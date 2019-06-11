@@ -1,0 +1,25 @@
+		<td colspan="5" class="row">
+			<div class="col-md-6">
+				<dl class="dl-horizontal">
+					<dt class="consultant-Matricule-caption field-caption-tv">Matricule</dt>
+					<dd id="consultant-Matricule-<%%VALUE(id_consultant)%%>" class="consultant-Matricule"><%%SELECT%%><%%VALUE(Matricule)%%><%%ENDSELECT%%></dd>
+
+					<dt class="consultant-Prenom-caption field-caption-tv">Prenom</dt>
+					<dd id="consultant-Prenom-<%%VALUE(id_consultant)%%>" class="consultant-Prenom"><%%SELECT%%><%%VALUE(Prenom)%%><%%ENDSELECT%%></dd>
+
+					<dt class="consultant-Nom-caption field-caption-tv">Nom</dt>
+					<dd id="consultant-Nom-<%%VALUE(id_consultant)%%>" class="consultant-Nom"><%%SELECT%%><%%VALUE(Nom)%%><%%ENDSELECT%%></dd>
+
+				</dl>
+			</div>
+			<div class="col-md-6">
+				<dl class="dl-horizontal">
+					<dt class="consultant-email-caption field-caption-tv">Email</dt>
+					<dd id="consultant-email-<%%VALUE(id_consultant)%%>" class="consultant-email"><a href="mailto:<%%VALUE(email)%%>" title="<%%VALUE(email)%%>" class="btn btn-default"><i class="glyphicon glyphicon-envelope text-info"></i></a></dd>
+
+					<dt class="consultant-emploi_fonctionnel-caption field-caption-tv">Emploi fonctionnel</dt>
+					<dd id="consultant-emploi_fonctionnel-<%%VALUE(id_consultant)%%>" class="consultant-emploi_fonctionnel"><%%SELECT%%><%%VALUE(emploi_fonctionnel)%%><%%ENDSELECT%%></dd>
+
+				</dl>
+			</div>
+		</td>

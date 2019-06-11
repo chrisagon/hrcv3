@@ -1,0 +1,12 @@
+<!-- Edit this file to change the layout of each record in the table view -->
+<!-- To disable clicking of a field, remove the  and  formatters around it-->
+
+<!-- If you wish to hide the table view header that contains the column titles, -->
+<!-- add the following to the feedback_init() hook (in hooks/feedback.php file) -->
+<!--     $options->ShowTableHeader = 0;     -->
+
+		<td id="feedback-titre-<%%VALUE(id)%%>" class="feedback-titre"><%%VALUE(titre)%%></td>
+		<td id="feedback-fonctionnalite-<%%VALUE(id)%%>" class="feedback-fonctionnalite"><%%VALUE(fonctionnalite)%%></td>
+		<td id="feedback-description-<%%VALUE(id)%%>" class="feedback-description"><%%VALUE(description)%%></td>
+		<td id="feedback-plus-<%%VALUE(id)%%>" class="feedback-plus"><%%VALUE(plus)%%></td>
+		<td id="feedback-moins-<%%VALUE(id)%%>" class="feedback-moins"><%%VALUE(moins)%%></td>

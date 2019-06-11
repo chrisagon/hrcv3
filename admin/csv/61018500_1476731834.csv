@@ -1,0 +1,29 @@
+titre_filiere;description
+Fonction Publique;"La fonction publique française, au sens strict, comprend l'ensemble des agents occupant les emplois civils permanents de l'État, des collectivités territoriales (commune, département ou région) ou de certains établissements publics hospitaliers.
+
+Certains sont titulaires, d'autres sont employés par contrats (contractuels).
+
+Ils travaillent pour l'administration centrale, ou pour ses services déconcentrés (à l'échelon régional ou départemental), ou encore au sein d'établissements ayant une mission de service public (organismes de Sécurité sociale, établissements d'enseignement de recherche ...).
+
+  * [La fonction publique d'État](http://www.fonction-publique.gouv.fr/fonction-publique/fonction-publique-france-0)
+  * [La fonction publique territoriale](http://www.fonction-publique.gouv.fr/fonction-publique/fonction-publique-france-1)
+  * [La fonction publique hospitalière](http://www.fonction-publique.gouv.fr/fonction-publique-hospitaliere)"
+Secteur Privé;Relatif aux entreprises de droit privé
+Outils & dev;Utilisation des Outils de développements : langages, AGL, Système exploit., HR Studio...
+MOE;"Le maître d'œuvre est une personne physique ou morale chargée de la phase conceptuelle du futur système d'information, il peut s'agir d'une entreprise, ou d'un service interne à l'entreprise. Il est responsable de la conformité des solutions retenues aux besoins exprimés par les utilisateurs. Il a un devoir de conseil et de mise en garde. Il assure le suivi de la réalisation technique des solutions, en général du développement, et participe à l'élaboration des jeux d'essai et à la réception des applications.
+
+Dans les marchés privés, il a, lors de la conception du [système d'information](http://fr.wikipedia.org/wiki/Syst%C3%A8me_d%27information) (SI), un devoir de conseil vis-à-vis du [maître d’ouvrage](http://fr.wikipedia.org/wiki/Ma%C3%AEtrise_d%27ouvrage) (MOA), car le système d'information doit être en harmonie avec les besoins issus du système de gestion. Il doit tirer le meilleur parti des possibilités techniques.
+
+Dans les marchés publics, il est comme tout maître d’œuvre, responsable de la conception ; toutefois la tendance est de réaliser des consultations sur la base d'un _[appel d'offres](http://fr.wikipedia.org/wiki/Appel_d%27offres) sur performance_ où le savoir de l'entrepreneur est valorisé, le cahier des charges laissant une marge de manœuvre importante dans le choix des réponses techniques.
+
+Lorsque le produit est compliqué, il peut être nécessaire de faire appel à plusieurs fournisseurs (prestations, sous-traitance). Le MŒ assure leur coordination ; il veille à la cohérence des fournitures et à leur compatibilité. Il coordonne l’action des fournisseurs en contrôlant la qualité technique, en assurant le respect des délais fixés par le MOA ([maître d'ouvrage](http://fr.wikipedia.org/wiki/Ma%C3%AEtrise_d%27ouvrage)) et en minimisant les risques.
+
+Le MŒ est responsable de la qualité technique de la solution. Il doit, avant toute réception contractuelle, procéder aux vérifications nécessaires selon une méthodologie définie préalablement : recettes unitaires, recette technique."
+ENV;Gestion des environnements : UNIX/Linux, Windows, Mainframe.
+AMOA;"Le terme **maître d'ouvrage** décrit ici dans le contexte d'un projet de système d'information a été emprunté au vocabulaire du bâtiment et des [travaux publics](http://fr.wikipedia.org/wiki/Travaux_publics).
+
+La maîtrise d’ouvrage est responsable de l’efficacité de l'organisation et des méthodes de travail autour des [systèmes d'information](http://fr.wikipedia.org/wiki/Syst%C3%A8mes_d%27information). Elle fait appel à un [maître d'œuvre](http://fr.wikipedia.org/wiki/Ma%C3%AEtrise_d%27%C5%93uvre) (MŒ) interne et/ou externe pour obtenir les produits ([matériels](http://fr.wikipedia.org/wiki/Mat%C3%A9riel_informatique), [logiciels](http://fr.wikipedia.org/wiki/Logiciel), services et solutions) nécessaires à la réalisation de sa mission.
+
+La maîtrise d'ouvrage joue un rôle clé dans l'organisation des entreprises, car elle est responsable de la bonne compréhension et des bonnes relations entre les directions [métier](http://fr.wikipedia.org/wiki/M%C3%A9tier_%28activit%C3%A9%29) et les directions informatiques (études et exploitation)."
+TMA;"Cela consiste donc pour une entreprise, à confier l’[infogérance](http://fr.wikipedia.org/wiki/Infog%C3%A9rance) d’une application à une société externe spécialisée. Le contrat qui lie cette dernière et l'entreprise cliente est donc un engagement de long terme ayant pour objet de maintenir en conditions opérationnelles selon un niveau de service prédéfini, tout ou partie du [Système d'Information](http://fr.wikipedia.org/wiki/Syst%C3%A8me_d%27information) (SI) d'une entité. Outre la TMA, il existe de nombreux types d'externalisation du SI tels que le Software as a Service ([SaaS](http://fr.wikipedia.org/wiki/SaaS)), l'[Application Service Provider](http://fr.wikipedia.org/wiki/Application_Service_Provider) (ASP), le [Business Process Outsourcing](http://fr.wikipedia.org/wiki/Business_Process_Outsourcing) (BPO) ou encore la Gestion de Patrimoine Applicatif (GPA), une extension de la TMA. Les frontières entre toutes ces catégories d'externalisation sont souvent floues. Pour les
+distinguer les unes des autres, deux critères sont utilisés : le niveau de transfert de [responsabilité](http://fr.wikipedia.org/wiki/Responsabilit%C3%A9) et l'[environnement](http://fr.wikipedia.org/wiki/Environnement) mis en œuvre par le [sous-traitant](http://fr.wikipedia.org/wiki/Sous-traitant) pour délivrer le [service](http://fr.wikipedia.org/wiki/Service)."

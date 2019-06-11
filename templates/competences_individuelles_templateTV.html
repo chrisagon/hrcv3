@@ -1,0 +1,15 @@
+<!-- Edit this file to change the layout of each record in the table view -->
+<!-- To disable clicking of a field, remove the <%%SELECT%%> and <%%ENDSELECT%%> formatters around it-->
+
+<!-- If you wish to hide the table view header that contains the column titles, -->
+<!-- add the following to the competences_individuelles_init() hook (in hooks/competences_individuelles.php file) -->
+<!--     $options->ShowTableHeader = 0;     -->
+
+		<td id="competences_individuelles-competence_mis_en_oeuvre-<%%VALUE(id_comp_indiv)%%>" class="competences_individuelles-competence_mis_en_oeuvre"><%%SELECT%%><%%VALUE(competence_mis_en_oeuvre)%%><%%ENDSELECT%%></td>
+		<td id="competences_individuelles-niveau-<%%VALUE(id_comp_indiv)%%>" class="competences_individuelles-niveau"><%%SELECT%%><%%VALUE(niveau)%%><%%ENDSELECT%%></td>
+		<td id="competences_individuelles-consultant_id-<%%VALUE(id_comp_indiv)%%>" class="competences_individuelles-consultant_id"><%%SELECT%%><%%VALUE(consultant_id)%%><%%ENDSELECT%%></td>
+		<td id="competences_individuelles-Documents_capitalises-<%%VALUE(id_comp_indiv)%%>" class="competences_individuelles-Documents_capitalises"><a href="link.php?t=competences_individuelles&f=Documents_capitalises&i=<%%VALUE(id_comp_indiv)%%>" target="_blank" title="<%%VALUE(Documents_capitalises)%%>" class="btn btn-default"><i class="glyphicon glyphicon-file text-info"></i></a></td>
+		<td id="competences_individuelles-commentaires-<%%VALUE(id_comp_indiv)%%>" class="competences_individuelles-commentaires"><%%SELECT%%><%%VALUE(commentaires)%%><%%ENDSELECT%%></td>
+		<script>$j(function(){
+			var e_Documents_capitalises = '<%%VALUE(Documents_capitalises)%%>'; if(e_Documents_capitalises == '' || e_Documents_capitalises == '&nbsp;') $j(/*<*/ '#competences_individuelles-Documents_capitalises-<%%VALUE(id_comp_indiv)%%>' /*>*/).html('');
+		});</script>

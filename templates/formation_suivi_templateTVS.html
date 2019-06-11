@@ -1,0 +1,17 @@
+<!-- Edit this file to change the layout of each record in the table view -->
+<!-- To disable clicking of a field, remove the  and  formatters around it-->
+
+<!-- If you wish to hide the table view header that contains the column titles, -->
+<!-- add the following to the formation_suivi_init() hook (in hooks/formation_suivi.php file) -->
+<!--     $options->ShowTableHeader = 0;     -->
+
+		<td id="formation_suivi-titre-<%%VALUE(id)%%>" class="formation_suivi-titre"><%%VALUE(titre)%%></td>
+		<td id="formation_suivi-niveau-<%%VALUE(id)%%>" class="formation_suivi-niveau"><%%VALUE(niveau)%%></td>
+		<td id="formation_suivi-date_deb-<%%VALUE(id)%%>" class="formation_suivi-date_deb"><%%VALUE(date_deb)%%></td>
+		<td id="formation_suivi-date_fin-<%%VALUE(id)%%>" class="formation_suivi-date_fin"><%%VALUE(date_fin)%%></td>
+		<td id="formation_suivi-competence_principale-<%%VALUE(id)%%>" class="formation_suivi-competence_principale"><%%VALUE(competence_principale)%%></td>
+		<td id="formation_suivi-competence_secondaire-<%%VALUE(id)%%>" class="formation_suivi-competence_secondaire"><%%VALUE(competence_secondaire)%%></td>
+		<td id="formation_suivi-evaluation-<%%VALUE(id)%%>" class="formation_suivi-evaluation"><%%VALUE(evaluation)%%></td>
+		<td id="formation_suivi-consultant_id-<%%VALUE(id)%%>" class="formation_suivi-consultant_id"><%%VALUE(consultant_id)%%></td>
+		<td id="formation_suivi-organisme-<%%VALUE(id)%%>" class="formation_suivi-organisme"><%%VALUE(organisme)%%></td>
+		<td id="formation_suivi-commentaire-<%%VALUE(id)%%>" class="formation_suivi-commentaire"><%%VALUE(commentaire)%%></td>

@@ -1,0 +1,11 @@
+<!-- Edit this file to change the layout of each record in the table view -->
+<!-- To disable clicking of a field, remove the <%%SELECT%%> and <%%ENDSELECT%%> formatters around it-->
+
+<!-- If you wish to hide the table view header that contains the column titles, -->
+<!-- add the following to the competences_ref_init() hook (in hooks/competences_ref.php file) -->
+<!--     $options->ShowTableHeader = 0;     -->
+
+		<td id="competences_ref-titre_competence-<%%VALUE(id_competence)%%>" class="competences_ref-titre_competence"><%%SELECT%%><%%VALUE(titre_competence)%%><%%ENDSELECT%%></td>
+		<td id="competences_ref-description-<%%VALUE(id_competence)%%>" class="competences_ref-description"><%%SELECT%%><%%VALUE(description)%%><%%ENDSELECT%%></td>
+		<td id="competences_ref-domaine_principal-<%%VALUE(id_competence)%%>" class="competences_ref-domaine_principal"><%%SELECT%%><%%VALUE(domaine_principal)%%><%%ENDSELECT%%></td>
+		<td id="competences_ref-domaine-<%%VALUE(id_competence)%%>" class="competences_ref-domaine"><%%SELECT%%><%%VALUE(domaine)%%><%%ENDSELECT%%></td>

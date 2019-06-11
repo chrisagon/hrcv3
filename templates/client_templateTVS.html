@@ -1,0 +1,17 @@
+<!-- Edit this file to change the layout of each record in the table view -->
+<!-- To disable clicking of a field, remove the  and  formatters around it-->
+
+<!-- If you wish to hide the table view header that contains the column titles, -->
+<!-- add the following to the client_init() hook (in hooks/client.php file) -->
+<!--     $options->ShowTableHeader = 0;     -->
+
+		<td id="client-nom_du_client-<%%VALUE(id_client)%%>" class="client-nom_du_client"><%%VALUE(nom_du_client)%%></td>
+		<td id="client-nom_du_contact-<%%VALUE(id_client)%%>" class="client-nom_du_contact"><%%VALUE(nom_du_contact)%%></td>
+		<td id="client-titre_du_contact-<%%VALUE(id_client)%%>" class="client-titre_du_contact"><%%VALUE(titre_du_contact)%%></td>
+		<td id="client-adresse_postale-<%%VALUE(id_client)%%>" class="client-adresse_postale"><%%VALUE(adresse_postale)%%></td>
+		<td id="client-ville-<%%VALUE(id_client)%%>" class="client-ville"><%%VALUE(ville)%%></td>
+		<td id="client-code_postal-<%%VALUE(id_client)%%>" class="client-code_postal"><%%VALUE(code_postal)%%></td>
+		<td id="client-adresse_gm-<%%VALUE(id_client)%%>" class="client-adresse_gm"><img src="<%%GOOGLEMAPTHUMB(adresse_gm)%%>" style="max-width: 50px; max-height: 50px; " ></td>
+		<td id="client-pays-<%%VALUE(id_client)%%>" class="client-pays"><%%VALUE(pays)%%></td>
+		<td id="client-telephone_contact-<%%VALUE(id_client)%%>" class="client-telephone_contact"><%%VALUE(telephone_contact)%%></td>
+		<td id="client-email-<%%VALUE(id_client)%%>" class="client-email"><a href="mailto:<%%VALUE(email)%%>" title="<%%VALUE(email)%%>" class="btn btn-default"><i class="glyphicon glyphicon-envelope text-info"></i></a></td>

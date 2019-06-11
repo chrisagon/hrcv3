@@ -1,0 +1,268 @@
+<!-- Edit this file to change the layout of the detail view form -->
+
+<a name="detail-view"></a>
+<div class="panel-heading"><h3 class="panel-title"><strong><%%DETAIL_VIEW_TITLE%%></strong></h3></div>
+
+<div class="panel-body" id="consultant_dv_container">
+	<!-- child links -->
+	<div class="row">
+		<div class="col-xs-12">
+			<a class="hidden-xs btn btn-default btn-lg pull-right hidden hspacer-sm" href="curriculum_vitae_view.php?filterer_du_consultant=<%%URLVALUE(id_consultant)%%>&<%%EMBEDDED%%>" id="curriculum_vitae_link"><i class="glyphicon glyphicon-list-alt"></i> Votre Curriculum vitae</a>
+			<a class="visible-xs btn btn-default btn-lg btn-block hidden vspacer-sm" href="curriculum_vitae_view.php?filterer_du_consultant=<%%URLVALUE(id_consultant)%%>&<%%EMBEDDED%%>" id="xs_curriculum_vitae_link"><i class="glyphicon glyphicon-list-alt"></i> Votre Curriculum vitae</a>
+			<input type="hidden" id="curriculum_vitae_hclink" value="curriculum_vitae_view.php?filterer_du_consultant=<%%URLVALUE(id_consultant)%%>&<%%EMBEDDED%%>">
+			<input type="hidden" id="consultant_hclink" value="consultant_view.php?filterer_coache_par=<%%URLVALUE(id_consultant)%%>&<%%EMBEDDED%%>">
+			<a class="hidden-xs btn btn-default btn-lg pull-right hidden hspacer-sm" href="missions_view.php?filterer_id_consultant=<%%URLVALUE(id_consultant)%%>&<%%EMBEDDED%%>" id="missions_link"><i class="glyphicon glyphicon-list-alt"></i> Vos Missions</a>
+			<a class="visible-xs btn btn-default btn-lg btn-block hidden vspacer-sm" href="missions_view.php?filterer_id_consultant=<%%URLVALUE(id_consultant)%%>&<%%EMBEDDED%%>" id="xs_missions_link"><i class="glyphicon glyphicon-list-alt"></i> Vos Missions</a>
+			<input type="hidden" id="missions_hclink" value="missions_view.php?filterer_id_consultant=<%%URLVALUE(id_consultant)%%>&<%%EMBEDDED%%>">
+			<a class="hidden-xs btn btn-default btn-lg pull-right hidden hspacer-sm" href="competences_individuelles_view.php?filterer_consultant_id=<%%URLVALUE(id_consultant)%%>&<%%EMBEDDED%%>" id="competences_individuelles_link"><i class="glyphicon glyphicon-list-alt"></i> Vos Competences </a>
+			<a class="visible-xs btn btn-default btn-lg btn-block hidden vspacer-sm" href="competences_individuelles_view.php?filterer_consultant_id=<%%URLVALUE(id_consultant)%%>&<%%EMBEDDED%%>" id="xs_competences_individuelles_link"><i class="glyphicon glyphicon-list-alt"></i> Vos Competences </a>
+			<input type="hidden" id="competences_individuelles_hclink" value="competences_individuelles_view.php?filterer_consultant_id=<%%URLVALUE(id_consultant)%%>&<%%EMBEDDED%%>">
+			<a class="hidden-xs btn btn-default btn-lg pull-right hidden hspacer-sm" href="formation_suivi_view.php?filterer_consultant_id=<%%URLVALUE(id_consultant)%%>&<%%EMBEDDED%%>" id="formation_suivi_link"><i class="glyphicon glyphicon-list-alt"></i> Formations suivis</a>
+			<a class="visible-xs btn btn-default btn-lg btn-block hidden vspacer-sm" href="formation_suivi_view.php?filterer_consultant_id=<%%URLVALUE(id_consultant)%%>&<%%EMBEDDED%%>" id="xs_formation_suivi_link"><i class="glyphicon glyphicon-list-alt"></i> Formations suivis</a>
+			<input type="hidden" id="formation_suivi_hclink" value="formation_suivi_view.php?filterer_consultant_id=<%%URLVALUE(id_consultant)%%>&<%%EMBEDDED%%>">
+			<div class="clearfix"></div>
+		</div>
+	</div>
+	<hr>
+
+	<div class="row">
+		<!-- form inputs -->
+		<div class="col-md-8 col-lg-10" id="consultant_dv_form">
+			<fieldset class="form-horizontal">
+
+				<div class="form-group">
+					<label for="Matricule" class="control-label col-lg-3">Matricule<span class="text-danger"><%%TRANSLATION(*)%%></span></label>
+					<div class="col-lg-9">
+						<input maxlength="40" type="text" class="form-control" name="Matricule" id="Matricule" value="<%%VALUE(Matricule)%%>" required>
+					</div>
+				</div>
+
+				<div class="form-group">
+					<label for="Prenom" class="control-label col-lg-3">Prenom</label>
+					<div class="col-lg-9">
+						<input maxlength="40" type="text" class="form-control" name="Prenom" id="Prenom" value="<%%VALUE(Prenom)%%>">
+					</div>
+				</div>
+
+				<div class="form-group">
+					<label for="Nom" class="control-label col-lg-3">Nom<span class="text-danger"><%%TRANSLATION(*)%%></span></label>
+					<div class="col-lg-9">
+						<input maxlength="40" type="text" class="form-control" name="Nom" id="Nom" value="<%%VALUE(Nom)%%>" required>
+					</div>
+				</div>
+
+				<div class="form-group">
+					<label for="email" class="control-label col-lg-3">Email <i class="glyphicon glyphicon-info-sign text-info" data-toggle="collapse" data-target="#email-description"></i></label>
+					<div class="col-lg-9">
+						<span class="help-block collapse" id="email-description"><div class="alert alert-info">indiquez votre email pour pouvoir &#234;tre contact&#233;.</div></span>
+
+						
+						<div>
+							<a id="email-link" href="mailto:<%%VALUE(email)%%>" target="_blank"><i class="glyphicon glyphicon-envelope text-info" title="<%%VALUE(email)%%>"></i></a>
+							<label for="email"><button type="button" id="email-edit-link" class="btn btn-default hspacer-lg vspacer-sm" data-toggle="collapse" data-target="#email" title="<%%TRANSLATION(Edit)%%>"><i class="glyphicon glyphicon-pencil"></i></button></label>
+						</div>
+						<script>jQuery(function(){ var e_email = '<%%VALUE(email)%%>'; if(e_email == '' || e_email == '&nbsp;' || e_email == 'blank.gif') jQuery('#email-link').hide(); });</script><input maxlength="80" type="text" class="form-control collapse" name="email" id="email" value="<%%VALUE(email)%%>">
+					</div>
+				</div>
+
+				<div class="form-group">
+					<label for="adresse_postale" class="control-label col-lg-3">Adresse postale</label>
+					<div class="col-lg-9">
+						<textarea class="form-control" name="adresse_postale" id="adresse_postale" rows="5"><%%VALUE(adresse_postale)%%></textarea>
+					</div>
+				</div>
+
+				<div class="form-group">
+					<label for="coache_par" class="control-label col-lg-3" data-parent_link="view_parent_hidden">Coache par <i class="glyphicon glyphicon-info-sign text-info" data-toggle="collapse" data-target="#coache_par-description"></i></label>
+					<div class="col-lg-9">
+						<span class="help-block collapse" id="coache_par-description"><div class="alert alert-info">Indiquez le nom de votre coach (s'il est dans la liste)</div></span>
+
+						<div class="row form-control-static"><div class="col-xs-11"><%%COMBO(coache_par)%%><%%PLINK(coache_par)%%><%%ADDNEW(consultant)%%></div></div>
+					</div>
+				</div>
+
+				<div class="form-group">
+					<label for="emploi_fonctionnel" class="control-label col-lg-3" data-parent_link="view_parent_modal">Emploi fonctionnel <i class="glyphicon glyphicon-info-sign text-info" data-toggle="collapse" data-target="#emploi_fonctionnel-description"></i></label>
+					<div class="col-lg-9">
+						<span class="help-block collapse" id="emploi_fonctionnel-description"><div class="alert alert-info">indiquez votre emploi fonctionnel : junior, confirm&#233;, senior, expert, manager ou assistante de direction.</div></span>
+
+						<div class="row form-control-static"><div class="col-xs-11"><%%COMBO(emploi_fonctionnel)%%><%%PLINK(emploi_fonctionnel)%%><%%ADDNEW(emploi_fonctionnel)%%></div></div>
+					</div>
+				</div>
+
+			</fieldset>
+		</div>
+
+		<!-- DV action buttons -->
+		<div class="col-md-4 col-lg-2" id="consultant_dv_action_buttons">
+			<div class="btn-toolbar">
+				<div class="btn-group-vertical btn-group-lg" style="width: 100%;">
+					<%%UPDATE_BUTTON%%>
+				</div><p></p>
+				<div class="btn-group-vertical btn-group-lg" style="width: 100%;">
+					<%%DESELECT_BUTTON%%>
+					<%%DVPRINT_BUTTON%%>
+					<%%DELETE_BUTTON%%>
+				</div><p></p>
+				<div class="btn-group-vertical btn-group-lg" style="width: 100%;">
+					<%%INSERT_BUTTON%%>
+				</div>
+			</div>
+		</div>
+	</div>
+
+
+	<!-- child records -->
+	<hr>
+	<div class="row">
+		<div class="col-lg-10 col-lg-offset-1">
+			<div id="consultant-children" class="children-tabs"></div>
+		</div>
+	</div>
+
+</div><!-- /div class="panel-body" -->
+	<script>
+		$j(function() {
+			var add_new_mode = (!$j('input[name=SelectedID]').val());
+			var embedded_mode = ($j('input[name=Embedded]').val() == 1);
+
+			/* auto-close embedded page? */
+			var autoclose_mode = ($j('input[name=AutoClose]').val() == 1);
+			var record_added_ok = (location.search.split('record-added-ok=').length == 2);
+			var record_updated_ok = (location.search.split('record-updated-ok=').length == 2);
+			if((record_added_ok || record_updated_ok) && embedded_mode && autoclose_mode){
+				setTimeout(function(){
+					window.parent.jQuery('.modal').modal('hide');
+				}, 2000);
+			}
+
+			/* enable DV action buttons to float on scrolling down the form */
+			enable_dvab_floating();
+
+			$j('select, input[type=text], textarea').not(':disabled').eq(0).focus();
+			$j('form').eq(0).change(function(){
+				if($j(this).data('already_changed')) return;
+				if($j('#deselect').length) $j('#deselect').removeClass('btn-default').addClass('btn-warning').get(0).lastChild.data = " <%%TRANSLATION(Cancel)%%>";
+				$j(this).data('already_changed', true);
+			});
+
+			$j('a[href="<%%TRANSLATION(ImageFolder)%%>"]').click(function(){ return false; });
+
+			if(embedded_mode){
+				/* hide links to children tables in embedded mode */
+				$j('.detail_view a[id$=_link]').remove();
+
+				/* append embedded mode to all links */
+				var append_embedded = function(){
+					$j('a[href]:not([href^=#]):not([href^=javascript]):not([href$="Embedded=1"]):not([href*="link.php?t="]):not([href^="mailto:"])').each(
+						function(){
+							$j(this).attr('href', $j(this).attr('href') + '&Embedded=1');
+						}
+					);
+				}
+				setTimeout(append_embedded, 500);
+				setTimeout(append_embedded, 1500);
+				setTimeout(append_embedded, 2500);
+				setTimeout(append_embedded, 3500);
+			}
+
+			/* when no record is selected ('add new' mode) */
+			if(add_new_mode){
+				/* hide links to children tables */
+				$j('.detail_view a[id$=_link]').remove();
+			}else{
+				post(
+					'parent-children.php', {
+						ParentTable: 'consultant',
+						SelectedID: '<%%VALUE(id_consultant)%%>',
+						Operation: 'show-children'
+					},
+					'consultant-children'
+				);
+			}
+
+			if(!embedded_mode){
+				/* add a horizontal spacer to [add new parent] buttons that don't have a spacered element before them */
+				$j('.add_new_parent').prev(':not(.hspacer-md)').next().addClass('hspacer-md');
+
+				$j('.add_new_parent').click(function(){
+					var pt = $j(this).attr('id').replace(/_add_new$/, '');
+					modal_window({
+						url: pt + '_view.php?addNew_x=1&Embedded=1',
+						close: function(){
+							var field_id = $j('#' + pt + '_add_new').prevAll('input:hidden').eq(0).attr('id');
+							$j('#' + field_id + '-container').select2('focus').select2('focus');
+						},
+						size: 'full',
+						title: $j(this).attr('title')
+					});
+				});
+			}
+
+			/* find and hide parent links if field label has data 'parent_link' set to 'view_parent_hidden' */
+			$j('label[data-parent_link=view_parent_hidden]').each(function(){
+				$j(this).parents('.form-group').find('.view_parent').hide();
+			});
+
+			$j('form').on('click', '.view_parent', function(){
+				var pt = $j(this).attr('id').replace(/_view_parent$/, '');
+				if($j(this).prevAll('input:hidden').length){
+					var parent_id = $j(this).prevAll('input:hidden').eq(0).val();
+				}else{
+					var parent_id = $j(this).prevAll().children('input:hidden').eq(0).val();
+				}
+
+				/* handle radio lookups */
+				if($j(this).prevAll('[type=radio]').length){
+					parent_id = $j(this).prevAll('[type=radio]').eq(0).val();
+				}
+
+				if(parent_id != '{empty_value}'){
+					var parent_link = $j(this).parents('.form-group').children('label').data('parent_link');
+					switch(parent_link){
+						case 'view_parent_hidden':
+							break;
+						case 'view_parent_modal':
+							modal_window({
+								url: pt + '_view.php?Embedded=1&SelectedID=' + encodeURIComponent(parent_id),
+								close: function(){
+									var field_id = $j('#' + pt + '_view_parent').prevAll('input:hidden').eq(0).attr('id');
+									$j('#' + field_id + '-container').select2('focus').select2('focus');
+								},
+								size: 'full',
+								title: $j(this).attr('title')
+							});
+							break;
+						case 'view_parent_same_window':
+							window.location = pt + '_view.php?Embedded=' + (embedded_mode ? '1' : '') + '&SelectedID=' + encodeURIComponent(parent_id);
+							break;
+						case 'view_parent_new_window':
+							window.open(pt + '_view.php?SelectedID=' + encodeURIComponent(parent_id));
+							break;
+					}
+
+				}
+			});
+
+
+			/* load admin tools for admin user */
+			if(!add_new_mode){
+				$j('body').append('<div id="admin-tools-appendix"></div>');
+				$j('#admin-tools-appendix').load(
+					'ajax_admin_tools.php?table=consultant&id=<%%URLVALUE(id_consultant)%%>',
+					function(resp){
+						if(!resp.length) return;
+						$j.ajax('ajax_admin_tools.php?action=get_admin_tools_js&table=consultant&id=<%%URLVALUE(id_consultant)%%>');
+					}
+				);
+			}
+
+			/* warn user if 'add new' clicked while unsaved changes exist */
+			$j('#addNew').click(function(){
+				if($j('#deselect.btn-warning').length){
+					return confirm('<%%TRANSLATION(discard changes confirm)%%>');
+				}
+			});
+
+		});
+	</script>

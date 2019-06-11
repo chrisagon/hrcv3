@@ -1,0 +1,13 @@
+<!-- Edit this file to change the layout of each record in the table view -->
+<!-- To disable clicking of a field, remove the  and  formatters around it-->
+
+<!-- If you wish to hide the table view header that contains the column titles, -->
+<!-- add the following to the missions_init() hook (in hooks/missions.php file) -->
+<!--     $options->ShowTableHeader = 0;     -->
+
+		<td id="missions-id_consultant-<%%VALUE(id_mission)%%>" class="missions-id_consultant text-right"><%%VALUE(id_consultant)%%></td>
+		<td id="missions-date_debut-<%%VALUE(id_mission)%%>" class="missions-date_debut"><%%VALUE(date_debut)%%></td>
+		<td id="missions-date_fin-<%%VALUE(id_mission)%%>" class="missions-date_fin"><%%VALUE(date_fin)%%></td>
+		<td id="missions-description_mission-<%%VALUE(id_mission)%%>" class="missions-description_mission"><%%VALUE(description_mission)%%></td>
+		<td id="missions-description_detaille-<%%VALUE(id_mission)%%>" class="missions-description_detaille"><%%VALUE(description_detaille)%%></td>
+		<td id="missions-client-<%%VALUE(id_mission)%%>" class="missions-client"><%%VALUE(client)%%></td>
