@@ -10,3 +10,12 @@ Réalisé avec **AppGini**
 ## TODO
 Habillage fonctionnel,
 Intégration d'un workflow.
+
+## Prérequis installation
+
+> PHP (Min 5.4)
+> Apache (Min 2.2)
+> Mysql
+
+A la première connexion, vous devez renseigner les identifiants de connexion à la base Mysql et suivre les instructions.
+L'application est pour l'instant vide de données et non paramétrées.
