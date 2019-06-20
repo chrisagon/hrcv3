@@ -5,13 +5,10 @@
 	~~~~~~ LIST OF FUNCTIONS ~~~~~~
 		getTableList() -- returns an associative array (tableName => tableData, tableData is array(tableCaption, tableDescription, tableIcon)) of tables accessible by current user
 		get_table_groups() -- returns an associative array (table_group => tables_array)
-		getLoggedMemberID() -- returns memberID of logged member. If no login, returns anonymous memberID
-		getLoggedGroupID() -- returns groupID of logged member, or anonymous groupID
-		logOutMember() -- destroys session and logs member out.
 		logInMember() -- checks POST login. If not valid, redirects to index.php, else returns TRUE
 		getTablePermissions($tn) -- returns an array of permissions allowed for logged member to given table (allowAccess, allowInsert, allowView, allowEdit, allowDelete) -- allowAccess is set to true if any access level is allowed
 		get_sql_fields($tn) -- returns the SELECT part of the table view query
-		get_sql_from($tn[, true]) -- returns the FROM part of the table view query, with full joins, optionally skipping permissions if true passed as 2nd param.
+		get_sql_from($tn[, true, [, false]]) -- returns the FROM part of the table view query, with full joins (unless third paramaeter is set to true), optionally skipping permissions if true passed as 2nd param.
 		get_joined_record($table, $id[, true]) -- returns assoc array of record values for given PK value of given table, with full joins, optionally skipping permissions if true passed as 3rd param.
 		get_defaults($table) -- returns assoc array of table fields as array keys and default values (or empty), excluding automatic values as array values
 		htmlUserBar() -- returns html code for displaying user login status to be used on top of pages.
@@ -20,7 +17,6 @@
 		parseCode(code) -- calculates and returns special values to be inserted in automatic fields.
 		addFilter(i, filterAnd, filterField, filterOperator, filterValue) -- enforce a filter over data
 		clearFilters() -- clear all filters
-		getMemberInfo() -- returns an array containing the currently signed-in member's info
 		loadView($view, $data) -- passes $data to templates/{$view}.php and returns the output
 		loadTable($table, $data) -- loads table template, passing $data to it
 		filterDropdownBy($filterable, $filterers, $parentFilterers, $parentPKField, $parentCaption, $parentTable, &$filterableCombo) -- applies cascading drop-downs for a lookup field, returns js code to be inserted into the page
@@ -39,6 +35,7 @@
 		getUploadDir($dir) -- if dir is empty, returns upload dir configured in defaultLang.php, else returns $dir.
 		PrepareUploadedFile($FieldName, $MaxSize, $FileTypes='jpg|jpeg|gif|png', $NoRename=false, $dir="") -- validates and moves uploaded file for given $FieldName into the given $dir (or the default one if empty)
 		get_home_links($homeLinks, $default_classes, $tgroup) -- process $homeLinks array and return custom links for homepage. Applies $default_classes to links if links have classes defined, and filters links by $tgroup (using '*' matches all table_group values)
+		quick_search_html($search_term, $label, $separate_dv = true) -- returns HTML code for the quick search box.
 	~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 	*/
 
@@ -46,7 +43,8 @@
 
 	function getTableList($skip_authentication = false){
 		$arrAccessTables = array();
-		$arrTables = array(   
+		$arrTables = array(
+			/* 'table_name' => ['table caption', 'homepage description', 'icon', 'table group name'] */   
 			'curriculum_vitae' => array('Votre Curriculum vitae', 'Votre fiche "consultant" est disponible dans Liste => Consultant. Vous pouvez cr&#233;er votre CV.<br>Il est possible d\'avoir plusieurs CV en fonction du focus du parcours professionnel. Il est possible d\'avoir un CV qui regroupe les missions MOE, et un autre les missions MOA.', 'resources/table_icons/curriculum_vitae.png', 'Votre CV'),
 			'consultant' => array('Consultant', 'Fiche contact du consultant', 'resources/table_icons/administrator.png', 'Liste'),
 			'missions' => array('Vos Missions', 'Mission rattach&#233; au cv : d&#233;crivez les &#233;lements cl&#233;s de votre mission. Vous pouvez ajouter en plus les comp&#233;tences acquises lors de chacune de vos missions.', 'resources/table_icons/document_comment_above.png', 'Votre CV'),
@@ -170,7 +168,7 @@
 
 	#########################################################
 
-	function get_sql_from($table_name, $skip_permissions = false){
+	function get_sql_from($table_name, $skip_permissions = false, $skip_joins = false) {
 		$sql_from = array(   
 			'curriculum_vitae' => "`curriculum_vitae` LEFT JOIN `consultant` as consultant1 ON `consultant1`.`id_consultant`=`curriculum_vitae`.`du_consultant` ",
 			'consultant' => "`consultant` LEFT JOIN `consultant` as consultant1 ON `consultant1`.`id_consultant`=`consultant`.`coache_par` LEFT JOIN `emploi_fonctionnel` as emploi_fonctionnel1 ON `emploi_fonctionnel1`.`id_ef`=`consultant`.`emploi_fonctionnel` ",
@@ -203,24 +201,25 @@
 			'emploi_fonctionnel' => 'id_ef'
 		);
 
-		if(isset($sql_from[$table_name])){
-			if($skip_permissions) return $sql_from[$table_name];
+		if(!isset($sql_from[$table_name])) return false;
 
-			// mm: build the query based on current member's permissions
-			$perm = getTablePermissions($table_name);
-			if($perm[2] == 1){ // view owner only
-				$sql_from[$table_name] .= ", membership_userrecords WHERE `{$table_name}`.`{$pkey[$table_name]}`=membership_userrecords.pkValue and membership_userrecords.tableName='{$table_name}' and lcase(membership_userrecords.memberID)='" . getLoggedMemberID() . "'";
-			}elseif($perm[2] == 2){ // view group only
-				$sql_from[$table_name] .= ", membership_userrecords WHERE `{$table_name}`.`{$pkey[$table_name]}`=membership_userrecords.pkValue and membership_userrecords.tableName='{$table_name}' and membership_userrecords.groupID='" . getLoggedGroupID() . "'";
-			}elseif($perm[2] == 3){ // view all
-				$sql_from[$table_name] .= ' WHERE 1=1';
-			}else{ // view none
-				return false;
-			}
-			return $sql_from[$table_name];
+		$from = ($skip_joins ? "`{$table_name}`" : $sql_from[$table_name]);
+
+		if($skip_permissions) return $from . ' WHERE 1=1';
+
+		// mm: build the query based on current member's permissions
+		$perm = getTablePermissions($table_name);
+		if($perm[2] == 1){ // view owner only
+			$from .= ", membership_userrecords WHERE `{$table_name}`.`{$pkey[$table_name]}`=membership_userrecords.pkValue and membership_userrecords.tableName='{$table_name}' and lcase(membership_userrecords.memberID)='" . getLoggedMemberID() . "'";
+		}elseif($perm[2] == 2){ // view group only
+			$from .= ", membership_userrecords WHERE `{$table_name}`.`{$pkey[$table_name]}`=membership_userrecords.pkValue and membership_userrecords.tableName='{$table_name}' and membership_userrecords.groupID='" . getLoggedGroupID() . "'";
+		}elseif($perm[2] == 3){ // view all
+			$from .= ' WHERE 1=1';
+		}else{ // view none
+			return false;
 		}
 
-		return false;
+		return $from;
 	}
 
 	#########################################################
@@ -363,67 +362,26 @@
 
 	#########################################################
 
-	function getLoggedGroupID(){
-		if($_SESSION['memberGroupID']!=''){
-			return $_SESSION['memberGroupID'];
-		}else{
-			if(!setAnonymousAccess()) return false;
-			return getLoggedGroupID();
-		}
-	}
-
-	#########################################################
-
-	function getLoggedMemberID(){
-		if($_SESSION['memberID']!=''){
-			return strtolower($_SESSION['memberID']);
-		}else{
-			if(!setAnonymousAccess()) return false;
-			return getLoggedMemberID();
-		}
-	}
-
-	#########################################################
-
-	function setAnonymousAccess(){
-		$adminConfig = config('adminConfig');
-		$anon_group_safe = addslashes($adminConfig['anonymousGroup']);
-		$anon_user_safe = strtolower(addslashes($adminConfig['anonymousMember']));
-
-		$eo = array('silentErrors' => true);
-
-		$res = sql("select groupID from membership_groups where name='{$anon_group_safe}'", $eo);
-		if(!$res){ return false; }
-		$row = db_fetch_array($res); $anonGroupID = $row[0];
-
-		$_SESSION['memberGroupID'] = ($anonGroupID ? $anonGroupID : 0);
-
-		$res = sql("select lcase(memberID) from membership_users where lcase(memberID)='{$anon_user_safe}' and groupID='{$anonGroupID}'", $eo);
-		if(!$res){ return false; }
-		$row = db_fetch_array($res); $anonMemberID = $row[0];
-
-		$_SESSION['memberID'] = ($anonMemberID ? $anonMemberID : 0);
-
-		return true;
-	}
-
-	#########################################################
-
 	function logInMember(){
 		$redir = 'index.php';
 		if($_POST['signIn'] != ''){
 			if($_POST['username'] != '' && $_POST['password'] != ''){
 				$username = makeSafe(strtolower($_POST['username']));
-				$password = md5($_POST['password']);
+				$hash = sqlValue("select passMD5 from membership_users where lcase(memberID)='{$username}' and isApproved=1 and isBanned=0");
+				$password = $_POST['password'];
 
-				if(sqlValue("select count(1) from membership_users where lcase(memberID)='$username' and passMD5='$password' and isApproved=1 and isBanned=0")==1){
-					$_SESSION['memberID']=$username;
-					$_SESSION['memberGroupID']=sqlValue("select groupID from membership_users where lcase(memberID)='$username'");
-					if($_POST['rememberMe']==1){
-						@setcookie('hrcv3_rememberMe', md5($username.$password), time()+86400*30);
+				if(password_match($password, $hash)) {
+					$_SESSION['memberID'] = $username;
+					$_SESSION['memberGroupID'] = sqlValue("SELECT `groupID` FROM `membership_users` WHERE LCASE(`memberID`)='{$username}'");
+
+					if($_POST['rememberMe'] == 1){
+						RememberMe::login($username);
 					}else{
-						@setcookie('hrcv3_rememberMe', '', time()-86400*30);
+						RememberMe::delete();
 					}
+
+					// harden user's password hash
+					password_harden($username, $password, $hash);
 
 					// hook: login_ok
 					if(function_exists('login_ok')){
@@ -451,20 +409,14 @@
 			if(!headers_sent()) header('HTTP/1.0 403 Forbidden');
 			redirect("index.php?loginFailed=1");
 			exit;
-		}elseif((!$_SESSION['memberID'] || $_SESSION['memberID']==$adminConfig['anonymousMember']) && $_COOKIE['hrcv3_rememberMe']!=''){
-			$chk=makeSafe($_COOKIE['hrcv3_rememberMe']);
-			if($username=sqlValue("select memberID from membership_users where convert(md5(concat(memberID, passMD5)), char)='$chk' and isBanned=0")){
-				$_SESSION['memberID']=$username;
-				$_SESSION['memberGroupID']=sqlValue("select groupID from membership_users where lcase(memberID)='$username'");
-			}
 		}
-	}
 
-	#########################################################
-
-	function logOutMember(){
-		logOutUser();
-		redirect("index.php?signIn=1");
+		/* check if a rememberMe cookie exists and sign in user if so */
+		if(RememberMe::check()) {
+			$username = makeSafe(strtolower(RememberMe::user()));
+			$_SESSION['memberID'] = $username;
+			$_SESSION['memberGroupID'] = sqlValue("SELECT `groupID` FROM `membership_users` WHERE LCASE(`memberID`)='{$username}'");
+		}
 	}
 
 	#########################################################
@@ -553,12 +505,12 @@
 		$notify_template_no_fadeout = '<div id="%%ID%%" class="alert alert-dismissable %%CLASS%%" style="display: none; padding-top: 6px; padding-bottom: 6px;">' .
 					'<button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>' .
 					'%%MSG%%</div>' .
-					'<script> jQuery(function(){ jQuery("#%%ID%%").show("slow"); }); </script>'."\n";
+					'<script> jQuery(function(){ /* */ jQuery("#%%ID%%").show("slow"); }); </script>'."\n";
 		$notify_template = '<div id="%%ID%%" class="alert %%CLASS%%" style="display: none; padding-top: 6px; padding-bottom: 6px;">%%MSG%%</div>' .
 					'<script>' .
 						'jQuery(function(){' .
 							'jQuery("#%%ID%%").show("slow", function(){' .
-								'setTimeout(function(){ jQuery("#%%ID%%").hide("slow"); }, 4000);' .
+								'setTimeout(function(){ /* */ jQuery("#%%ID%%").hide("slow"); }, 4000);' .
 							'});' .
 						'});' .
 					'</script>'."\n";
@@ -689,51 +641,6 @@
 		for($i=1; $i<=80; $i++){
 			addFilter($i, '', 0, '', '');
 		}
-	}
-
-	#########################################################
-
-	function getMemberInfo($memberID = ''){
-		static $member_info = array();
-
-		if(!$memberID){
-			$memberID = getLoggedMemberID();
-		}
-
-		// return cached results, if present
-		if(isset($member_info[$memberID])) return $member_info[$memberID];
-
-		$adminConfig = config('adminConfig');
-		$mi = array();
-
-		if($memberID){
-			$res = sql("select * from membership_users where memberID='" . makeSafe($memberID) . "'", $eo);
-			if($row = db_fetch_assoc($res)){
-				$mi = array(
-					'username' => $memberID,
-					'groupID' => $row['groupID'],
-					'group' => sqlValue("select name from membership_groups where groupID='{$row['groupID']}'"),
-					'admin' => ($adminConfig['adminUsername'] == $memberID ? true : false),
-					'email' => $row['email'],
-					'custom' => array(
-						$row['custom1'], 
-						$row['custom2'], 
-						$row['custom3'], 
-						$row['custom4']
-					),
-					'banned' => ($row['isBanned'] ? true : false),
-					'approved' => ($row['isApproved'] ? true : false),
-					'signupDate' => @date('n/j/Y', @strtotime($row['signupDate'])),
-					'comments' => $row['comments'],
-					'IP' => $_SERVER['REMOTE_ADDR']
-				);
-
-				// cache results
-				$member_info[$memberID] = $mi;
-			}
-		}
-
-		return $mi;
 	}
 
 	#########################################################
@@ -886,7 +793,7 @@
 			$filterJS.="\n\t}";
 			$filterJS.="\n\t$('{$filterable}').highlight();";
 			$filterJS.="\n};";
-			$filterJS.="\n$('{$filterer}').observe('change', function(){ window.setTimeout({$filterable}_change_by_{$filterer}, 25); });";
+			$filterJS.="\n$('{$filterer}').observe('change', function(){ /* */ window.setTimeout({$filterable}_change_by_{$filterer}, 25); });";
 			$filterJS.="\n";
 		}
 
@@ -1066,7 +973,7 @@
 			if(!$max_height) $max_height = 360;
 			if(!$max_width) $max_width = 480;
 
-			$api_key = 'AIzaSyDCmPAecTO_tNH1X2M2H8c49s_DgycM-8M';
+			$api_key = 'AIzaSyAJiMynmMdsRDOtLa1pGdOtC6gdLBeZMhQ';
 			$embed_url = "https://www.google.com/maps/embed/v1/view?key={$api_key}&center={$lat},{$long}&zoom={$zoom}&maptype=roadmap";
 			$thumbnail_url = "https://maps.googleapis.com/maps/api/staticmap?key={$api_key}&center={$lat},{$long}&zoom={$zoom}&maptype=roadmap&size={$max_width}x{$max_height}";
 
@@ -1265,15 +1172,16 @@ EOT;
 
 	#########################################################
 
-	function PrepareUploadedFile($FieldName, $MaxSize, $FileTypes='jpg|jpeg|gif|png', $NoRename=false, $dir=""){
+	function PrepareUploadedFile($FieldName, $MaxSize, $FileTypes = 'jpg|jpeg|gif|png', $NoRename = false, $dir = ''){
 		global $Translation;
 		$f = $_FILES[$FieldName];
+		if($f['error'] == 4 || !$f['name']) return '';
 
 		$dir = getUploadDir($dir);
 
 		/* get php.ini upload_max_filesize in bytes */
 		$php_upload_size_limit = trim(ini_get('upload_max_filesize'));
-		$last = strtolower($php_upload_size_limit[strlen($php_upload_size_limit)-1]);
+		$last = strtolower($php_upload_size_limit[strlen($php_upload_size_limit) - 1]);
 		switch($last){
 			case 'g':
 				$php_upload_size_limit *= 1024;
@@ -1285,38 +1193,27 @@ EOT;
 
 		$MaxSize = min($MaxSize, $php_upload_size_limit);
 
-		if($f['error'] != 4 && $f['name']!=''){
-			if($f['size']>$MaxSize || $f['error']){
-				echo error_message(str_replace('<MaxSize>', intval($MaxSize / 1024), $Translation['file too large']));
-				exit;
-			}
-			if(!preg_match('/\.('.$FileTypes.')$/i', $f['name'], $ft)){
-				echo error_message(str_replace('<FileTypes>', str_replace('|', ', ', $FileTypes), $Translation['invalid file type']));
-				exit;
-			}
-
-			if($NoRename){
-				$n  = str_replace(' ', '_', $f['name']);
-			}else{
-				$n  = microtime();
-				$n  = str_replace(' ', '_', $n);
-				$n  = str_replace('0.', '', $n);
-				$n .= $ft[0];
-			}
-
-			if(!file_exists($dir)){
-				@mkdir($dir, 0777);
-			}
-
-			if(!@move_uploaded_file($f['tmp_name'], $dir . $n)){
-				echo error_message("Couldn't save the uploaded file. Try chmoding the upload folder '{$dir}' to 777.");
-				exit;
-			}else{
-				@chmod($dir.$n, 0666);
-				return $n;
-			}
+		if($f['size'] > $MaxSize || $f['error']){
+			echo error_message(str_replace('<MaxSize>', intval($MaxSize / 1024), $Translation['file too large']));
+			exit;
 		}
-		return "";
+		if(!preg_match('/\.(' . $FileTypes . ')$/i', $f['name'], $ft)){
+			echo error_message(str_replace('<FileTypes>', str_replace('|', ', ', $FileTypes), $Translation['invalid file type']));
+			exit;
+		}
+
+		$name = str_replace(' ', '_', $f['name']);
+		if(!$NoRename) $name = substr(md5(microtime() . rand(0, 100000)), -17) . $ft[0];
+
+		if(!file_exists($dir)) @mkdir($dir, 0777);
+
+		if(!@move_uploaded_file($f['tmp_name'], $dir . $name)){
+			echo error_message("Couldn't save the uploaded file. Try chmoding the upload folder '{$dir}' to 777.");
+			exit;
+		}
+
+		@chmod($dir . $name, 0666);
+		return $name;
 	}
 
 	#########################################################
@@ -1353,6 +1250,34 @@ EOT;
 		$html = ob_get_contents();
 		ob_end_clean();
 
+		return $html;
+	}
+
+	#########################################################
+
+	function quick_search_html($search_term, $label, $separate_dv = true){
+		global $Translation;
+
+		$safe_search = html_attr($search_term);
+		$safe_label = html_attr($label);
+		$safe_clear_label = html_attr($Translation['Reset Filters']);
+
+		if($separate_dv){
+			$reset_selection = "document.myform.SelectedID.value = '';";
+		}else{
+			$reset_selection = "document.myform.writeAttribute('novalidate', 'novalidate');";
+		}
+		$reset_selection .= ' document.myform.NoDV.value=1; return true;';
+
+		$html = <<<EOT
+		<div class="input-group" id="quick-search">
+			<input type="text" id="SearchString" name="SearchString" value="{$safe_search}" class="form-control" placeholder="{$safe_label}">
+			<span class="input-group-btn">
+				<button name="Search_x" value="1" id="Search" type="submit" onClick="{$reset_selection}" class="btn btn-default" title="{$safe_label}"><i class="glyphicon glyphicon-search"></i></button>
+				<button name="ClearQuickSearch" value="1" id="ClearQuickSearch" type="submit" onClick="\$j('#SearchString').val(''); {$reset_selection}" class="btn btn-default" title="{$safe_clear_label}"><i class="glyphicon glyphicon-remove-circle"></i></button>
+			</span>
+		</div>
+EOT;
 		return $html;
 	}
 

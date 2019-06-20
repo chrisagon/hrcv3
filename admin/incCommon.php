@@ -1,6 +1,9 @@
 <?php
 	error_reporting(E_ERROR | E_WARNING | E_PARSE);
 
+	// incCommon.php is included only in the admin area, so if this flag is defined, this indicates we're in admin area
+	define('ADMIN_AREA', true);
+
 	if(!defined('datalist_db_encoding')) define('datalist_db_encoding', 'UTF-8');
 	if(function_exists('set_magic_quotes_runtime')) @set_magic_quotes_runtime(0);
 	ob_start();
@@ -18,6 +21,12 @@
 	include("{$currDir}/../language.php");
 	include("{$currDir}/../defaultLang.php");
 	include("{$currDir}/../language-admin.php");
+
+	// detecting classes not included above
+	@spl_autoload_register(function($class) {
+		$admin_dir = dirname(__FILE__);
+		@include("{$admin_dir}/../resources/lib/{$class}.php");
+	});
 
 	/* trim $_POST, $_GET, $_REQUEST */
 	if(count($_POST)) $_POST = array_trim($_POST);
@@ -48,9 +57,10 @@
 	@ini_set('session.serialize_handler', 'php');
 	@ini_set('session.use_cookies', '1');
 	@ini_set('session.use_only_cookies', '1');
-	@header('Cache-Control: no-cache, no-store, must-revalidate'); // HTTP 1.1.
-	@header('Pragma: no-cache'); // HTTP 1.0.
-	@header('Expires: 0'); // Proxies.
+	@ini_set('session.cookie_httponly', '1');
+	@ini_set('session.use_strict_mode', '1');
+	@session_cache_expire(2);
+	@session_cache_limiter($_SERVER['REQUEST_METHOD'] == 'POST' ? 'private' : 'nocache');
 	@session_name('hrcv3');
 	session_start();
 
@@ -62,22 +72,24 @@
 	########################################################################
 
 	// do we have an admin log out request?
-	if($_GET['signOut']==1){
+	if(isset($_GET['signOut'])){
 		logOutUser();
-		?><META HTTP-EQUIV="Refresh" CONTENT="0;url=../index.php"><?php
-		exit;
+		redirect('../index.php?signIn=1');
 	}
 
-	// is there a logged user?
-	if(!$uname=getLoggedAdmin()){
-		// is there a user trying to log in?
-		if(!checkUser($_POST['username'], $_POST['password'])){
-			// display login form
-			?><META HTTP-EQUIV="Refresh" CONTENT="0;url=../index.php?signIn=1"><?php
-			exit;
-		}else{
-			redirect('admin/pageHome.php');
-		}
+	// renew remember-me token, if applicable
+	$remember_check = RememberMe::check();
+
+	// is there a logged admin user?
+	if(!($uname = getLoggedAdmin())) {
+		// if no remember-me cookie, redirect to login page
+		if(!$remember_check) die('<META HTTP-EQUIV="Refresh" CONTENT="0;url=../index.php">');
+
+		// get username from remeber-me cookie, set session and redirect to admin homepage
+		$uname = makeSafe(strtolower(RememberMe::user()));
+		$_SESSION['memberID'] = $uname;
+		$_SESSION['memberGroupID'] = sqlValue("SELECT `groupID` FROM `membership_users` WHERE LCASE(`memberID`)='{$uname}'");
+		redirect('admin/pageHome.php');
 	}
 
 ?>

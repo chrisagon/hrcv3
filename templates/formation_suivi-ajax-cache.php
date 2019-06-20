@@ -1,12 +1,16 @@
+<?php
+	$rdata = array_map('to_utf8', array_map('nl2br', array_map('html_attr_tags_ok', $rdata)));
+	$jdata = array_map('to_utf8', array_map('nl2br', array_map('html_attr_tags_ok', $jdata)));
+?>
 <script>
 	$j(function(){
 		var tn = 'formation_suivi';
 
 		/* data for selected record, or defaults if none is selected */
 		var data = {
-			competence_principale: '<?php echo $jdata['competence_principale']; ?>',
-			competence_secondaire: { id: '<?php echo $rdata['competence_secondaire']; ?>', value: '<?php echo $rdata['competence_secondaire']; ?>', text: '<?php echo $jdata['competence_secondaire']; ?>' },
-			consultant_id: { id: '<?php echo $rdata['consultant_id']; ?>', value: '<?php echo $rdata['consultant_id']; ?>', text: '<?php echo $jdata['consultant_id']; ?>' }
+			competence_principale: <?php echo json_encode($jdata['competence_principale']); ?>,
+			competence_secondaire: <?php echo json_encode(array('id' => $rdata['competence_secondaire'], 'value' => $rdata['competence_secondaire'], 'text' => $jdata['competence_secondaire'])); ?>,
+			consultant_id: <?php echo json_encode(array('id' => $rdata['consultant_id'], 'value' => $rdata['consultant_id'], 'text' => $jdata['consultant_id'])); ?>
 		};
 
 		/* initialize or continue using AppGini.cache for the current table */

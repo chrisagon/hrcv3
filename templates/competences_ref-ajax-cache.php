@@ -1,10 +1,14 @@
+<?php
+	$rdata = array_map('to_utf8', array_map('nl2br', array_map('html_attr_tags_ok', $rdata)));
+	$jdata = array_map('to_utf8', array_map('nl2br', array_map('html_attr_tags_ok', $jdata)));
+?>
 <script>
 	$j(function(){
 		var tn = 'competences_ref';
 
 		/* data for selected record, or defaults if none is selected */
 		var data = {
-			domaine_principal: { id: '<?php echo $rdata['domaine_principal']; ?>', value: '<?php echo $rdata['domaine_principal']; ?>', text: '<?php echo $jdata['domaine_principal']; ?>' }
+			domaine_principal: <?php echo json_encode(array('id' => $rdata['domaine_principal'], 'value' => $rdata['domaine_principal'], 'text' => $jdata['domaine_principal'])); ?>
 		};
 
 		/* initialize or continue using AppGini.cache for the current table */

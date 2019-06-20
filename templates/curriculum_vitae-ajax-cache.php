@@ -1,10 +1,14 @@
+<?php
+	$rdata = array_map('to_utf8', array_map('nl2br', array_map('html_attr_tags_ok', $rdata)));
+	$jdata = array_map('to_utf8', array_map('nl2br', array_map('html_attr_tags_ok', $jdata)));
+?>
 <script>
 	$j(function(){
 		var tn = 'curriculum_vitae';
 
 		/* data for selected record, or defaults if none is selected */
 		var data = {
-			du_consultant: { id: '<?php echo $rdata['du_consultant']; ?>', value: '<?php echo $rdata['du_consultant']; ?>', text: '<?php echo $jdata['du_consultant']; ?>' }
+			du_consultant: <?php echo json_encode(array('id' => $rdata['du_consultant'], 'value' => $rdata['du_consultant'], 'text' => $jdata['du_consultant'])); ?>
 		};
 
 		/* initialize or continue using AppGini.cache for the current table */

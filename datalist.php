@@ -1,7 +1,7 @@
 <?php
 
 define('datalist_filters_count', 20);
-define('datalist_image_uploads_exist', True);
+define('datalist_image_uploads_exist', true);
 define('datalist_max_records_multi_selection', 1000);
 define('datalist_max_page_lump', 50);
 define('datalist_max_records_dv_print', 100);
@@ -43,6 +43,7 @@ class DataList{
 		$AllowSorting,
 		$AllowNavigation,
 		$AllowPrinting,
+		$AllowPrintingDV,
 		$HideTableView,
 		$AllowCSV,
 		$CSVSeparator,
@@ -63,7 +64,6 @@ class DataList{
 		$TemplateDV,
 		$TemplateDVP,
 		$ShowTableHeader, // 1 = show standard table headers
-		$ShowRecordSlots, // 1 = show empty record slots in table view
 		$TVClasses,
 		$DVClasses,
 		// End of templates variables
@@ -85,6 +85,7 @@ class DataList{
 		$this->AllowFilters = 1;
 		$this->AllowNavigation = 1;
 		$this->AllowPrinting = 1;
+		$this->AllowPrintingDV = 1;
 		$this->HideTableView = 0;
 		$this->QuickSearch = 0;
 		$this->AllowCSV = 0;
@@ -138,16 +139,6 @@ class DataList{
 		$Search_x = $_REQUEST["Search_x"];
 		$SearchString = (get_magic_quotes_gpc() ? stripslashes($_REQUEST['SearchString']) : $_REQUEST['SearchString']);
 		$CSV_x = $_REQUEST["CSV_x"];
-
-		$FilterAnd = $_REQUEST["FilterAnd"];
-		$FilterField = $_REQUEST["FilterField"];
-		$FilterOperator = $_REQUEST["FilterOperator"];
-		if(is_array($_REQUEST['FilterValue'])){
-			foreach($_REQUEST['FilterValue'] as $fvi=>$fv){
-				$FilterValue[$fvi]=(get_magic_quotes_gpc() ? stripslashes($fv) : $fv);
-			}
-		}
-
 		$Print_x = $_REQUEST['Print_x'];
 		$PrintTV = $_REQUEST['PrintTV'];
 		$PrintDV = $_REQUEST['PrintDV'];
@@ -160,29 +151,15 @@ class DataList{
 		$addNew_x = $_REQUEST['addNew_x'];
 		$dvprint_x = $_REQUEST['dvprint_x'];
 		$DisplayRecords = (in_array($_REQUEST['DisplayRecords'], array('user', 'group')) ? $_REQUEST['DisplayRecords'] : 'all');
+		list($FilterAnd, $FilterField, $FilterOperator, $FilterValue) = $this->validate_filters($_REQUEST, $FiltersPerGroup);
+		$record_selector = array();
+		if(isset($_REQUEST['record_selector']) && is_array($_REQUEST['record_selector']))
+			$record_selector = $_REQUEST['record_selector'];
+
 
 		$mi = getMemberInfo();
 
-	// insure authenticity of user inputs:
-		if(is_array($FilterAnd)){
-			foreach($FilterAnd as $i => $f){
-				if($f && !preg_match('/^(and|or)$/i', trim($f))){
-					$FilterAnd[$i] = 'and';
-				}
-			}
-		}
-		if(is_array($FilterField)){
-			foreach($FilterField as $ffi => $ffn){
-				$FilterField[$ffi] = intval($ffn);
-			}
-		}
-		if(is_array($FilterOperator)){
-			foreach($FilterOperator as $i => $f){
-				if($f && !in_array(trim($f), array_keys($GLOBALS['filter_operators']))){
-					$FilterOperator[$i] = '';
-				}
-			}
-		}
+	// validate user inputs
 		if(!preg_match('/^\s*[1-9][0-9]*\s*(asc|desc)?(\s*,\s*[1-9][0-9]*\s*(asc|desc)?)*$/i', $SortField)){
 			$SortField = '';
 		}
@@ -190,42 +167,23 @@ class DataList{
 			$SortDirection = '';
 		}
 
-		if(!$this->AllowDelete){
-			$delete_x = '';
-		}
-		if(!$this->AllowDeleteOfParents){
-			$SkipChecks = '';
-		}
-		if(!$this->AllowInsert){
-			$insert_x = '';
-			$addNew_x = '';
-		}
-		if(!$this->AllowUpdate){
-			$update_x = '';
-		}
-		if(!$this->AllowFilters){
-			$Filter_x = '';
-		}
-		if(!$this->AllowPrinting){
-			$Print_x = '';
-			$PrintTV = '';
-		}
-		if(!$this->QuickSearch){
-			$SearchString = '';
-		}
-		if(!$this->AllowCSV){
-			$CSV_x = '';
-		}
+		if(!$this->AllowDelete) $delete_x = '';
+		if(!$this->AllowDeleteOfParents) $SkipChecks = '';
+		if(!$this->AllowInsert) $insert_x = $addNew_x = '';
+		if(!$this->AllowUpdate) $update_x = '';
+		if(!$this->AllowFilters) $Filter_x = '';
+		if(!$this->AllowPrinting) $Print_x = $PrintTV = '';
+		if(!$this->AllowPrintingDV) $PrintDV = '';
+		if(!$this->QuickSearch) $SearchString = '';
+		if(!$this->AllowCSV) $CSV_x = '';
 
 	// enforce record selection if user has edit/delete permissions on the current table
-		$AllowPrintDV=1;
 		$this->Permissions=getTablePermissions($this->TableName);
 		if($this->Permissions[3] || $this->Permissions[4]){ // current user can edit or delete?
 			$this->AllowSelection = 1;
 		}elseif(!$this->AllowSelection){
-			$SelectedID='';
-			$AllowPrintDV=0;
-			$PrintDV='';
+			$SelectedID = '';
+			$PrintDV = '';
 		}
 
 		if(!$this->AllowSelection || !$SelectedID){ $dvprint_x=''; }
@@ -246,7 +204,7 @@ class DataList{
 			elseif($Filter_x != '') $current_view = 'Filters';
 		}
 
-		$this->HTML .= '<div class="row"><div class="col-xs-11 col-md-12">';
+		$this->HTML .= '<div class="row"><div class="col-xs-12">';
 		$this->HTML .= '<form ' . (datalist_image_uploads_exist ? 'enctype="multipart/form-data" ' : '') . 'method="post" name="myform" action="' . $this->ScriptFileName . '">';
 		if($Embedded) $this->HTML .= '<input name="Embedded" value="1" type="hidden">';
 		if($AutoClose) $this->HTML .= '<input name="AutoClose" value="1" type="hidden">';
@@ -284,7 +242,7 @@ class DataList{
 			foreach($this->filterers as $filterer => $caption){
 				if($_REQUEST['filterer_' . $filterer] != '') $filtersGET .= '&filterer_' . $filterer . '=' . urlencode($_REQUEST['filterer_' . $filterer]);
 			}
-			for($i = 1; $i <= (20 * $FiltersPerGroup); $i++){ // Number of filters allowed
+			for($i = 1; $i <= (datalist_filters_count * $FiltersPerGroup); $i++){ // Number of filters allowed
 				if($FilterField[$i] != '' && $FilterOperator[$i] != '' && ($FilterValue[$i] != '' || strpos($FilterOperator[$i], 'empty'))){
 					$filtersGET .= "&FilterAnd[{$i}]={$FilterAnd[$i]}&FilterField[{$i}]={$FilterField[$i]}&FilterOperator[{$i}]={$FilterOperator[$i]}&FilterValue[{$i}]=" . urlencode($FilterValue[$i]);
 				}
@@ -334,7 +292,7 @@ class DataList{
 
 				/* close window if embedded */
 				if($Embedded){
-					$this->HTML .= '<script>$j(function(){ setTimeout(function(){ window.parent.jQuery(".modal").modal("hide"); }, 2000); })</script>';
+					$this->HTML .= '<script>$j(function(){ setTimeout(function(){ AppGini.closeParentModal(); }, 2000); })</script>';
 				}
 			}
 		}
@@ -349,7 +307,7 @@ class DataList{
 			foreach($this->filterers as $filterer => $caption){
 				if($_REQUEST['filterer_' . $filterer] != '') $filtersGET .= '&filterer_' . $filterer . '=' . urlencode($_REQUEST['filterer_' . $filterer]);
 			}
-			for($i = 1; $i <= (20 * $FiltersPerGroup); $i++){ // Number of filters allowed
+			for($i = 1; $i <= (datalist_filters_count * $FiltersPerGroup); $i++){ // Number of filters allowed
 				if($FilterField[$i] != '' && $FilterOperator[$i] != '' && ($FilterValue[$i] != '' || strpos($FilterOperator[$i], 'empty'))){
 					$filtersGET .= "&FilterAnd[{$i}]={$FilterAnd[$i]}&FilterField[{$i}]={$FilterField[$i]}&FilterOperator[{$i}]={$FilterOperator[$i]}&FilterValue[{$i}]=" . urlencode($FilterValue[$i]);
 				}
@@ -379,7 +337,7 @@ class DataList{
 
 		elseif($SaveFilter_x != '' && $this->AllowSavingFilters){
 			$filter_link = $_SERVER['HTTP_REFERER'] . '?SortField=' . urlencode($SortField) . '&SortDirection=' . $SortDirection . '&';
-			for($i = 1; $i <= (20 * $FiltersPerGroup); $i++){ // Number of filters allowed
+			for($i = 1; $i <= (datalist_filters_count * $FiltersPerGroup); $i++){ // Number of filters allowed
 				if(($FilterField[$i] != '' || $i == 1) && $FilterOperator[$i] != '' && ($FilterValue[$i] != '' || strpos($FilterOperator[$i], 'empty'))){
 					$filter_link .= urlencode("FilterAnd[$i]") . '=' . urlencode($FilterAnd[$i]) . '&';
 					$filter_link .= urlencode("FilterField[$i]") . '=' . urlencode($FilterField[$i]) . '&';
@@ -540,20 +498,16 @@ class DataList{
 							$FilterAnd[$i+$j]='and';
 						}
 						// test for date/time fields
-						$tries=0; $isDateTime=FALSE; $isDate=FALSE;
+						$tries = 0; $isDateTime = $isDate = false;
 						$fieldName=str_replace('`', '', $this->QueryFieldsIndexed[($FilterField[$i+$j])]);
 						list($tn, $fn)=explode('.', $fieldName);
-						while(!($res=sql("show columns from `$tn` like '$fn'", $eo)) && $tries<2){
+						while(!($res = sql("show columns from `{$tn}` like '{$fn}'", $eo)) && $tries < 2){
 							$tn=substr($tn, 0, -1);
 							$tries++;
 						}
 						if($row = @db_fetch_array($res)){
-							if($row['Type']=='date' || $row['Type']=='time'){
-								$isDateTime=TRUE;
-								if($row['Type']=='date'){
-									$isDate=True;
-								}
-							}
+							$isDateTime = in_array($row['Type'], array('date', 'time', 'datetime'));
+							$isDate = in_array($row['Type'], array('date', 'datetime'));
 						}
 						// end of test
 						if($FilterOperator[$i+$j]=='is-empty' && !$isDateTime){
@@ -569,7 +523,7 @@ class DataList{
 						}elseif($FilterOperator[$i+$j]=='not-like' && !strstr($FilterValue[$i+$j], "%") && !strstr($FilterValue[$i+$j], "_")){
 							$this->QueryWhere .= " <FilterItem> " . $FilterAnd[$i+$j] . " " . $this->QueryFieldsIndexed[($FilterField[$i+$j])] . " not like '%" . makeSafe($FilterValue[$i+$j]) . "%' </FilterItem>";
 						}elseif($isDate){
-							$dateValue = toMySQLDate($FilterValue[$i+$j]);
+							$dateValue = mysql_datetime($FilterValue[$i + $j]);
 							$this->QueryWhere .= " <FilterItem> " . $FilterAnd[$i+$j] . " " . $this->QueryFieldsIndexed[($FilterField[$i+$j])] . " " . $GLOBALS['filter_operators'][$FilterOperator[$i+$j]] . " '$dateValue' </FilterItem>";
 						}else{
 							$this->QueryWhere .= " <FilterItem> " . $FilterAnd[$i+$j] . " " . $this->QueryFieldsIndexed[($FilterField[$i+$j])] . " " . $GLOBALS['filter_operators'][$FilterOperator[$i+$j]] . " '" . makeSafe($FilterValue[$i+$j]) . "' </FilterItem>";
@@ -665,7 +619,7 @@ class DataList{
 			header("Content-Type: application/force-download");
 			header("Content-Length: " . (string)(strlen($this->HTML)));
 			header("Content-Transfer-Encoding: Binary");
-			header("Content-Disposition: attachment; filename=$this->TableName.csv");
+			header("Content-Disposition: attachment; filename={$this->TableName}.csv");
 
 		// send output and quit script
 			echo $this->HTML;
@@ -724,13 +678,7 @@ class DataList{
 					$buttonsCount++;
 				}
 
-				$quick_search_html .= '<div class="input-group" id="quick-search">';
-					$quick_search_html .= '<input type="text" name="SearchString" value="' . html_attr($SearchString) . '" class="form-control" placeholder="' . html_attr($this->QuickSearchText) . '">';
-					$quick_search_html .= '<span class="input-group-btn">';
-						$quick_search_html .= '<button name="Search_x" value="1" id="Search" type="submit" onClick="' . $resetSelection . ' document.myform.NoDV.value=1; return true;"  class="btn btn-default" title="' . html_attr($this->QuickSearchText) . '"><i class="glyphicon glyphicon-search"></i></button>';
-						$quick_search_html .= '<button name="NoFilter_x" value="1" id="NoFilter_x" type="submit" onClick="' . $resetSelection . ' document.myform.NoDV.value=1; return true;"  class="btn btn-default" title="' . html_attr($Translation['Reset Filters']) . '"><i class="glyphicon glyphicon-remove-circle"></i></button>';
-					$quick_search_html .= '</span>';
-				$quick_search_html .= '</div>';
+				$quick_search_html .= quick_search_html($SearchString, $this->QuickSearchText, $this->SeparateDV);
 			}else{
 				$buttons_all .= '<button class="btn btn-primary" type="button" id="sendToPrinter" onClick="window.print();"><i class="glyphicon glyphicon-print"></i> ' . $Translation['Print'] . '</button>';
 				$buttons_all .= '<button class="btn btn-default" type="submit"><i class="glyphicon glyphicon-remove-circle"></i> ' . $Translation['Cancel Printing'] . '</button>';
@@ -739,7 +687,7 @@ class DataList{
 			/* if user can print DV, add action to 'More' menu */
 			$selected_records_more = array();
 
-			if($AllowPrintDV){
+			if($this->AllowPrintingDV){
 				$selected_records_more[] = array(
 					'function' => ($this->SeparateDV ? 'print_multiple_dv_sdv' : 'print_multiple_dv_tvdv'),
 					'title' => $Translation['Print Preview Detail View'],
@@ -816,6 +764,10 @@ class DataList{
 						$this->HTML .= '<div class="row">';
 							$this->HTML .= '<div class="col-sm-8">';
 								$this->HTML .= '<a style="text-decoration: none; color: inherit;" href="' . $this->TableName . '_view.php"><img src="' . $this->TableIcon . '"> ' . $this->TableTitle . '</a>';
+								/* show add new button if user can insert and there is a selected record */
+								if($SelectedID && $this->Permissions[1] && !$this->SeparateDV && $this->AllowInsert){
+									$this->HTML .= ' <button type="submit" id="addNew" name="addNew_x" value="1" class="btn btn-success"><i class="glyphicon glyphicon-plus-sign"></i> ' . $Translation['Add New'] . '</button>';
+								}
 							$this->HTML .= '</div>';
 							if($this->QuickSearch){
 								$this->HTML .= '<div class="col-sm-4">';
@@ -830,10 +782,11 @@ class DataList{
 					/* .all_records: container for buttons that don't need a selection */
 					/* .selected_records: container for buttons that need a selection */
 					$this->HTML .= '<div class="btn-group btn-group-lg visible-md visible-lg all_records pull-left">' . $buttons_all . '</div>';
-					$this->HTML .= '<div class="btn-group btn-group-lg visible-md visible-lg selected_records hidden pull-left hspacer-lg">' . $buttons_selected . ($actual_more_count ? $more_menu : '') . '</div>';
+					$this->HTML .= '<div class="btn-group btn-group-lg visible-md visible-lg selected_records hidden pull-left hspacer-lg">' . ($actual_more_count ? $more_menu : '') . '</div>';
 					$this->HTML .= '<div class="btn-group-vertical btn-group-lg visible-xs visible-sm all_records">' . $buttons_all . '</div>';
-					$this->HTML .= '<div class="btn-group-vertical btn-group-lg visible-xs visible-sm selected_records hidden vspacer-lg">' . $buttons_selected . ($actual_more_count ? $more_menu : '') . '</div>';
-					$this->HTML .= '<div class="clearfix"></div><p></p>';
+					$this->HTML .= '<div class="btn-group-vertical btn-group-lg visible-xs visible-sm selected_records hidden vspacer-lg">' . ($actual_more_count ? $more_menu : '') . '</div>';
+					$this->HTML .= $this->tv_tools();
+					$this->HTML .= '<p></p>';
 				$this->HTML .= '</div>';
 
 				$this->HTML .= '<div class="row"><div class="table_view col-xs-12 ' . $this->TVClasses . '">';
@@ -987,8 +940,6 @@ class DataList{
 			$this->HTML .= "\n\t</tr>\n\n</thead>\n\n<tbody><!-- tv data below -->\n";
 
 			$i = 0;
-			$hc=new CI_Input();
-			$hc->charset = datalist_db_encoding;
 			if($RecordCount){
 				$i = $FirstRecord;
 			// execute query for table view
@@ -1004,7 +955,7 @@ class DataList{
 				$result = sql($tvQuery . " limit " . ($i-1) . ",{$this->RecordsPerPage}", $eo);
 				while(($row = db_fetch_array($result)) && ($i < ($FirstRecord + $this->RecordsPerPage))){
 					/* skip displaying the current record if we're in TVP or multiple DVP and the record is not checked */
-					if(($PrintTV || $Print_x) && count($_REQUEST['record_selector']) && !in_array($row[$FieldCountTV], $_REQUEST['record_selector'])) continue;
+					if(($PrintTV || $Print_x) && count($record_selector) && !in_array($row[$FieldCountTV], $record_selector)) continue;
 
 					$attr_id = html_attr($row[$FieldCountTV]); /* pk value suitable for inserting into html tag attributes */
 					$js_id = addslashes($row[$FieldCountTV]); /* pk value suitable for inserting into js strings */
@@ -1014,7 +965,7 @@ class DataList{
 
 					if(!$Print_x){
 						$this->HTML .= ($SelectedID == $row[$FieldCountTV] ? '<tr class="active">' : '<tr>');
-						$checked = (is_array($_REQUEST['record_selector']) && in_array($row[$FieldCountTV], $_REQUEST['record_selector']) ? ' checked' : '');
+						$checked = (is_array($record_selector) && in_array($row[$FieldCountTV], $record_selector) ? ' checked' : '');
 						$this->HTML .= "<td class=\"text-center\"><input class=\"hidden-print record_selector\" type=\"checkbox\" id=\"record_selector_{$attr_id}\" name=\"record_selector[]\" value=\"{$attr_id}\"{$checked}></td>";
 					}
 
@@ -1036,14 +987,7 @@ class DataList{
 						for($j = 0; $j < $FieldCountTV; $j++){
 							$fieldTVCaption = current(array_slice($this->QueryFieldsTV, $j, 1));
 
-							$fd = $row[$j];
-							/* apply nl2br only for non-HTML data */
-							if($row[$j] == strip_tags($row[$j])){
-								$fd = nl2br($row[$j]);
-							}
-
-							/* Sanitize output against XSS attacks */
-							$fd = $hc->xss_clean($fd);
+							$fd = safe_html($row[$j]);
 
 							/*
 								the TV template could contain field placeholders in the format 
@@ -1094,7 +1038,7 @@ class DataList{
 				$pagesMenu = '';
 				if($RecordCount > $this->RecordsPerPage){
 					$pagesMenuId = "{$this->TableName}_pagesMenu";
-					$pagesMenu = $Translation['go to page'] . ' <select class="input-sm" id="' . $pagesMenuId . '" onChange="document.myform.writeAttribute(\'novalidate\', \'novalidate\'); document.myform.NoDV.value=1; document.myform.FirstRecord.value=(this.value * ' . $this->RecordsPerPage . '+1); document.myform.submit();">';
+					$pagesMenu = $Translation['go to page'] . ' <select style="width: 90%; max-width: 8em;" class="input-sm ltr" id="' . $pagesMenuId . '" onChange="document.myform.writeAttribute(\'novalidate\', \'novalidate\'); document.myform.NoDV.value=1; document.myform.FirstRecord.value=(this.value * ' . $this->RecordsPerPage . '+1); document.myform.submit();">';
 					$pagesMenu .= '</select>';
 
 					$pagesMenu .= '<script>';
@@ -1176,20 +1120,20 @@ class DataList{
 			$this->HTML .= "</table></div>\n";
 
 			/* highlight quick search matches */
-			if($SearchString!='') $this->HTML .= '<script>$j(function(){ $j(".table-responsive td").mark("' . html_attr($SearchString) . '", { className: "text-warning bg-warning", diacritics: false }); })</script>';
+			if($SearchString!='') $this->HTML .= '<script>$j(function(){ $j(".table-responsive td").mark("' . html_attr($SearchString) . '", { className: "text-bold bg-warning", diacritics: false }); })</script>';
 
 			if($Print_x == '' && $i){ // TV
 				$this->HTML .= '<div class="row pagination-section">';
-					$this->HTML .= '<div class="col-sm-4 col-md-3 col-lg-2 vspacer-lg">';
-						$this->HTML .= '<button onClick="' . $resetSelection . ' document.myform.NoDV.value = 1; return true;" type="submit" name="Previous_x" id="Previous" value="1" class="btn btn-default btn-block"><i class="glyphicon glyphicon-chevron-left"></i> ' . $Translation['Previous'] . '</button>';
+					$this->HTML .= '<div class="col-xs-4 col-md-3 col-lg-2 vspacer-lg">';
+						if($FirstRecord > 1) $this->HTML .= '<button onClick="' . $resetSelection . ' document.myform.NoDV.value = 1; return true;" type="submit" name="Previous_x" id="Previous" value="1" class="btn btn-default btn-block"><i class="glyphicon glyphicon-chevron-left"></i> <span class="hidden-xs">' . $Translation['Previous'] . '</span></button>';
 					$this->HTML .= '</div>';
 
-					$this->HTML .= '<div class="col-sm-4 col-md-4 col-lg-2 col-md-offset-1 col-lg-offset-3 text-center vspacer-lg">';
+					$this->HTML .= '<div class="col-xs-4 col-md-4 col-lg-2 col-md-offset-1 col-lg-offset-3 text-center vspacer-lg">';
 						$this->HTML .= $pagesMenu;
 					$this->HTML .= '</div>';
 
-					$this->HTML .= '<div class="col-sm-4 col-md-3 col-lg-2 col-md-offset-1 col-lg-offset-3 text-right vspacer-lg">';
-						$this->HTML .= '<button onClick="'.$resetSelection.' document.myform.NoDV.value=1; return true;" type="submit" name="Next_x" id="Next" value="1" class="btn btn-default btn-block">' . $Translation['Next'] . ' <i class="glyphicon glyphicon-chevron-right"></i></button>';
+					$this->HTML .= '<div class="col-xs-4 col-md-3 col-lg-2 col-md-offset-1 col-lg-offset-3 text-right vspacer-lg">';
+						if($i < $RecordCount) $this->HTML .= '<button onClick="'.$resetSelection.' document.myform.NoDV.value=1; return true;" type="submit" name="Next_x" id="Next" value="1" class="btn btn-default btn-block"><span class="hidden-xs">' . $Translation['Next'] . '</span> <i class="glyphicon glyphicon-chevron-right"></i></button>';
 					$this->HTML .= '</div>';
 				$this->HTML .= '</div>';
 			}
@@ -1244,6 +1188,20 @@ class DataList{
 					$this->ContentType = 'detailview';
 					$dvShown = true;
 				}
+
+				// if we're in embedded mode and a new record has just been inserted,
+				// save its ID to localStorage in order to be used in child DV to
+				// auto-select the new parent
+				if(isset($_REQUEST['record-added-ok']) && $Embedded && $SelectedID) {
+					ob_start();
+					?><script>
+						localStorage.setItem(
+							'<?php echo $this->TableName; ?>_last_added_id', 
+							<?php echo json_encode($SelectedID); ?>
+						);
+					</script><?php
+					$this->HTML .= ob_get_clean();
+				}
 			}
 		}
 
@@ -1262,13 +1220,13 @@ class DataList{
 
 			// count selected records
 			$selectedRecords = 0;
-			if(is_array($_REQUEST['record_selector'])) foreach($_REQUEST['record_selector'] as $id){
+			if(is_array($record_selector)) foreach($record_selector as $id){
 				$selectedRecords++;
 				$this->HTML .= '<input type="hidden" name="record_selector[]" value="' . html_attr($id) . '">'."\n";
 			}
 
 			if($selectedRecords && $selectedRecords <= datalist_max_records_dv_print){ // if records selected > {datalist_max_records_dv_print} don't show DV preview to avoid db performance issues.
-				foreach($_REQUEST['record_selector'] as $id){
+				foreach($record_selector as $id){
 					$dvCode .= call_user_func($this->TableName . '_form', $id, 0, 0, 0, 1, $this->TemplateDV, $this->TemplateDVP);
 				}
 
@@ -1287,16 +1245,228 @@ class DataList{
 
 		// $this->HTML .= '<font face="garamond">'.html_attr($tvQuery).'</font>';  // uncomment this line for debugging the table view query
 
-		if($dvShown && $tvShown) $this->ContentType='tableview+detailview';
-		if($dvprint_x!='') $this->ContentType='print-detailview';
-		if($Print_x!='') $this->ContentType='print-tableview';
-		if($PrintDV!='') $this->ContentType='print-detailview';
+		if($dvShown && $tvShown) $this->ContentType = 'tableview+detailview';
+		if($dvprint_x != '') $this->ContentType = 'print-detailview';
+		if($Print_x != '') $this->ContentType = 'print-tableview';
+		if($PrintDV != '') $this->ContentType = 'print-detailview';
 
 		// call detail view javascript hook file if found
 		$dvJSHooksFile=dirname(__FILE__).'/hooks/'.$this->TableName.'-dv.js';
 		if(is_file($dvJSHooksFile) && ($this->ContentType=='detailview' || $this->ContentType=='tableview+detailview')){
 			$this->HTML.="\n<script src=\"hooks/{$this->TableName}-dv.js\"></script>\n";
 		}
+
+		return;
 	}
+
+	function validate_filters($req, $FiltersPerGroup = 4, $is_gpc = true){
+		$fand = (isset($req['FilterAnd']) && is_array($req['FilterAnd']) ? $req['FilterAnd'] : array());
+		$ffield = (isset($req['FilterField']) && is_array($req['FilterField']) ? $req['FilterField'] : array());
+		$fop = (isset($req['FilterOperator']) && is_array($req['FilterOperator']) ? $req['FilterOperator'] : array());
+		$fvalue = (isset($req['FilterValue']) && is_array($req['FilterValue']) ? $req['FilterValue'] : array());
+
+		/* make sure FilterAnd is either 'and' or 'or' */
+		foreach($fand as $i => $f){
+			if($f && !preg_match('/^(and|or)$/i', trim($f))) $fand[$i] = 'and';
+		}
+
+		/* FilterField must be a positive integer */
+		foreach($ffield as $ffi => $ffn){
+			$ffield[$ffi] = max(0, intval($ffn));
+		}
+
+		/* validate FilterOperator */
+		foreach($fop as $i => $f){
+			$fop[$i] = trim($f);
+			if($f && !in_array(trim($f), array_keys($GLOBALS['filter_operators']))){
+				$fop[$i] = '';
+			}
+		}
+
+		/* undo magic quotes if gpc */
+		if($is_gpc){
+			foreach($fvalue as $fvi => $fv){
+				$fvalue[$fvi] = (get_magic_quotes_gpc() ? stripslashes($fv) : $fv);
+			}
+		}
+
+		/* clear fand, ffield and fop for filters having no value or no field */
+		/* assume equal-to op and 'and' if missing */
+		for($i = 1; $i <= datalist_filters_count * $FiltersPerGroup; $i++){
+			if(!isset($fand[$i]) && !isset($ffield[$i]) && !isset($fop[$i]) && !isset($fvalue[$i])) continue;
+
+			if(($fvalue[$i] == '' && !in_array($fop[$i], array('is-empty', 'is-not-empty'))) || !$ffield[$i]){
+				unset($ffield[$i], $fop[$i], $fvalue[$i]);
+				if($i % $FiltersPerGroup != 1) unset($fand[$i]);
+			}else{
+				if(!$fand[$i]) $fand[$i] = 'and';
+				if(!$fop[$i]) $fop[$i] = 'equal-to';
+			}
+		}
+
+		/* empty FilterAnd for empty groups or set to 'and' if empty while group not empty */
+		for($i = 1; $i <= datalist_filters_count * $FiltersPerGroup; $i += $FiltersPerGroup){
+			$empty_group = true;
+
+			for($j = $i; $j < ($i + $FiltersPerGroup); $j++){
+				if($ffield[$j]) $empty_group = false;
+			}
+
+			if($empty_group){
+				$fand[$i] = '';
+				continue;
+			}
+
+			if(!$fand[$i]) $fand[$i] = 'and';
+		}
+
+		return array($fand, $ffield, $fop, $fvalue);
+	}
+
+	/**
+	 *  @brief Returns HTML/JS code for displaying TV table options (hide/show columns)
+	 */
+	function tv_tools(){
+		global $Translation;
+
+		ob_start();
+		?>
+
+		<?php if($this->ShowTableHeader){ ?>
+			<div class="pull-right flip btn-group vspacer-md tv-tools">
+				<button title="<?php echo html_attr($Translation['hide/show columns']); ?>" type="button" class="btn btn-default tv-toggle" data-toggle="collapse" data-target="#toggle-columns-container"><i class="glyphicon glyphicon-align-justify rotate90"></i></button>
+			</div>
+		<?php } ?>
+
+		<div class="pull-right flip btn-group vspacer-md hspacer-md tv-tools">
+			<button title="<?php echo html_attr($Translation['previous column']); ?>" type="button" class="btn btn-default tv-scroll" onclick="AppGini.TVScroll().less()"><i class="glyphicon glyphicon-step-backward"></i></button>
+			<button title="<?php echo html_attr($Translation['next column']); ?>" type="button" class="btn btn-default tv-scroll" onclick="AppGini.TVScroll().more()"><i class="glyphicon glyphicon-step-forward"></i></button>
+		</div>
+		<div class="clearfix"></div>
+
+		<?php if($this->ShowTableHeader){ ?>
+			<div class="collapse" id="toggle-columns-container">
+				<div class="well pull-right flip" style="width: 100%; max-width: 600px;">
+					<div class="row" id="toggle-columns">
+						<div class="col-md-12">
+							<div class="btn-group" style="width: 100%;">
+								<button type="button" class="btn btn-default" id="show-all-columns" style="width: 33.3%;"><i class="glyphicon glyphicon-check"></i> <?php echo $Translation['Reset Filters']; ?></button>
+								<button type="button" class="btn btn-default" id="hide-all-columns" style="width: 33.3%;"><i class="glyphicon glyphicon-unchecked"></i> <?php echo $Translation['hide all']; ?></button>
+								<button type="button" class="btn btn-default" id="toggle-columns-checks" style="width: 33.4%;"><i class="glyphicon glyphicon-random"></i> <?php echo $Translation['toggle']; ?></button>
+							</div>
+						</div>
+						<div class="col-md-12"><button type="button" class="btn btn-default btn-block" id="toggle-columns-collapser" data-toggle="collapse" data-target="#toggle-columns-container"><i class="glyphicon glyphicon-ok"></i> <?php echo $Translation['ok']; ?></button></div>
+					</div>
+				</div>
+				<div class="clearfix"></div>
+			</div>
+		<?php } ?>
+
+		<script>
+			$j(function(){
+				/**
+				 *  @brief Saves/retrieves value of column toggle status
+				 *  
+				 *  @param [in] col_class class of column concerned
+				 *  @param [in] val boolean, optional value to save.
+				 *  @return column toggle status if no value is passed
+				 */
+				var col_cookie = function(col_class, val){
+					if(col_class === undefined) return true;
+					if(val !== undefined && val !== true && val !== false) val = true;
+
+					var cn = 'columns-' + location.pathname.split(/\//).pop().split(/\./).shift(); // cookie name
+					var c = JSON.parse(localStorage.getItem(cn)) || {};
+
+					/* if no cookie, create it and set it to val (or true if no val) */
+					if(c[col_class] === undefined) {
+						if(val === undefined) val = true;
+
+						c[col_class] = val;
+						localStorage.setItem(cn, JSON.stringify(c));
+						return val;
+					}
+
+					/* if cookie found and val provided, set cookie to new val */
+					if(val !== undefined){
+						c[col_class] = val;
+						localStorage.setItem(cn, JSON.stringify(c));
+						return val;
+					}
+
+					/* if cookie found and no val, return cookie val */
+					return c[col_class];
+				}
+
+				/**
+				 *  @brief shows/hides column given its class, and saves this into localStorage
+				 *  
+				 *  @param [in] col_class class of column to show/hide
+				 *  @param [in] show boolean, optional. Set to false to hide. Default is true (to show).
+				 */
+				var show_column = function(col_class, show){
+					if(col_class == undefined) return;
+					if(show == undefined) show = true;
+
+					if(show === false) $j('.' + col_class).hide();
+					else $j('.' + col_class).show();
+
+					AppGini.TVScroll().reset();
+
+					col_cookie(col_class, show);
+				}
+
+				/* initiate TVScroll */
+				AppGini.TVScroll().less();
+
+			<?php if($this->ShowTableHeader){ ?>
+				/* handle toggling columns' checkboxes */
+				$j('#toggle-columns-container').on('click', 'input[type=checkbox]', function(){
+					show_column($j(this).data('col'), $j(this).prop('checked'));
+				});
+
+				/* get TV columns and populate the #toggle-columns section */
+				$j('.table_view th').each(function(){
+					var th = $j(this);
+
+					/* ignore the record selector column */
+					if(th.find('#select_all_records').length > 0) return;
+
+					var col_class = th.attr('class');
+					var label = $j.trim(th.text());
+
+					/* Add a toggler for the column in the #toggle-columns section */
+					$j(
+						'<div class="col-md-6"><div class="checkbox"><label>' +
+							'<input type="checkbox" data-col="' + col_class + '" checked> ' + label +
+						'</label></div></div>'
+					).insertBefore('#toggle-columns-collapser');
+
+					/* load saved column status */
+					var col_status = col_cookie(col_class);
+					if(col_status === false) $j('#toggle-columns input[type=checkbox]:last').trigger('click');
+				});
+
+				/* handle clicking 'show all [columns]' */
+				$j('#show-all-columns').click(function(){
+					$j('#toggle-columns input[type=checkbox]:not(:checked)').trigger('click');
+				});
+
+				/* handle clicking 'hide all [columns]' */
+				$j('#hide-all-columns').click(function(){
+					$j('#toggle-columns input[type=checkbox]:checked').trigger('click');
+				});
+
+				/* handle clicking 'toggle [columns]' */
+				$j('#toggle-columns-checks').click(function(){
+					$j('#toggle-columns input[type=checkbox]').trigger('click');
+				});
+			<?php } ?>
+			})
+		</script>
+		<?php
+		return ob_get_clean();
+	}
+
 }
 

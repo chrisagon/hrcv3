@@ -295,3 +295,18 @@
 	$Translation['admin-only info'] = 'The above info is displayed because you are currently signed in as the super admin. Other users won\'t see this.';
 	$Translation['discard changes confirm'] = 'Discard changes to this record?';
 
+	/* Added in AppGini 5.70 */
+	$Translation['hide/show columns'] = 'Hide/Show columns';
+	$Translation['next column'] = 'Next column';
+	$Translation['previous column'] = 'Previous column';
+
+	/* Added in AppGini 5.72 */
+	$Translation['hide all'] = 'Hide all';
+	$Translation['toggle'] = 'Toggle';
+
+	/* Added in AppGini 5.73 */
+	$Translation['datetimepicker locale'] = 'en'; // If needed, set a locale for use in datetime picker. For supported locales, type moment.locales() in your browser console.
+	$Translation['account token theft warning'] = 'Someone might have been trying to access your account by stealing your cookie-based access token. As a precaution, you have been logged out and are required to re-enter your login credentials to sign in.';
+
+	/* Added in AppGini 5.75 */
+	$Translation['rebuild fields'] = 'You could try fixing this issue from the Admin Area : Utilities menu : Rebuild Fields.';

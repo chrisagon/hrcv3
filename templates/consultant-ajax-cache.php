@@ -1,11 +1,15 @@
+<?php
+	$rdata = array_map('to_utf8', array_map('nl2br', array_map('html_attr_tags_ok', $rdata)));
+	$jdata = array_map('to_utf8', array_map('nl2br', array_map('html_attr_tags_ok', $jdata)));
+?>
 <script>
 	$j(function(){
 		var tn = 'consultant';
 
 		/* data for selected record, or defaults if none is selected */
 		var data = {
-			coache_par: { id: '<?php echo $rdata['coache_par']; ?>', value: '<?php echo $rdata['coache_par']; ?>', text: '<?php echo $jdata['coache_par']; ?>' },
-			emploi_fonctionnel: { id: '<?php echo $rdata['emploi_fonctionnel']; ?>', value: '<?php echo $rdata['emploi_fonctionnel']; ?>', text: '<?php echo $jdata['emploi_fonctionnel']; ?>' }
+			coache_par: <?php echo json_encode(array('id' => $rdata['coache_par'], 'value' => $rdata['coache_par'], 'text' => $jdata['coache_par'])); ?>,
+			emploi_fonctionnel: <?php echo json_encode(array('id' => $rdata['emploi_fonctionnel'], 'value' => $rdata['emploi_fonctionnel'], 'text' => $jdata['emploi_fonctionnel'])); ?>
 		};
 
 		/* initialize or continue using AppGini.cache for the current table */

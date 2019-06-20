@@ -99,7 +99,7 @@
 	$Translation['Reset Filters'] = 'Afficher Tout';
 	$Translation['Find It'] = 'Lancer la Recherche';
 	$Translation['Previous'] = 'Pr&eacute;c&eacute;dent';
-	$Translation['Next'] = 'Suivant';
+	$Translation['Next'] = 'Prochain';
 	$Translation['Back'] = 'Retour';
 	
 	
@@ -246,7 +246,7 @@
 	$Translation['setup finished'] = "<b>C'est r&eacute;ussi!</b><br><br>Votre application AppGini a &eacute;t&eacute; install&eacute;e. Voici quelques suggestions pour commencer &agrave; l'utiliser:";
 	$Translation['setup next 1'] = "Commencer &agrave; utiliser votre application pour ajouter des donn&eacute;es, ou utiliser vos donn&eacute;es existantes, s'il y a lieu.";
 	$Translation['setup next 2'] = "Importer des donn&eacute;es existantes dans votre application &agrave; partir d'un fichier CSV.";
-	$Translation['setup next 3'] = "Allez &agrave; la page d'administration où vous pouvez modifier d'autres options de param&eacute;trage.";
+	$Translation['setup next 3'] = "Allez &agrave; la page d'administration o� vous pouvez modifier d'autres options de param&eacute;trage.";
 	$Translation['db_name help'] = 'Le nom de la Base de donn&eacute;es dans laquelle vous d&eacute;sirez ex&eacute;cuter votre application AppGini.';
 	
 	$Translation['db_server help'] = "<i>localhost</i> fonctionne avec la majorit&eacute; des serveurs. Sinon, vous devriez obtenir cette information de votre h&eacute;bergeur Web.";
@@ -263,7 +263,7 @@
 	$Translation['Database connection error'] = '&#10007; Database connection error!';
 	$Translation['The following errors occured'] = 'Les erreurs suivantes sont survenues';
 	$Translation['failed to create config instructions'] = "Cela est probablement caus&eacute; par les droits sur le r&eacute;pertoire qui ne permettent pas au Web serveur de cr&eacute;er des fichiers. Pas d'inqui&eacute;tude! Vous pouvez cr&eacute;er le fichier de configuration manuellement.<br><br>Simplement coller les lignes de code suivantes dans un &eacute;diteur de texte et sauvegarder le tout dans 'config.php', ensuite t&eacute;l&eacute;charger le fichier avec FTP ou un autre moyen dans le r&eacute;pertoire %s sur votre serveur.";
-	$Translation['Only show records having filterer'] = 'Afficher seulement les enregistrements où %s est %s';
+	$Translation['Only show records having filterer'] = 'Afficher seulement les enregistrements o� %s est %s';
 	
 	/* Added in AppGini 5.20 */
 	$Translation['You don\'t have enough permissions to delete this record'] = 'Vous ne poss&eacute;dez pas les privil&egrave;ges n&eacute;cessaires pour effacer cet enregistrement';
@@ -289,25 +289,42 @@
 	$Translation['Change owner of <n> selected records to'] = 'Changer le propri&eacute;taire des <n> enregistrements s&eacute;lectionn&eacute;s pour ';
 
 /* Added in AppGini 5.40 */
-	$Translation['username invalid'] = "ID utilisateur <MemberID> existe d&eacute;j&agrave; ou est invalide. Assurez-vous d'entrer un ID contenant 4 à 20 caract&eacute;res valides.";
+	$Translation['username invalid'] = "ID utilisateur <MemberID> existe d&eacute;j&agrave; ou est invalide. Assurez-vous d'entrer un ID contenant 4 &agrave; 20 caract&eacute;res valides.";
 	$Translation['permalink'] = 'Permalink';
 	$Translation['invalid provider'] = 'Source Invalide!';
 	$Translation['invalid url'] = 'URL Invalide!';
 	$Translation['cant retrieve coordinates from url'] = "Incapable d'obtenir les coordonn&eacute;es &agrave; partir de l'URL!";
-	
+
 	/* Added in AppGini 5.51 */
-	$Translation['maintenance mode admin notification'] = 'Mode de Maintenance est activé ! Vous pouvez le désactiver de la page d\'administration.';
-	$Translation['unique field error'] = 'Cette valeur existe déjà ou est invalide. Merci de remplir avec une valeur valide et unique.';
+	$Translation['maintenance mode admin notification'] = "Le mode de maintenance est activ&eacute; ! Vous pouvez le d&eacute;sactiver depuis la page d\'accueil de l'administrateur.";
+	$Translation['unique field error'] = "Cette valeur existe d&eacute;j&agrave; ou est invalide. Veuillez vous assurer d\'indiquer une valeur valide unique.";
 
 	/* Added in AppGini 5.60 */
-	$Translation['show all user records from table'] = 'Montrer tous les enregistrements de la table "<tablename>" pour cet utilisateur';
-	$Translation['show all group records from table'] = 'Montrer tous les enregistrements de la table "<tablename>" pour ce groupe';
-	$Translation['email this user'] = 'Envoyer un Email à cet utilisateur ';
-	$Translation['email this group'] = 'Envoyer un Email à ce groupe';
-	$Translation['owner'] = 'Propriétaire';
-	$Translation['created'] = 'Créée';
-	$Translation['last modified'] = 'dernière modif.';
-	$Translation['record has no owner'] = 'Cet enregistrement n\'a pas de propriétaire. Vous pouvez en assigner depuis l\'interface d\'administration.';
-	$Translation['admin-only info'] = 'The above info is displayed because you are currently signed in as the super admin. Other users won\'t see this.';
-	$Translation['discard changes confirm'] = 'Annuler les modifs. pour cet enregistrement ? ';
+	$Translation['show all user records from table'] = 'Montre tous les enregistements de cet utilisateur pour la table "<tablename>" ';
+	$Translation['show all group records from table'] = 'Montre tous les enregistements de ce groupe pour la table "<tablename>" ';
+	$Translation['email this user'] = 'Email cet utilisateur';
+	$Translation['email this group'] = 'Email ce groupe';
+	$Translation['owner'] = 'Propri&eacute;taire';
+	$Translation['created'] = 'Cr&eacute;&eacute;';
+	$Translation['last modified'] = 'derni&egravere modification';
+	$Translation['record has no owner'] = "Cet enregistrement n\'a pas d'utilisateur assign&eacute;. Vous pouvez affecter un propri&eacute;taire &agrave; partir de la zone d'administration.";
+	$Translation['admin-only info'] = 'Les informations ci-dessus sont affich&eacute;es parce que vous �tes actuellement connect&eacute; en tant que super administrateur. Les autres utilisateurs ne verront pas �a.';
+	$Translation['discard changes confirm'] = 'Rejeter les modifications apport&eacute;es &agrave; cet enregistrement ?';
+
+	/* Added in AppGini 5.70 */
+	$Translation['hide/show columns'] = 'Cacher/montrer colonnes';
+	$Translation['next column'] = 'Colonne suivante';
+	$Translation['previous column'] = 'colonne pr&eacute;c&eacute;dente';
+
+	/* Added in AppGini 5.72 */
+	$Translation['hide all'] = 'Cacher tout';
+	$Translation['toggle'] = 'Basculer';
+
+	/* Added in AppGini 5.73 */
+	$Translation['datetimepicker locale'] = 'fr'; // If needed, set a locale for use in datetime picker. For supported locales, type moment.locales() in your browser console.
+	$Translation['account token theft warning'] = "Quelqu'un a peut-�tre essay&eacute; d\'acc&eacute;der &agrave; votre compte en volant votre cl&eacute; d\'acc&egrave;s bas&eacute;e sur un cookie. Par mesure de pr&eacute;caution, vous avez &eacute;t&eacute; d&eacute;connect&eacute; et vous devez saisir &agrave; nouveau vos identifiants de connexion pour vous connecter.";
+
+	/* Added in AppGini 5.75 */
+	$Translation['rebuild fields'] = 'Vous pouvez essayer de r�soudre ce probl&egrave;me &agrave; partir de la Zone Admin : Menu Utilitaires : Rebuild Fields.';
+	
 ?>
