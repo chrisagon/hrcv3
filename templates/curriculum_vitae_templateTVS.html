@@ -8,3 +8,7 @@
 		<td id="curriculum_vitae-du_consultant-<%%VALUE(id_cv)%%>" class="curriculum_vitae-du_consultant"><%%VALUE(du_consultant)%%></td>
 		<td id="curriculum_vitae-Titre_du_cv-<%%VALUE(id_cv)%%>" class="curriculum_vitae-Titre_du_cv"><%%VALUE(Titre_du_cv)%%></td>
 		<td id="curriculum_vitae-creer_par-<%%VALUE(id_cv)%%>" class="curriculum_vitae-creer_par"><%%VALUE(creer_par)%%></td>
+		<td id="curriculum_vitae-cv_hrc-<%%VALUE(id_cv)%%>" class="curriculum_vitae-cv_hrc"><a href="link.php?t=curriculum_vitae&f=cv_hrc&i=<%%VALUE(id_cv)%%>" target="_blank" title="<%%VALUE(cv_hrc)%%>" class="btn btn-default"><i class="glyphicon glyphicon-file text-info"></i></a></td>
+		<script>$j(function(){
+			var e_cv_hrc = '<%%VALUE(cv_hrc)%%>'; if(e_cv_hrc == '' || e_cv_hrc == '&nbsp;') $j(/*<*/ '#curriculum_vitae-cv_hrc-<%%VALUE(id_cv)%%>' /*>*/).html('');
+		});</script>

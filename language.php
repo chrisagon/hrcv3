@@ -289,42 +289,52 @@
 	$Translation['Change owner of <n> selected records to'] = 'Changer le propri&eacute;taire des <n> enregistrements s&eacute;lectionn&eacute;s pour ';
 
 /* Added in AppGini 5.40 */
-	$Translation['username invalid'] = "ID utilisateur <MemberID> existe d&eacute;j&agrave; ou est invalide. Assurez-vous d'entrer un ID contenant 4 &agrave; 20 caract&eacute;res valides.";
+	$Translation['username invalid'] = "ID utilisateur <MemberID> existe d&eacute;j&agrave; ou est invalide. Assurez-vous d'entrer un ID contenant 4 &agrave 20 caract&eacute;res valides.";
 	$Translation['permalink'] = 'Permalink';
 	$Translation['invalid provider'] = 'Source Invalide!';
 	$Translation['invalid url'] = 'URL Invalide!';
 	$Translation['cant retrieve coordinates from url'] = "Incapable d'obtenir les coordonn&eacute;es &agrave; partir de l'URL!";
 
 	/* Added in AppGini 5.51 */
-	$Translation['maintenance mode admin notification'] = "Le mode de maintenance est activ&eacute; ! Vous pouvez le d&eacute;sactiver depuis la page d\'accueil de l'administrateur.";
-	$Translation['unique field error'] = "Cette valeur existe d&eacute;j&agrave; ou est invalide. Veuillez vous assurer d\'indiquer une valeur valide unique.";
+	$Translation['maintenance mode admin notification'] = "Le mode de maintenance est activ&eacute; ! Vous pouvez le d&eacute;sactiver depuis la page d'accueil de l'administrateur.";
+	$Translation['unique field error'] = "Cette valeur existe d&eacute;j&agrave ou est invalide. Veuillez vous assurer d'indiquer une valeur unique valide.";
 
 	/* Added in AppGini 5.60 */
-	$Translation['show all user records from table'] = 'Montre tous les enregistements de cet utilisateur pour la table "<tablename>" ';
-	$Translation['show all group records from table'] = 'Montre tous les enregistements de ce groupe pour la table "<tablename>" ';
-	$Translation['email this user'] = 'Email cet utilisateur';
-	$Translation['email this group'] = 'Email ce groupe';
+	$Translation['show all user records from table'] = "Afficher tous les enregistrements de cet utilisateur depuis la table <tablename>.";
+	$Translation['show all group records from table'] = "Afficher tous les enregistrements de ce groupe &agrave partir de la table <tablename>.";
+	$Translation['email this user'] = 'Envoyer un email &agrave cet utilisateur';
+	$Translation['email this group'] = 'Envoyer un courriel &agrave ce groupe';
 	$Translation['owner'] = 'Propri&eacute;taire';
 	$Translation['created'] = 'Cr&eacute;&eacute;';
-	$Translation['last modified'] = 'derni&egravere modification';
-	$Translation['record has no owner'] = "Cet enregistrement n\'a pas d'utilisateur assign&eacute;. Vous pouvez affecter un propri&eacute;taire &agrave; partir de la zone d'administration.";
-	$Translation['admin-only info'] = 'Les informations ci-dessus sont affich&eacute;es parce que vous êtes actuellement connect&eacute; en tant que super administrateur. Les autres utilisateurs ne verront pas ça.';
-	$Translation['discard changes confirm'] = 'Rejeter les modifications apport&eacute;es &agrave; cet enregistrement ?';
+	$Translation['last modified'] = 'Derni&egrave;re modification';
+	$Translation['record has no owner'] = "Cet enregistrement n'a pas de propri&eacute;taire attitr&eacute;. Vous pouvez affecter un propri&eacute;taire &agrave partir de la zone d'administration.";
+	$Translation['admin-only info'] = "Les informations ci-dessus sont affich&eacute;es parce que vous êtes actuellement connect&eacute; en tant que super administrateur. Les autres utilisateurs ne verront pas ça.";
+	$Translation['discard changes confirm'] = "Abandonner les modifications apport&eacute;es &agrave cet enregistrement ?";
 
 	/* Added in AppGini 5.70 */
-	$Translation['hide/show columns'] = 'Cacher/montrer colonnes';
+	$Translation['hide/show columns'] = "Masquer/afficher les colonnes";
 	$Translation['next column'] = 'Colonne suivante';
-	$Translation['previous column'] = 'colonne pr&eacute;c&eacute;dente';
+	$Translation['previous column'] = 'Colonne pr&eacute;c&eacute;dente';
 
 	/* Added in AppGini 5.72 */
 	$Translation['hide all'] = 'Cacher tout';
 	$Translation['toggle'] = 'Basculer';
 
 	/* Added in AppGini 5.73 */
-	$Translation['datetimepicker locale'] = 'fr'; // If needed, set a locale for use in datetime picker. For supported locales, type moment.locales() in your browser console.
-	$Translation['account token theft warning'] = "Quelqu'un a peut-être essay&eacute; d\'acc&eacute;der &agrave; votre compte en volant votre cl&eacute; d\'acc&egrave;s bas&eacute;e sur un cookie. Par mesure de pr&eacute;caution, vous avez &eacute;t&eacute; d&eacute;connect&eacute; et vous devez saisir &agrave; nouveau vos identifiants de connexion pour vous connecter.";
+	$Translation['datetimepicker locale'] = 'fr'; // Si n&eacute;cessaire, d&eacute;finissez une locale &agrave utiliser dans le s&eacute;lecteur de date. Pour les locales prises en charge, tapez moment.locales() dans la console de votre navigateur.
+	$Translation['account token theft warning'] = "Quelqu'un a peut-être essay&eacute; d'acc&eacute;der &agrave votre compte en volant votre cl&eacute; d'acc&egrave;s bas&eacute;e sur un cookie. Par mesure de pr&eacute;caution, vous avez &eacute;t&eacute; d&eacute;connect&eacute; et devez saisir &agrave nouveau vos informations d'identification pour vous connecter.";
 
 	/* Added in AppGini 5.75 */
-	$Translation['rebuild fields'] = 'Vous pouvez essayer de résoudre ce probl&egrave;me &agrave; partir de la Zone Admin : Menu Utilitaires : Rebuild Fields.';
-	
+	$Translation['rebuild fields'] = "Vous pouvez essayer de r&eacute;soudre ce probl&egrave;me &agrave partir de la Zone Admin : Menu Utilitaires : Reconstruire les champs.";
+
+	/* Added in AppGini 5.80 */
+	$Translation['group added successfully'] = 'Groupe ajout&eacute; avec succ&egrave;s';
+	$Translation['group updated successfully'] = "Les modifications apport&eacute;es &agrave ce groupe ont &eacute;t&eacute; enregistr&eacute;es avec succ&egrave;s.";
+	$Translation['saved filter link'] = "Lien du filtre enregistr&eacute;";
+	$Translation['app documentation'] = "documentation de l'app";
+	$Translation['back to top'] = 'Retour haut de page';
+	$Translation['check all'] = 'Cocher tout';
+	$Translation['uncheck all'] = 'D&eacute;cocher tout';
+	$Translation['invert checks'] = 'Inverser s&eacute;l&eacute;ction';
+	$Translation['set all to x'] = 'Mettre tout &agrave <x>';	
 ?>

@@ -1,0 +1,1 @@
+<script src="hooks/AppGiniHelper.min.js"></script>

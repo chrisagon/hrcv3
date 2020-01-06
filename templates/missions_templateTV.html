@@ -1,13 +1,43 @@
-<!-- Edit this file to change the layout of each record in the table view -->
-<!-- To disable clicking of a field, remove the <%%SELECT%%> and <%%ENDSELECT%%> formatters around it-->
+		<td colspan="11" class="row">
+			<div class="col-md-6">
+				<dl class="dl-horizontal">
+					<dt class="missions-id_consultant-caption field-caption-tv">Consultant</dt>
+					<dd id="missions-id_consultant-<%%VALUE(id_mission)%%>" class="missions-id_consultant text-right"><%%SELECT%%><%%VALUE(id_consultant)%%><%%ENDSELECT%%></dd>
 
-<!-- If you wish to hide the table view header that contains the column titles, -->
-<!-- add the following to the missions_init() hook (in hooks/missions.php file) -->
-<!--     $options->ShowTableHeader = 0;     -->
+					<dt class="missions-rattache_a_filiere-caption field-caption-tv">Fili&#232;re</dt>
+					<dd id="missions-rattache_a_filiere-<%%VALUE(id_mission)%%>" class="missions-rattache_a_filiere"><%%SELECT%%><%%VALUE(rattache_a_filiere)%%><%%ENDSELECT%%></dd>
 
-		<td id="missions-id_consultant-<%%VALUE(id_mission)%%>" class="missions-id_consultant text-right"><%%SELECT%%><%%VALUE(id_consultant)%%><%%ENDSELECT%%></td>
-		<td id="missions-date_debut-<%%VALUE(id_mission)%%>" class="missions-date_debut"><%%SELECT%%><%%VALUE(date_debut)%%><%%ENDSELECT%%></td>
-		<td id="missions-date_fin-<%%VALUE(id_mission)%%>" class="missions-date_fin"><%%SELECT%%><%%VALUE(date_fin)%%><%%ENDSELECT%%></td>
-		<td id="missions-description_mission-<%%VALUE(id_mission)%%>" class="missions-description_mission"><%%SELECT%%><%%VALUE(description_mission)%%><%%ENDSELECT%%></td>
-		<td id="missions-description_detaille-<%%VALUE(id_mission)%%>" class="missions-description_detaille"><%%SELECT%%><%%VALUE(description_detaille)%%><%%ENDSELECT%%></td>
-		<td id="missions-client-<%%VALUE(id_mission)%%>" class="missions-client"><%%SELECT%%><%%VALUE(client)%%><%%ENDSELECT%%></td>
+					<dt class="missions-site_mission-caption field-caption-tv">Site mission</dt>
+					<dd id="missions-site_mission-<%%VALUE(id_mission)%%>" class="missions-site_mission"><%%SELECT%%><%%VALUE(site_mission)%%><%%ENDSELECT%%></dd>
+
+					<dt class="missions-periode-caption field-caption-tv">Periode de la mission</dt>
+					<dd id="missions-periode-<%%VALUE(id_mission)%%>" class="missions-periode"><%%SELECT%%><%%VALUE(periode)%%><%%ENDSELECT%%></dd>
+
+					<dt class="missions-date_debut-caption field-caption-tv">Date debut</dt>
+					<dd id="missions-date_debut-<%%VALUE(id_mission)%%>" class="missions-date_debut"><%%SELECT%%><%%VALUE(date_debut)%%><%%ENDSELECT%%></dd>
+
+					<dt class="missions-date_fin-caption field-caption-tv">Date fin</dt>
+					<dd id="missions-date_fin-<%%VALUE(id_mission)%%>" class="missions-date_fin"><%%SELECT%%><%%VALUE(date_fin)%%><%%ENDSELECT%%></dd>
+
+				</dl>
+			</div>
+			<div class="col-md-6">
+				<dl class="dl-horizontal">
+					<dt class="missions-description_mission-caption field-caption-tv">Objet de la mission</dt>
+					<dd id="missions-description_mission-<%%VALUE(id_mission)%%>" class="missions-description_mission"><%%SELECT%%><%%VALUE(description_mission)%%><%%ENDSELECT%%></dd>
+
+					<dt class="missions-description_detaille-caption field-caption-tv">D&#233;tail de la mission</dt>
+					<dd id="missions-description_detaille-<%%VALUE(id_mission)%%>" class="missions-description_detaille"><%%SELECT%%><%%VALUE(description_detaille)%%><%%ENDSELECT%%></dd>
+
+					<dt class="missions-client-caption field-caption-tv">Client</dt>
+					<dd id="missions-client-<%%VALUE(id_mission)%%>" class="missions-client"><%%SELECT%%><%%VALUE(client)%%><%%ENDSELECT%%></dd>
+
+					<dt class="missions-environnement-caption field-caption-tv">Environnement</dt>
+					<dd id="missions-environnement-<%%VALUE(id_mission)%%>" class="missions-environnement"><%%SELECT%%><%%VALUE(environnement)%%><%%ENDSELECT%%></dd>
+
+					<dt class="missions-competences_utilisees-caption field-caption-tv">Comp&#233;tences utilis&#233;es</dt>
+					<dd id="missions-competences_utilisees-<%%VALUE(id_mission)%%>" class="missions-competences_utilisees"><%%SELECT%%><%%VALUE(competences_utilisees)%%><%%ENDSELECT%%></dd>
+
+				</dl>
+			</div>
+		</td>

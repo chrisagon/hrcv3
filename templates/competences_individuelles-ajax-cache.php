@@ -3,7 +3,7 @@
 	$jdata = array_map('to_utf8', array_map('nl2br', array_map('html_attr_tags_ok', $jdata)));
 ?>
 <script>
-	$j(function(){
+	$j(function() {
 		var tn = 'competences_individuelles';
 
 		/* data for selected record, or defaults if none is selected */
@@ -20,7 +20,7 @@
 		var cache = AppGini.cache[tn];
 
 		/* saved value for rattache_a_mission */
-		cache.addCheck(function(u, d){
+		cache.addCheck(function(u, d) {
 			if(u != 'ajax_combo.php') return false;
 			if(d.t == tn && d.f == 'rattache_a_mission' && d.id == data.rattache_a_mission.id)
 				return { results: [ data.rattache_a_mission ], more: false, elapsed: 0.01 };
@@ -28,7 +28,7 @@
 		});
 
 		/* saved value for competence_mis_en_oeuvre */
-		cache.addCheck(function(u, d){
+		cache.addCheck(function(u, d) {
 			if(u != 'ajax_combo.php') return false;
 			if(d.t == tn && d.f == 'competence_mis_en_oeuvre' && d.id == data.competence_mis_en_oeuvre.id)
 				return { results: [ data.competence_mis_en_oeuvre ], more: false, elapsed: 0.01 };
@@ -36,7 +36,7 @@
 		});
 
 		/* saved value for niveau */
-		cache.addCheck(function(u, d){
+		cache.addCheck(function(u, d) {
 			if(u != 'ajax_combo.php') return false;
 			if(d.t == tn && d.f == 'niveau' && d.id == data.niveau.id)
 				return { results: [ data.niveau ], more: false, elapsed: 0.01 };
@@ -44,7 +44,7 @@
 		});
 
 		/* saved value for consultant_id */
-		cache.addCheck(function(u, d){
+		cache.addCheck(function(u, d) {
 			if(u != 'ajax_combo.php') return false;
 			if(d.t == tn && d.f == 'consultant_id' && d.id == data.consultant_id.id)
 				return { results: [ data.consultant_id ], more: false, elapsed: 0.01 };

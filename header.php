@@ -14,10 +14,7 @@
 		<title>Hrcv3 | <?php echo (isset($x->TableTitle) ? $x->TableTitle : ''); ?></title>
 		<link id="browser_favicon" rel="shortcut icon" href="<?php echo PREPEND_PATH; ?>resources/images/appgini-icon.png">
 
-		<link rel="stylesheet" href="<?php echo PREPEND_PATH; ?>resources/initializr/css/bootstrap.css">
-		<!--[if gt IE 8]><!-->
-			<link rel="stylesheet" href="<?php echo PREPEND_PATH; ?>resources/initializr/css/bootstrap-theme.css">
-		<!--<![endif]-->
+		<link rel="stylesheet" href="<?php echo PREPEND_PATH; ?>resources/initializr/css/cerulean.css">
 		<link rel="stylesheet" href="<?php echo PREPEND_PATH; ?>resources/lightbox/css/lightbox.css" media="screen">
 		<link rel="stylesheet" href="<?php echo PREPEND_PATH; ?>resources/select2/select2.css" media="screen">
 		<link rel="stylesheet" href="<?php echo PREPEND_PATH; ?>resources/timepicker/bootstrap-timepicker.min.css" media="screen">
@@ -40,21 +37,21 @@
 		<script src="<?php echo PREPEND_PATH; ?>resources/datepicker/js/datepicker.packed.js"></script>
 		<script src="<?php echo PREPEND_PATH; ?>resources/bootstrap-datetimepicker/bootstrap-datetimepicker.min.js"></script>
 		<script src="<?php echo PREPEND_PATH; ?>common.js.php"></script>
-		<?php if(isset($x->TableName) && is_file(dirname(__FILE__) . "/hooks/{$x->TableName}-tv.js")){ ?>
+		<?php if(isset($x->TableName) && is_file(dirname(__FILE__) . "/hooks/{$x->TableName}-tv.js")) { ?>
 			<script src="<?php echo PREPEND_PATH; ?>hooks/<?php echo $x->TableName; ?>-tv.js"></script>
 		<?php } ?>
 
 	</head>
 	<body>
-		<div class="container theme-bootstrap_hrc theme-3d theme-compact">
+		<div class="container theme-cerulean theme-compact">
 			<?php if(function_exists('handle_maintenance')) echo handle_maintenance(true); ?>
 
-			<?php if(!$_REQUEST['Embedded']){ ?>
+			<?php if(!$_REQUEST['Embedded']) { ?>
 				<?php if(function_exists('htmlUserBar')) echo htmlUserBar(); ?>
 				<div style="height: 70px;" class="hidden-print"></div>
 			<?php } ?>
 
-			<?php if(class_exists('Notification')) echo Notification::placeholder(); ?>
+			<?php if(class_exists('Notification', false)) echo Notification::placeholder(); ?>
 
 			<!-- process notifications -->
 			<?php $notification_margin = ($_REQUEST['Embedded'] ? '15px 0px' : '-15px 0 -45px'); ?>
@@ -62,6 +59,6 @@
 				<?php if(function_exists('showNotifications')) echo showNotifications(); ?>
 			</div>
 
-			<?php if(!defined('APPGINI_SETUP') && is_file(dirname(__FILE__) . '/hooks/header-extras.php')){ include(dirname(__FILE__).'/hooks/header-extras.php'); } ?>
+			<?php if(!defined('APPGINI_SETUP') && is_file(dirname(__FILE__) . '/hooks/header-extras.php')) { include(dirname(__FILE__).'/hooks/header-extras.php'); } ?>
 			<!-- Add header template below here .. -->
 

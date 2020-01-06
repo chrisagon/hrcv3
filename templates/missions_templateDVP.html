@@ -21,6 +21,18 @@
 			</div>
 		</div>
 		<div class="form-group" style="border-bottom: dotted 1px #DDD;">
+			<label class="col-xs-3 control-label">Site mission</label>
+			<div class="col-xs-9">
+				<div class="form-control-static"><%%VALUE(site_mission)%%></div>
+			</div>
+		</div>
+		<div class="form-group" style="border-bottom: dotted 1px #DDD;">
+			<label class="col-xs-3 control-label">Periode de la mission</label>
+			<div class="col-xs-9">
+				<div class="form-control-static"><%%VALUE(periode)%%></div>
+			</div>
+		</div>
+		<div class="form-group" style="border-bottom: dotted 1px #DDD;">
 			<label class="col-xs-3 control-label">Date debut</label>
 			<div class="col-xs-9">
 				<div class="form-control-static"><%%COMBOTEXT(date_debut)%%></div>
@@ -33,13 +45,13 @@
 			</div>
 		</div>
 		<div class="form-group" style="border-bottom: dotted 1px #DDD;">
-			<label class="col-xs-3 control-label">Description courte de la mission</label>
+			<label class="col-xs-3 control-label">Objet de la mission</label>
 			<div class="col-xs-9">
 				<div class="form-control-static"><%%VALUE(description_mission)%%></div>
 			</div>
 		</div>
 		<div class="form-group" style="border-bottom: dotted 1px #DDD;">
-			<label class="col-xs-3 control-label">Description detaille</label>
+			<label class="col-xs-3 control-label">D&#233;tail de la mission</label>
 			<div class="col-xs-9">
 				<div class="form-control-static"><%%VALUE(description_detaille)%%></div>
 			</div>
@@ -50,6 +62,18 @@
 				<div class="form-control-static"><span id="client<%%RND1%%>"><%%COMBOTEXT(client)%%></span></div>
 			</div>
 		</div>
+		<div class="form-group" style="border-bottom: dotted 1px #DDD;">
+			<label class="col-xs-3 control-label">Environnement</label>
+			<div class="col-xs-9">
+				<div class="form-control-static"><%%VALUE(environnement)%%></div>
+			</div>
+		</div>
+		<div class="form-group" style="border-bottom: dotted 1px #DDD;">
+			<label class="col-xs-3 control-label">Comp&#233;tences utilis&#233;es</label>
+			<div class="col-xs-9">
+				<div class="form-control-static"><span id="competences_utilisees<%%RND1%%>"><%%COMBOTEXT(competences_utilisees)%%></span></div>
+			</div>
+		</div>
 	</fieldset>
 </div>
 <!-- child records -->
@@ -58,7 +82,7 @@
 </div>
 
 <script>
-	$j(function(){
+	$j(function() {
 		/* prevent loading child records in multiple DVP */
 		if($j('[id=missions-children]').length > 1) return;
 
@@ -74,7 +98,7 @@
 			apply_persisting_children
 		);
 
-		$j('form').on('click', '#children-tabs button[data-target]', function(){
+		$j('form').on('click', '#children-tabs button[data-target]', function() {
 			$j(this).toggleClass('active');
 			persist_expanded_child($j(this).attr('id'));
 		});

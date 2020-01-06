@@ -11,41 +11,23 @@ visitorSignup0Tip=["", spacer+"If this option is selected, visitors will not be 
 visitorSignup1Tip=["", spacer+"If this option is selected, visitors can join this group but will not be able to sign in unless the admin approves them from the admin area."];
 visitorSignup2Tip=["", spacer+"If this option is selected, visitors can join this group and will be able to sign in instantly with no need for admin approval."];
 
-// curriculum_vitae table
-curriculum_vitae_addTip=["",spacer+"This option allows all members of the group to add records to the 'Votre Curriculum vitae' table. A member who adds a record to the table becomes the 'owner' of that record."];
-
-curriculum_vitae_view0Tip=["",spacer+"This option prohibits all members of the group from viewing any record in the 'Votre Curriculum vitae' table."];
-curriculum_vitae_view1Tip=["",spacer+"This option allows each member of the group to view only his own records in the 'Votre Curriculum vitae' table."];
-curriculum_vitae_view2Tip=["",spacer+"This option allows each member of the group to view any record owned by any member of the group in the 'Votre Curriculum vitae' table."];
-curriculum_vitae_view3Tip=["",spacer+"This option allows each member of the group to view all records in the 'Votre Curriculum vitae' table."];
-
-curriculum_vitae_edit0Tip=["",spacer+"This option prohibits all members of the group from modifying any record in the 'Votre Curriculum vitae' table."];
-curriculum_vitae_edit1Tip=["",spacer+"This option allows each member of the group to edit only his own records in the 'Votre Curriculum vitae' table."];
-curriculum_vitae_edit2Tip=["",spacer+"This option allows each member of the group to edit any record owned by any member of the group in the 'Votre Curriculum vitae' table."];
-curriculum_vitae_edit3Tip=["",spacer+"This option allows each member of the group to edit any records in the 'Votre Curriculum vitae' table, regardless of their owner."];
-
-curriculum_vitae_delete0Tip=["",spacer+"This option prohibits all members of the group from deleting any record in the 'Votre Curriculum vitae' table."];
-curriculum_vitae_delete1Tip=["",spacer+"This option allows each member of the group to delete only his own records in the 'Votre Curriculum vitae' table."];
-curriculum_vitae_delete2Tip=["",spacer+"This option allows each member of the group to delete any record owned by any member of the group in the 'Votre Curriculum vitae' table."];
-curriculum_vitae_delete3Tip=["",spacer+"This option allows each member of the group to delete any records in the 'Votre Curriculum vitae' table."];
-
 // consultant table
-consultant_addTip=["",spacer+"This option allows all members of the group to add records to the 'Consultant' table. A member who adds a record to the table becomes the 'owner' of that record."];
+consultant_addTip=["",spacer+"This option allows all members of the group to add records to the 'Dossier Consultant' table. A member who adds a record to the table becomes the 'owner' of that record."];
 
-consultant_view0Tip=["",spacer+"This option prohibits all members of the group from viewing any record in the 'Consultant' table."];
-consultant_view1Tip=["",spacer+"This option allows each member of the group to view only his own records in the 'Consultant' table."];
-consultant_view2Tip=["",spacer+"This option allows each member of the group to view any record owned by any member of the group in the 'Consultant' table."];
-consultant_view3Tip=["",spacer+"This option allows each member of the group to view all records in the 'Consultant' table."];
+consultant_view0Tip=["",spacer+"This option prohibits all members of the group from viewing any record in the 'Dossier Consultant' table."];
+consultant_view1Tip=["",spacer+"This option allows each member of the group to view only his own records in the 'Dossier Consultant' table."];
+consultant_view2Tip=["",spacer+"This option allows each member of the group to view any record owned by any member of the group in the 'Dossier Consultant' table."];
+consultant_view3Tip=["",spacer+"This option allows each member of the group to view all records in the 'Dossier Consultant' table."];
 
-consultant_edit0Tip=["",spacer+"This option prohibits all members of the group from modifying any record in the 'Consultant' table."];
-consultant_edit1Tip=["",spacer+"This option allows each member of the group to edit only his own records in the 'Consultant' table."];
-consultant_edit2Tip=["",spacer+"This option allows each member of the group to edit any record owned by any member of the group in the 'Consultant' table."];
-consultant_edit3Tip=["",spacer+"This option allows each member of the group to edit any records in the 'Consultant' table, regardless of their owner."];
+consultant_edit0Tip=["",spacer+"This option prohibits all members of the group from modifying any record in the 'Dossier Consultant' table."];
+consultant_edit1Tip=["",spacer+"This option allows each member of the group to edit only his own records in the 'Dossier Consultant' table."];
+consultant_edit2Tip=["",spacer+"This option allows each member of the group to edit any record owned by any member of the group in the 'Dossier Consultant' table."];
+consultant_edit3Tip=["",spacer+"This option allows each member of the group to edit any records in the 'Dossier Consultant' table, regardless of their owner."];
 
-consultant_delete0Tip=["",spacer+"This option prohibits all members of the group from deleting any record in the 'Consultant' table."];
-consultant_delete1Tip=["",spacer+"This option allows each member of the group to delete only his own records in the 'Consultant' table."];
-consultant_delete2Tip=["",spacer+"This option allows each member of the group to delete any record owned by any member of the group in the 'Consultant' table."];
-consultant_delete3Tip=["",spacer+"This option allows each member of the group to delete any records in the 'Consultant' table."];
+consultant_delete0Tip=["",spacer+"This option prohibits all members of the group from deleting any record in the 'Dossier Consultant' table."];
+consultant_delete1Tip=["",spacer+"This option allows each member of the group to delete only his own records in the 'Dossier Consultant' table."];
+consultant_delete2Tip=["",spacer+"This option allows each member of the group to delete any record owned by any member of the group in the 'Dossier Consultant' table."];
+consultant_delete3Tip=["",spacer+"This option allows each member of the group to delete any records in the 'Dossier Consultant' table."];
 
 // missions table
 missions_addTip=["",spacer+"This option allows all members of the group to add records to the 'Vos Missions' table. A member who adds a record to the table becomes the 'owner' of that record."];

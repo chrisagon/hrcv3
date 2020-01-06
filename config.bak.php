@@ -3,6 +3,7 @@
 	$dbUsername = 'root';
 	$dbPassword = 'root';
 	$dbDatabase = 'hrcv3';
+	$appURI = 'hrcv3';
 
 	$adminConfig = array(
 		'adminUsername' => "admin",
@@ -24,7 +25,7 @@
 		'senderName' => "Membership management",
 		'senderEmail' => "christophe.thomas@fesc.asso.fr",
 		'approvalSubject' => "Votre adhésion a été approuvée",
-		'approvalMessage' => "Dear member,\r\nVotre adhésion a été approuvée. Vous pouvez vous connecter à votre compte ici :\r\nhttp://localhost/hrcv3\r\n\r\nSincèrement,\r\nAdmin",
+		'approvalMessage' => "Bonjour,\r\nVotre adhésion a été approuvée. Vous pouvez vous connecter à votre compte ici :\r\nhttp://localhost/hrcv3\r\n\r\nSincèrement,\r\nAdmin",
 		'hide_twitter_feed' => "",
 		'maintenance_mode_message' => ""
 	);

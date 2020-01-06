@@ -22,17 +22,35 @@
 
 				<div class="form-group">
 					<hr class="hidden-md hidden-lg">
-					<label for="id_consultant" class="control-label col-lg-3" data-parent_link="view_parent_hidden">Consultant <i class="glyphicon glyphicon-info-sign text-info" data-toggle="collapse" data-target="#id_consultant-description"></i></label>
+					<label for="id_consultant" class="control-label col-lg-3" data-parent_link="view_parent_modal">Consultant <i class="glyphicon glyphicon-info-sign text-info" data-toggle="collapse" data-target="#id_consultant-description"></i></label>
 					<div class="col-lg-9">
 						<span class="help-block collapse" id="id_consultant-description"><div class="alert alert-info">Consultant ayant effectu&#233; la mission.</div></span>
 
-						<div class="form-control-static" style="white-space: nowrap; overflow-x: hidden;"><%%COMBO(id_consultant)%%><%%ADDNEW(consultant)%%></div>
+						<div class="form-control-static" style="white-space: nowrap; overflow-x: hidden;"><%%COMBO(id_consultant)%%><%%PLINK(id_consultant)%%><%%ADDNEW(consultant)%%></div>
 					</div>
 				</div>
 
 				<div class="form-group">
 					<hr class="hidden-md hidden-lg">
-					<label for="date_debut" class="control-label col-lg-3">Date debut<span class="text-danger"><%%TRANSLATION(*)%%></span></label>
+					<label for="site_mission" class="control-label col-lg-3">Site mission</label>
+					<div class="col-lg-9">
+						<input maxlength="40" type="text" class="form-control" name="site_mission" id="site_mission" value="<%%VALUE(site_mission)%%>">
+					</div>
+				</div>
+
+				<div class="form-group">
+					<hr class="hidden-md hidden-lg">
+					<label for="periode" class="control-label col-lg-3">Periode de la mission <i class="glyphicon glyphicon-info-sign text-info" data-toggle="collapse" data-target="#periode-description"></i></label>
+					<div class="col-lg-9">
+						<span class="help-block collapse" id="periode-description"><div class="alert alert-info">La mission d'est d&#233;roul&#233; de ...</div></span>
+
+						<input maxlength="40" type="text" class="form-control" name="periode" id="periode" value="<%%VALUE(periode)%%>">
+					</div>
+				</div>
+
+				<div class="form-group">
+					<hr class="hidden-md hidden-lg">
+					<label for="date_debut" class="control-label col-lg-3">Date debut</label>
 					<div class="col-lg-9">
 						<%%COMBO(date_debut)%%>
 					</div>
@@ -48,7 +66,7 @@
 
 				<div class="form-group">
 					<hr class="hidden-md hidden-lg">
-					<label for="description_mission" class="control-label col-lg-3">Description courte de la mission<span class="text-danger"><%%TRANSLATION(*)%%></span></label>
+					<label for="description_mission" class="control-label col-lg-3">Objet de la mission<span class="text-danger"><%%TRANSLATION(*)%%></span></label>
 					<div class="col-lg-9">
 						<textarea class="form-control" name="description_mission" id="description_mission" rows="5"><%%VALUE(description_mission)%%></textarea>
 					</div>
@@ -56,7 +74,7 @@
 
 				<div class="form-group">
 					<hr class="hidden-md hidden-lg">
-					<label for="description_detaille" class="control-label col-lg-3">Description detaille</label>
+					<label for="description_detaille" class="control-label col-lg-3">D&#233;tail de la mission</label>
 					<div class="col-lg-9">
 						<%%HTMLAREA(description_detaille)%%>
 					</div>
@@ -64,9 +82,29 @@
 
 				<div class="form-group">
 					<hr class="hidden-md hidden-lg">
-					<label for="client" class="control-label col-lg-3" data-parent_link="view_parent_modal">Client<span class="text-danger"><%%TRANSLATION(*)%%></span></label>
+					<label for="client" class="control-label col-lg-3" data-parent_link="view_parent_modal">Client</label>
 					<div class="col-lg-9">
 						<div class="form-control-static" style="white-space: nowrap; overflow-x: hidden;"><%%COMBO(client)%%><%%PLINK(client)%%><%%ADDNEW(client)%%></div>
+					</div>
+				</div>
+
+				<div class="form-group">
+					<hr class="hidden-md hidden-lg">
+					<label for="environnement" class="control-label col-lg-3">Environnement <i class="glyphicon glyphicon-info-sign text-info" data-toggle="collapse" data-target="#environnement-description"></i></label>
+					<div class="col-lg-9">
+						<span class="help-block collapse" id="environnement-description"><div class="alert alert-info">Environnement technique de la mission</div></span>
+
+						<input maxlength="40" type="text" class="form-control" name="environnement" id="environnement" value="<%%VALUE(environnement)%%>">
+					</div>
+				</div>
+
+				<div class="form-group">
+					<hr class="hidden-md hidden-lg">
+					<label for="competences_utilisees" class="control-label col-lg-3" data-parent_link="view_parent_modal">Comp&#233;tences utilis&#233;es <i class="glyphicon glyphicon-info-sign text-info" data-toggle="collapse" data-target="#competences_utilisees-description"></i></label>
+					<div class="col-lg-9">
+						<span class="help-block collapse" id="competences_utilisees-description"><div class="alert alert-info">Comp&#233;tences du r&#233;f&#233;rentiel utilis&#233; pendant la mission</div></span>
+
+						<div class="form-control-static" style="white-space: nowrap; overflow-x: hidden;"><%%COMBO(competences_utilisees)%%><%%PLINK(competences_utilisees)%%><%%ADDNEW(competences_ref)%%></div>
 					</div>
 				</div>
 
@@ -92,7 +130,7 @@
 		</div>
 	</div>
 
-	<input type="hidden" name="rattache_a_cv" value="<%%VALUE(rattache_a_cv)%%>">
+	<input type="hidden" name="rattache_a_filiere" value="<%%VALUE(rattache_a_filiere)%%>">
 
 	<!-- child records -->
 	<hr>
@@ -113,11 +151,11 @@
 			var autoclose_mode = ($j('input[name=AutoClose]').val() == 1);
 			var record_added_ok = (location.search.split('record-added-ok=').length == 2);
 			var record_updated_ok = (location.search.split('record-updated-ok=').length == 2);
-			if((record_added_ok || record_updated_ok) && embedded_mode && autoclose_mode){
+			if((record_added_ok || record_updated_ok) && embedded_mode && autoclose_mode) {
 				setTimeout(AppGini.closeParentModal, 2000);
 			}
 
-			bkLib.onDomLoaded(function(){
+			bkLib.onDomLoaded(function() {
 				if($j('textarea#description_detaille').length) new nicEditor({ fullPanel : true }).panelInstance('description_detaille');
 
 				$j('.nicEdit-panelContain').parent().width('100%');
@@ -127,26 +165,27 @@
 			/* enable DV action buttons to float on scrolling down the form */
 			enable_dvab_floating();
 
-			if(!(embedded_mode && AppGini.mobileDevice())){
-				$j('select, input[type=text], textarea').not(':disabled').eq(0).focus();
-			}
+			setTimeout(AppGini.focusFirstFormElement, 1500);
 
-			$j('form').eq(0).change(function(){
+			$j('form').eq(0).change(function() {
 				if($j(this).data('already_changed')) return;
 				if($j('#deselect').length) $j('#deselect').removeClass('btn-default').addClass('btn-warning').get(0).lastChild.data = " <%%TRANSLATION(Cancel)%%>";
 				$j(this).data('already_changed', true);
 			});
 
-			$j('a[href="<%%TRANSLATION(ImageFolder)%%>"]').click(function(){ /* */ return false; });
+			// try to detect rich text changes by adding 'input' handler after nicedit is loaded ...
+			AppGini.detectContentEditableChanges();
 
-			if(embedded_mode){
+			$j('a[href="<%%TRANSLATION(ImageFolder)%%>"]').click(function() { /* */ return false; });
+
+			if(embedded_mode) {
 				/* hide links to children tables in embedded mode */
 				$j('.detail_view a[id$=_link]').remove();
 
 				/* append embedded mode to all links */
-				var append_embedded = function(){
+				var append_embedded = function() {
 					$j('a[href]:not([href^="#"]):not([href^="javascript"]):not([href$="Embedded=1"]):not([href*="link.php?t="]):not([href^="mailto:"])').each(
-						function(){
+						function() {
 							$j(this).attr('href', $j(this).attr('href') + '&Embedded=1');
 						}
 					);
@@ -158,7 +197,7 @@
 			}
 
 			/* when no record is selected ('add new' mode) */
-			if(add_new_mode){
+			if(add_new_mode) {
 				/* hide links to children tables */
 				$j('.detail_view a[id$=_link]').remove();
 			}else{
@@ -172,15 +211,15 @@
 				);
 			}
 
-			if(!embedded_mode){
+			if(!embedded_mode) {
 				/* add a horizontal spacer to [add new parent] buttons that don't have a spacered element before them */
 				$j('.add_new_parent').prev(':not(.hspacer-md)').next().addClass('hspacer-md');
 
-				$j('.add_new_parent').click(function(){
+				$j('.add_new_parent').click(function() {
 					var pt = $j(this).attr('id').replace(/_add_new$/, '');
 					modal_window({
 						url: pt + '_view.php?addNew_x=1&Embedded=1',
-						close: function(){
+						close: function() {
 							var field_id = $j('#' + pt + '_add_new').prevAll('input:hidden').eq(0).attr('id');
 							$j('#' + field_id + '-container').select2('focus').select2('focus');
 
@@ -206,28 +245,28 @@
 
 			AppGini.hideViewParentLinks();
 
-			$j('form').on('click', '.view_parent', function(){
+			$j('form').on('click', '.view_parent', function() {
 				var pt = $j(this).attr('id').replace(/_view_parent$/, '');
-				if($j(this).prevAll('input:hidden').length){
+				if($j(this).prevAll('input:hidden').length) {
 					var parent_id = $j(this).prevAll('input:hidden').eq(0).val();
 				}else{
 					var parent_id = $j(this).prevAll().children('input:hidden').eq(0).val();
 				}
 
 				/* handle radio lookups */
-				if($j(this).prevAll('[type=radio]').length){
+				if($j(this).prevAll('[type=radio]').length) {
 					parent_id = $j(this).prevAll('[type=radio]').eq(0).val();
 				}
 
-				if(parent_id != '{empty_value}' && parent_id != undefined && parent_id != ''){
+				if(parent_id != '{empty_value}' && parent_id != undefined && parent_id != '') {
 					var parent_link = $j(this).parents('.form-group').children('label').data('parent_link');
-					switch(parent_link){
+					switch(parent_link) {
 						case 'view_parent_hidden':
 							break;
 						case 'view_parent_modal':
 							modal_window({
 								url: pt + '_view.php?Embedded=1&SelectedID=' + encodeURIComponent(parent_id),
-								close: function(){
+								close: function() {
 									var field_id = $j('#' + pt + '_view_parent').prevAll('input:hidden').eq(0).attr('id');
 									$j('#' + field_id + '-container').select2('focus').select2('focus');
 								},
@@ -248,11 +287,11 @@
 
 
 			/* load admin tools for admin user */
-			if(!add_new_mode){
+			if(!add_new_mode) {
 				$j('body').append('<div id="admin-tools-appendix"></div>');
 				$j('#admin-tools-appendix').load(
 					'ajax_admin_tools.php?table=missions&id=<%%URLVALUE(id_mission)%%>',
-					function(resp){
+					function(resp) {
 						if(!resp.length) return;
 						$j.ajax('ajax_admin_tools.php?action=get_admin_tools_js&table=missions&id=<%%URLVALUE(id_mission)%%>');
 					}
@@ -260,8 +299,8 @@
 			}
 
 			/* warn user if 'add new' clicked while unsaved changes exist */
-			$j('#addNew').click(function(){
-				if($j('#deselect.btn-warning').length){
+			$j('#addNew').click(function() {
+				if($j('#deselect.btn-warning').length) {
 					return confirm('<%%TRANSLATION(discard changes confirm)%%>');
 				}
 			});
