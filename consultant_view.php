@@ -6,7 +6,7 @@
 	include("$currDir/defaultLang.php");
 	include("$currDir/language.php");
 	include("$currDir/lib.php");
-	include("$currDir/hooks/consultant.php");
+	@include("$currDir/hooks/consultant.php");
 	include("$currDir/consultant_dml.php");
 
 	// mm: can the current member access this page?

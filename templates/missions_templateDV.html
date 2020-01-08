@@ -22,7 +22,7 @@
 
 				<div class="form-group">
 					<hr class="hidden-md hidden-lg">
-					<label for="id_consultant" class="control-label col-lg-3" data-parent_link="view_parent_modal">Consultant <i class="glyphicon glyphicon-info-sign text-info" data-toggle="collapse" data-target="#id_consultant-description"></i></label>
+					<label for="id_consultant" class="control-label col-lg-3" data-parent_link="view_parent_new_window">Consultant <i class="glyphicon glyphicon-info-sign text-info" data-toggle="collapse" data-target="#id_consultant-description"></i></label>
 					<div class="col-lg-9">
 						<span class="help-block collapse" id="id_consultant-description"><div class="alert alert-info">Consultant ayant effectu&#233; la mission.</div></span>
 
@@ -34,7 +34,7 @@
 					<hr class="hidden-md hidden-lg">
 					<label for="site_mission" class="control-label col-lg-3">Site mission</label>
 					<div class="col-lg-9">
-						<input maxlength="40" type="text" class="form-control" name="site_mission" id="site_mission" value="<%%VALUE(site_mission)%%>">
+						<input maxlength="64" type="text" class="form-control" name="site_mission" id="site_mission" value="<%%VALUE(site_mission)%%>">
 					</div>
 				</div>
 
@@ -74,8 +74,10 @@
 
 				<div class="form-group">
 					<hr class="hidden-md hidden-lg">
-					<label for="description_detaille" class="control-label col-lg-3">D&#233;tail de la mission</label>
+					<label for="description_detaille" class="control-label col-lg-3">D&#233;tail de la mission <i class="glyphicon glyphicon-info-sign text-info" data-toggle="collapse" data-target="#description_detaille-description"></i></label>
 					<div class="col-lg-9">
+						<span class="help-block collapse" id="description_detaille-description"><div class="alert alert-info">Veuillez indiquer les t&#226;ches que vous avez effectu&#233;s lors de votre mission.</div></span>
+
 						<%%HTMLAREA(description_detaille)%%>
 					</div>
 				</div>
@@ -94,7 +96,7 @@
 					<div class="col-lg-9">
 						<span class="help-block collapse" id="environnement-description"><div class="alert alert-info">Environnement technique de la mission</div></span>
 
-						<input maxlength="40" type="text" class="form-control" name="environnement" id="environnement" value="<%%VALUE(environnement)%%>">
+						<input maxlength="254" type="text" class="form-control" name="environnement" id="environnement" value="<%%VALUE(environnement)%%>">
 					</div>
 				</div>
 

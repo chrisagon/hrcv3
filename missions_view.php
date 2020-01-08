@@ -25,14 +25,14 @@
 		"`missions`.`id_mission`" => "id_mission",
 		"IF(    CHAR_LENGTH(`consultant1`.`Prenom`) || CHAR_LENGTH(`consultant1`.`Nom`), CONCAT_WS('',   `consultant1`.`Prenom`, ', ', `consultant1`.`Nom`), '') /* Consultant */" => "id_consultant",
 		"IF(    CHAR_LENGTH(`filiere1`.`titre_filiere`), CONCAT_WS('',   `filiere1`.`titre_filiere`), '') /* Fili&#232;re */" => "rattache_a_filiere",
-		"`missions`.`site_mission`" => "site_mission",
+		"if(CHAR_LENGTH(`missions`.`site_mission`)>40, concat(left(`missions`.`site_mission`,40),' ...'), `missions`.`site_mission`)" => "site_mission",
 		"`missions`.`periode`" => "periode",
 		"if(`missions`.`date_debut`,date_format(`missions`.`date_debut`,'%d/%m/%Y'),'')" => "date_debut",
 		"if(`missions`.`date_fin`,date_format(`missions`.`date_fin`,'%d/%m/%Y'),'')" => "date_fin",
 		"`missions`.`description_mission`" => "description_mission",
 		"`missions`.`description_detaille`" => "description_detaille",
 		"IF(    CHAR_LENGTH(`client1`.`nom_du_client`), CONCAT_WS('',   `client1`.`nom_du_client`), '') /* Client */" => "client",
-		"`missions`.`environnement`" => "environnement",
+		"if(CHAR_LENGTH(`missions`.`environnement`)>40, concat(left(`missions`.`environnement`,40),' ...'), `missions`.`environnement`)" => "environnement",
 		"IF(    CHAR_LENGTH(`domaine1`.`titre_domaine`) || CHAR_LENGTH(`filiere2`.`titre_filiere`) || CHAR_LENGTH(`competences_ref1`.`titre_competence`), CONCAT_WS('',   `domaine1`.`titre_domaine`, '>', `filiere2`.`titre_filiere`, `competences_ref1`.`titre_competence`), '') /* Comp&#233;tences utilis&#233;es */" => "competences_utilisees",
 	);
 	// mapping incoming sort by requests to actual query fields
@@ -87,14 +87,14 @@
 		"`missions`.`id_mission`" => "id_mission",
 		"IF(    CHAR_LENGTH(`consultant1`.`Prenom`) || CHAR_LENGTH(`consultant1`.`Nom`), CONCAT_WS('',   `consultant1`.`Prenom`, ', ', `consultant1`.`Nom`), '') /* Consultant */" => "id_consultant",
 		"IF(    CHAR_LENGTH(`filiere1`.`titre_filiere`), CONCAT_WS('',   `filiere1`.`titre_filiere`), '') /* Fili&#232;re */" => "rattache_a_filiere",
-		"`missions`.`site_mission`" => "site_mission",
+		"`missions`.`site_mission`" => "Site mission",
 		"`missions`.`periode`" => "periode",
 		"if(`missions`.`date_debut`,date_format(`missions`.`date_debut`,'%d/%m/%Y'),'')" => "date_debut",
 		"if(`missions`.`date_fin`,date_format(`missions`.`date_fin`,'%d/%m/%Y'),'')" => "date_fin",
 		"`missions`.`description_mission`" => "description_mission",
 		"`missions`.`description_detaille`" => "description_detaille",
 		"IF(    CHAR_LENGTH(`client1`.`nom_du_client`), CONCAT_WS('',   `client1`.`nom_du_client`), '') /* Client */" => "client",
-		"`missions`.`environnement`" => "environnement",
+		"`missions`.`environnement`" => "Environnement",
 		"IF(    CHAR_LENGTH(`domaine1`.`titre_domaine`) || CHAR_LENGTH(`filiere2`.`titre_filiere`) || CHAR_LENGTH(`competences_ref1`.`titre_competence`), CONCAT_WS('',   `domaine1`.`titre_domaine`, '>', `filiere2`.`titre_filiere`, `competences_ref1`.`titre_competence`), '') /* Comp&#233;tences utilis&#233;es */" => "competences_utilisees",
 	);
 
@@ -131,10 +131,10 @@
 	$x->DefaultSortField = '`missions`.`date_debut`';
 	$x->DefaultSortDirection = 'desc';
 
-	$x->ColWidth   = array(  80, 150, 150, 150, 150, 150, 150, 150, 150, 150, 150);
-	$x->ColCaption = array("Consultant", "Fili&#232;re", "Site mission", "Periode de la mission", "Date debut", "Date fin", "Objet de la mission", "D&#233;tail de la mission", "Client", "Environnement", "Comp&#233;tences utilis&#233;es");
-	$x->ColFieldName = array('id_consultant', 'rattache_a_filiere', 'site_mission', 'periode', 'date_debut', 'date_fin', 'description_mission', 'description_detaille', 'client', 'environnement', 'competences_utilisees');
-	$x->ColNumber  = array(2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12);
+	$x->ColWidth   = array(  80, 150, 150, 150, 150, 150, 150, 150, 150, 150);
+	$x->ColCaption = array("Consultant", "Fili&#232;re", "Site mission", "Periode de la mission", "Date debut", "Date fin", "Objet de la mission", "Client", "Environnement", "Comp&#233;tences utilis&#233;es");
+	$x->ColFieldName = array('id_consultant', 'rattache_a_filiere', 'site_mission', 'periode', 'date_debut', 'date_fin', 'description_mission', 'client', 'environnement', 'competences_utilisees');
+	$x->ColNumber  = array(2, 3, 4, 5, 6, 7, 8, 10, 11, 12);
 
 	// template paths below are based on the app main directory
 	$x->Template = 'templates/missions_templateTV.html';

@@ -48,7 +48,6 @@ function consultant_insert() {
 	}
 
 	// hook: consultant_before_insert
-    echo "consultant_before_insert";
 	if(function_exists('consultant_before_insert')) {
 		$args = array();
 		if(!consultant_before_insert($data, getMemberInfo(), $args)) { return false; }
@@ -64,7 +63,6 @@ function consultant_insert() {
 	$recID = db_insert_id(db_link());
 
 	// hook: consultant_after_insert
-    echo "after insert";
 	if(function_exists('consultant_after_insert')) {
 		$res = sql("select * from `consultant` where `id_consultant`='" . makeSafe($recID, false) . "' limit 1", $eo);
 		if($row = db_fetch_assoc($res)) {
@@ -73,7 +71,6 @@ function consultant_insert() {
 		$data['selectedID'] = makeSafe($recID, false);
 		$args=array();
 		if(!consultant_after_insert($data, getMemberInfo(), $args)) { return $recID; }
-        else {consultant_after_insert($data, getMemberInfo(), $args);}
 	}
 
 	// mm: save ownership data
@@ -289,7 +286,6 @@ function consultant_update($selected_id) {
 
 
 	// hook: consultant_after_update
-    echo "hook: consultant_after_update";
 	if(function_exists('consultant_after_update')) {
 		$res = sql("SELECT * FROM `consultant` WHERE `id_consultant`='{$data['selectedID']}' LIMIT 1", $eo);
 		if($row = db_fetch_assoc($res)) {
@@ -298,7 +294,6 @@ function consultant_update($selected_id) {
 		$data['selectedID'] = $data['id_consultant'];
 		$args = array();
 		if(!consultant_after_update($data, getMemberInfo(), $args)) { return; }
-        else {consultant_after_update($data, getMemberInfo(), $args);}
 	}
 
 	// mm: update ownership data

@@ -96,7 +96,7 @@
 					'Description' => 'Fiche contact du consultant',
 					'tableIcon' => 'resources/table_icons/administrator.png',
 					'group' => $tg[1],
-					'homepageShowCount' => 0
+					'homepageShowCount' => 1
 				),
 				'missions' => array(
 					'Caption' => 'Vos Missions',
@@ -110,7 +110,7 @@
 					'Description' => 'Ajoutez vos Competences individuelles mis en oeuvre lors de la mission, ainsi que le niveau acquis.',
 					'tableIcon' => 'resources/table_icons/brick.png',
 					'group' => $tg[0],
-					'homepageShowCount' => 0
+					'homepageShowCount' => 1
 				),
 				'client' => array(
 					'Caption' => 'Client',
@@ -124,21 +124,21 @@
 					'Description' => 'R&#233;f&#233;rentiel g&#233;n&#233;ral des comp&#233;tences mise en oeuvre au sein de la soci&#233;t&#233;',
 					'tableIcon' => 'table.gif',
 					'group' => $tg[2],
-					'homepageShowCount' => 0
+					'homepageShowCount' => 1
 				),
 				'domaine' => array(
 					'Caption' => 'Domaine',
 					'Description' => 'Domaine regroupant des comp&#233;tences',
 					'tableIcon' => 'table.gif',
 					'group' => $tg[2],
-					'homepageShowCount' => 0
+					'homepageShowCount' => 1
 				),
 				'filiere' => array(
 					'Caption' => 'Filiere',
 					'Description' => 'Fill&#232;re (MOA, MOE, TMA, d&#233;claratif)',
 					'tableIcon' => 'table.gif',
 					'group' => $tg[2],
-					'homepageShowCount' => 0
+					'homepageShowCount' => 1
 				),
 				'niveaux_ref' => array(
 					'Caption' => 'Niveaux ref',
@@ -159,7 +159,7 @@
 					'Description' => 'Indiquez ici la liste des formations internes ou externes que vous avez suivis',
 					'tableIcon' => 'resources/table_icons/books.png',
 					'group' => $tg[0],
-					'homepageShowCount' => 0
+					'homepageShowCount' => 1
 				),
 				'feedback' => array(
 					'Caption' => 'Feedback',
@@ -173,7 +173,7 @@
 					'Description' => '',
 					'tableIcon' => 'table.gif',
 					'group' => $tg[2],
-					'homepageShowCount' => 0
+					'homepageShowCount' => 1
 				),
 		);
 

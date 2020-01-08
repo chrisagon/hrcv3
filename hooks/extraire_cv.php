@@ -1,6 +1,5 @@
 <?php
 /* Script d'extraction du CV pour alimenter les missions et les compétences */
-    header('Content-type: text/html; charset=utf8');
     class DocxConversion
     {
         private $filename;
@@ -65,7 +64,9 @@
                 "µ|NOM :", $content );
             $content = str_replace( '<w:pPr><w:pStyle w:val="Titre"/><w:rPr><w:lang w:val="en-US"/></w:rPr></w:pPr>',
                 "|TITRE :", $content );
-            $content = str_replace( '<w:szCs w:val="24"/></w:rPr>',
+            $content = str_replace( '<w:pStyle w:val="Titre2"/><w:rPr><w:rFonts w:cs="Arial"/><w:szCs w:val="24"/><w:lang w:val="fr-FR" w:eastAsia="fr-FR"/></w:rPr></w:pPr><w:r><w:rPr><w:rFonts w:cs="Arial"/><w:szCs w:val="24"/><w:lang w:val="fr-FR" w:eastAsia="fr-FR"/></w:rPr>',
+                "|MISSION :", $content );
+            $content = str_replace( '<w:pPr><w:pStyle w:val="Titre2"/><w:rPr><w:rFonts w:cs="Arial"/><w:szCs w:val="24"/></w:rPr></w:pPr>',
                 "|MISSION :", $content );
             $content = str_replace( '<w:pPr><w:pStyle w:val="Dates"/>',
                 "µ|PERIODE :", $content );
