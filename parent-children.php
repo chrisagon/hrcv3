@@ -20,9 +20,9 @@
 					'display-refresh' => true,
 					'display-add-new' => true,
 					'forced-where' => '',
-					'display-fields' => array(1 => 'Consultant', 2 => 'Fili&#232;re', 3 => 'Site mission', 4 => 'Periode de la mission', 5 => 'Date debut', 6 => 'Date fin', 7 => 'Objet de la mission', 9 => 'Client', 10 => 'Environnement', 11 => 'Comp&#233;tences utilis&#233;es'),
-					'display-field-names' => array(1 => 'id_consultant', 2 => 'rattache_a_filiere', 3 => 'site_mission', 4 => 'periode', 5 => 'date_debut', 6 => 'date_fin', 7 => 'description_mission', 9 => 'client', 10 => 'environnement', 11 => 'competences_utilisees'),
-					'sortable-fields' => array(0 => '`missions`.`id_mission`', 1 => 2, 2 => '`filiere1`.`titre_filiere`', 3 => 4, 4 => 5, 5 => '`missions`.`date_debut`', 6 => '`missions`.`date_fin`', 7 => 8, 8 => 9, 9 => '`client1`.`nom_du_client`', 10 => 11, 11 => 12),
+					'display-fields' => array(1 => 'Consultant', 2 => 'Fili&#232;re', 3 => 'Site mission', 4 => 'Periode de la mission', 5 => 'Date debut', 6 => 'Date fin', 7 => 'Objet de la mission', 9 => 'Client', 10 => 'Environnement', 11 => 'Comp&#233;tences utilis&#233;es', 12 => 'Tags'),
+					'display-field-names' => array(1 => 'id_consultant', 2 => 'rattache_a_filiere', 3 => 'site_mission', 4 => 'periode', 5 => 'date_debut', 6 => 'date_fin', 7 => 'description_mission', 9 => 'client', 10 => 'environnement', 11 => 'competences_utilisees', 12 => 'tags'),
+					'sortable-fields' => array(0 => '`missions`.`id_mission`', 1 => 2, 2 => '`filiere1`.`titre_filiere`', 3 => 4, 4 => 5, 5 => '`missions`.`date_debut`', 6 => '`missions`.`date_fin`', 7 => 8, 8 => 9, 9 => '`client1`.`nom_du_client`', 10 => 11, 11 => 12, 12 => 13),
 					'records-per-page' => 10,
 					'default-sort-by' => 5,
 					'default-sort-direction' => 'desc',
@@ -31,7 +31,7 @@
 					'show-page-progress' => true,
 					'template' => 'children-missions',
 					'template-printable' => 'children-missions-printable',
-					'query' => "SELECT `missions`.`id_mission` as 'id_mission', IF(    CHAR_LENGTH(`consultant1`.`Prenom`) || CHAR_LENGTH(`consultant1`.`Nom`), CONCAT_WS('',   `consultant1`.`Prenom`, ', ', `consultant1`.`Nom`), '') as 'id_consultant', IF(    CHAR_LENGTH(`filiere1`.`titre_filiere`), CONCAT_WS('',   `filiere1`.`titre_filiere`), '') as 'rattache_a_filiere', if(CHAR_LENGTH(`missions`.`site_mission`)>40, concat(left(`missions`.`site_mission`,40),' ...'), `missions`.`site_mission`) as 'site_mission', `missions`.`periode` as 'periode', if(`missions`.`date_debut`,date_format(`missions`.`date_debut`,'%d/%m/%Y'),'') as 'date_debut', if(`missions`.`date_fin`,date_format(`missions`.`date_fin`,'%d/%m/%Y'),'') as 'date_fin', `missions`.`description_mission` as 'description_mission', `missions`.`description_detaille` as 'description_detaille', IF(    CHAR_LENGTH(`client1`.`nom_du_client`), CONCAT_WS('',   `client1`.`nom_du_client`), '') as 'client', if(CHAR_LENGTH(`missions`.`environnement`)>40, concat(left(`missions`.`environnement`,40),' ...'), `missions`.`environnement`) as 'environnement', IF(    CHAR_LENGTH(`domaine1`.`titre_domaine`) || CHAR_LENGTH(`filiere2`.`titre_filiere`) || CHAR_LENGTH(`competences_ref1`.`titre_competence`), CONCAT_WS('',   `domaine1`.`titre_domaine`, '>', `filiere2`.`titre_filiere`, `competences_ref1`.`titre_competence`), '') as 'competences_utilisees' FROM `missions` LEFT JOIN `consultant` as consultant1 ON `consultant1`.`id_consultant`=`missions`.`id_consultant` LEFT JOIN `filiere` as filiere1 ON `filiere1`.`id_filiere`=`missions`.`rattache_a_filiere` LEFT JOIN `client` as client1 ON `client1`.`id_client`=`missions`.`client` LEFT JOIN `competences_ref` as competences_ref1 ON `competences_ref1`.`id_competence`=`missions`.`competences_utilisees` LEFT JOIN `domaine` as domaine1 ON `domaine1`.`id_domaine`=`competences_ref1`.`domaine_principal` LEFT JOIN `filiere` as filiere2 ON `filiere2`.`id_filiere`=`domaine1`.`rattache_a_filiere` "
+					'query' => "SELECT `missions`.`id_mission` as 'id_mission', IF(    CHAR_LENGTH(`consultant1`.`Prenom`) || CHAR_LENGTH(`consultant1`.`Nom`), CONCAT_WS('',   `consultant1`.`Prenom`, ', ', `consultant1`.`Nom`), '') as 'id_consultant', IF(    CHAR_LENGTH(`filiere1`.`titre_filiere`), CONCAT_WS('',   `filiere1`.`titre_filiere`), '') as 'rattache_a_filiere', if(CHAR_LENGTH(`missions`.`site_mission`)>40, concat(left(`missions`.`site_mission`,40),' ...'), `missions`.`site_mission`) as 'site_mission', `missions`.`periode` as 'periode', if(`missions`.`date_debut`,date_format(`missions`.`date_debut`,'%d/%m/%Y'),'') as 'date_debut', if(`missions`.`date_fin`,date_format(`missions`.`date_fin`,'%d/%m/%Y'),'') as 'date_fin', `missions`.`description_mission` as 'description_mission', `missions`.`description_detaille` as 'description_detaille', IF(    CHAR_LENGTH(`client1`.`nom_du_client`), CONCAT_WS('',   `client1`.`nom_du_client`), '') as 'client', if(CHAR_LENGTH(`missions`.`environnement`)>40, concat(left(`missions`.`environnement`,40),' ...'), `missions`.`environnement`) as 'environnement', IF(    CHAR_LENGTH(`domaine1`.`titre_domaine`) || CHAR_LENGTH(`filiere2`.`titre_filiere`) || CHAR_LENGTH(`competences_ref1`.`titre_competence`), CONCAT_WS('',   `domaine1`.`titre_domaine`, '>', `filiere2`.`titre_filiere`, `competences_ref1`.`titre_competence`), '') as 'competences_utilisees', `missions`.`tags` as 'tags' FROM `missions` LEFT JOIN `consultant` as consultant1 ON `consultant1`.`id_consultant`=`missions`.`id_consultant` LEFT JOIN `filiere` as filiere1 ON `filiere1`.`id_filiere`=`missions`.`rattache_a_filiere` LEFT JOIN `client` as client1 ON `client1`.`id_client`=`missions`.`client` LEFT JOIN `competences_ref` as competences_ref1 ON `competences_ref1`.`id_competence`=`missions`.`competences_utilisees` LEFT JOIN `domaine` as domaine1 ON `domaine1`.`id_domaine`=`competences_ref1`.`domaine_principal` LEFT JOIN `filiere` as filiere2 ON `filiere2`.`id_filiere`=`domaine1`.`rattache_a_filiere` "
 				),
 				'client' => array(
 					'parent-table' => 'client',
@@ -44,9 +44,9 @@
 					'display-refresh' => true,
 					'display-add-new' => true,
 					'forced-where' => '',
-					'display-fields' => array(1 => 'Consultant', 2 => 'Fili&#232;re', 3 => 'Site mission', 4 => 'Periode de la mission', 5 => 'Date debut', 6 => 'Date fin', 7 => 'Objet de la mission', 9 => 'Client', 10 => 'Environnement', 11 => 'Comp&#233;tences utilis&#233;es'),
-					'display-field-names' => array(1 => 'id_consultant', 2 => 'rattache_a_filiere', 3 => 'site_mission', 4 => 'periode', 5 => 'date_debut', 6 => 'date_fin', 7 => 'description_mission', 9 => 'client', 10 => 'environnement', 11 => 'competences_utilisees'),
-					'sortable-fields' => array(0 => '`missions`.`id_mission`', 1 => 2, 2 => '`filiere1`.`titre_filiere`', 3 => 4, 4 => 5, 5 => '`missions`.`date_debut`', 6 => '`missions`.`date_fin`', 7 => 8, 8 => 9, 9 => '`client1`.`nom_du_client`', 10 => 11, 11 => 12),
+					'display-fields' => array(1 => 'Consultant', 2 => 'Fili&#232;re', 3 => 'Site mission', 4 => 'Periode de la mission', 5 => 'Date debut', 6 => 'Date fin', 7 => 'Objet de la mission', 9 => 'Client', 10 => 'Environnement', 11 => 'Comp&#233;tences utilis&#233;es', 12 => 'Tags'),
+					'display-field-names' => array(1 => 'id_consultant', 2 => 'rattache_a_filiere', 3 => 'site_mission', 4 => 'periode', 5 => 'date_debut', 6 => 'date_fin', 7 => 'description_mission', 9 => 'client', 10 => 'environnement', 11 => 'competences_utilisees', 12 => 'tags'),
+					'sortable-fields' => array(0 => '`missions`.`id_mission`', 1 => 2, 2 => '`filiere1`.`titre_filiere`', 3 => 4, 4 => 5, 5 => '`missions`.`date_debut`', 6 => '`missions`.`date_fin`', 7 => 8, 8 => 9, 9 => '`client1`.`nom_du_client`', 10 => 11, 11 => 12, 12 => 13),
 					'records-per-page' => 10,
 					'default-sort-by' => 5,
 					'default-sort-direction' => 'desc',
@@ -55,34 +55,10 @@
 					'show-page-progress' => true,
 					'template' => 'children-missions',
 					'template-printable' => 'children-missions-printable',
-					'query' => "SELECT `missions`.`id_mission` as 'id_mission', IF(    CHAR_LENGTH(`consultant1`.`Prenom`) || CHAR_LENGTH(`consultant1`.`Nom`), CONCAT_WS('',   `consultant1`.`Prenom`, ', ', `consultant1`.`Nom`), '') as 'id_consultant', IF(    CHAR_LENGTH(`filiere1`.`titre_filiere`), CONCAT_WS('',   `filiere1`.`titre_filiere`), '') as 'rattache_a_filiere', if(CHAR_LENGTH(`missions`.`site_mission`)>40, concat(left(`missions`.`site_mission`,40),' ...'), `missions`.`site_mission`) as 'site_mission', `missions`.`periode` as 'periode', if(`missions`.`date_debut`,date_format(`missions`.`date_debut`,'%d/%m/%Y'),'') as 'date_debut', if(`missions`.`date_fin`,date_format(`missions`.`date_fin`,'%d/%m/%Y'),'') as 'date_fin', `missions`.`description_mission` as 'description_mission', `missions`.`description_detaille` as 'description_detaille', IF(    CHAR_LENGTH(`client1`.`nom_du_client`), CONCAT_WS('',   `client1`.`nom_du_client`), '') as 'client', if(CHAR_LENGTH(`missions`.`environnement`)>40, concat(left(`missions`.`environnement`,40),' ...'), `missions`.`environnement`) as 'environnement', IF(    CHAR_LENGTH(`domaine1`.`titre_domaine`) || CHAR_LENGTH(`filiere2`.`titre_filiere`) || CHAR_LENGTH(`competences_ref1`.`titre_competence`), CONCAT_WS('',   `domaine1`.`titre_domaine`, '>', `filiere2`.`titre_filiere`, `competences_ref1`.`titre_competence`), '') as 'competences_utilisees' FROM `missions` LEFT JOIN `consultant` as consultant1 ON `consultant1`.`id_consultant`=`missions`.`id_consultant` LEFT JOIN `filiere` as filiere1 ON `filiere1`.`id_filiere`=`missions`.`rattache_a_filiere` LEFT JOIN `client` as client1 ON `client1`.`id_client`=`missions`.`client` LEFT JOIN `competences_ref` as competences_ref1 ON `competences_ref1`.`id_competence`=`missions`.`competences_utilisees` LEFT JOIN `domaine` as domaine1 ON `domaine1`.`id_domaine`=`competences_ref1`.`domaine_principal` LEFT JOIN `filiere` as filiere2 ON `filiere2`.`id_filiere`=`domaine1`.`rattache_a_filiere` "
+					'query' => "SELECT `missions`.`id_mission` as 'id_mission', IF(    CHAR_LENGTH(`consultant1`.`Prenom`) || CHAR_LENGTH(`consultant1`.`Nom`), CONCAT_WS('',   `consultant1`.`Prenom`, ', ', `consultant1`.`Nom`), '') as 'id_consultant', IF(    CHAR_LENGTH(`filiere1`.`titre_filiere`), CONCAT_WS('',   `filiere1`.`titre_filiere`), '') as 'rattache_a_filiere', if(CHAR_LENGTH(`missions`.`site_mission`)>40, concat(left(`missions`.`site_mission`,40),' ...'), `missions`.`site_mission`) as 'site_mission', `missions`.`periode` as 'periode', if(`missions`.`date_debut`,date_format(`missions`.`date_debut`,'%d/%m/%Y'),'') as 'date_debut', if(`missions`.`date_fin`,date_format(`missions`.`date_fin`,'%d/%m/%Y'),'') as 'date_fin', `missions`.`description_mission` as 'description_mission', `missions`.`description_detaille` as 'description_detaille', IF(    CHAR_LENGTH(`client1`.`nom_du_client`), CONCAT_WS('',   `client1`.`nom_du_client`), '') as 'client', if(CHAR_LENGTH(`missions`.`environnement`)>40, concat(left(`missions`.`environnement`,40),' ...'), `missions`.`environnement`) as 'environnement', IF(    CHAR_LENGTH(`domaine1`.`titre_domaine`) || CHAR_LENGTH(`filiere2`.`titre_filiere`) || CHAR_LENGTH(`competences_ref1`.`titre_competence`), CONCAT_WS('',   `domaine1`.`titre_domaine`, '>', `filiere2`.`titre_filiere`, `competences_ref1`.`titre_competence`), '') as 'competences_utilisees', `missions`.`tags` as 'tags' FROM `missions` LEFT JOIN `consultant` as consultant1 ON `consultant1`.`id_consultant`=`missions`.`id_consultant` LEFT JOIN `filiere` as filiere1 ON `filiere1`.`id_filiere`=`missions`.`rattache_a_filiere` LEFT JOIN `client` as client1 ON `client1`.`id_client`=`missions`.`client` LEFT JOIN `competences_ref` as competences_ref1 ON `competences_ref1`.`id_competence`=`missions`.`competences_utilisees` LEFT JOIN `domaine` as domaine1 ON `domaine1`.`id_domaine`=`competences_ref1`.`domaine_principal` LEFT JOIN `filiere` as filiere2 ON `filiere2`.`id_filiere`=`domaine1`.`rattache_a_filiere` "
 				),
 			),
 			'competences_individuelles' => array(
-				'rattache_a_mission' => array(
-					'parent-table' => 'missions',
-					'parent-primary-key' => 'id_mission',
-					'child-primary-key' => 'id_comp_indiv',
-					'child-primary-key-index' => 0,
-					'tab-label' => 'Competences individuelles <span class="hidden child-label-competences_individuelles child-field-caption">(Rattache a la mission)</span>',
-					'auto-close' => true,
-					'table-icon' => 'resources/table_icons/brick.png',
-					'display-refresh' => true,
-					'display-add-new' => true,
-					'forced-where' => '',
-					'display-fields' => array(2 => 'Competence mis en oeuvre', 3 => 'Niveau de la comp&#233;tence', 4 => 'detenu par', 5 => 'Documents capitalises', 6 => 'Commentaires'),
-					'display-field-names' => array(2 => 'competence_mis_en_oeuvre', 3 => 'niveau', 4 => 'consultant_id', 5 => 'Documents_capitalises', 6 => 'commentaires'),
-					'sortable-fields' => array(0 => '`competences_individuelles`.`id_comp_indiv`', 1 => 2, 2 => '`competences_ref1`.`titre_competence`', 3 => 4, 4 => 5, 5 => 6, 6 => 7),
-					'records-per-page' => 10,
-					'default-sort-by' => false,
-					'default-sort-direction' => 'asc',
-					'open-detail-view-on-click' => true,
-					'display-page-selector' => true,
-					'show-page-progress' => true,
-					'template' => 'children-competences_individuelles',
-					'template-printable' => 'children-competences_individuelles-printable',
-					'query' => "SELECT `competences_individuelles`.`id_comp_indiv` as 'id_comp_indiv', IF(    CHAR_LENGTH(`missions1`.`description_mission`) || CHAR_LENGTH(`client1`.`nom_du_client`), CONCAT_WS('',   `missions1`.`description_mission`, ' chez ', `client1`.`nom_du_client`), '') as 'rattache_a_mission', IF(    CHAR_LENGTH(`competences_ref1`.`titre_competence`), CONCAT_WS('',   `competences_ref1`.`titre_competence`), '') as 'competence_mis_en_oeuvre', IF(    CHAR_LENGTH(`niveaux_ref1`.`titre`) || CHAR_LENGTH(`niveaux_ref1`.`niveau`), CONCAT_WS('',   `niveaux_ref1`.`titre`, ' : ', `niveaux_ref1`.`niveau`), '') as 'niveau', IF(    CHAR_LENGTH(`consultant1`.`Prenom`) || CHAR_LENGTH(`consultant1`.`Nom`), CONCAT_WS('',   `consultant1`.`Prenom`, ', ', `consultant1`.`Nom`), '') as 'consultant_id', `competences_individuelles`.`Documents_capitalises` as 'Documents_capitalises', if(CHAR_LENGTH(`competences_individuelles`.`commentaires`)>300, concat(left(`competences_individuelles`.`commentaires`,300),' ...'), `competences_individuelles`.`commentaires`) as 'commentaires' FROM `competences_individuelles` LEFT JOIN `missions` as missions1 ON `missions1`.`id_mission`=`competences_individuelles`.`rattache_a_mission` LEFT JOIN `client` as client1 ON `client1`.`id_client`=`missions1`.`client` LEFT JOIN `competences_ref` as competences_ref1 ON `competences_ref1`.`id_competence`=`competences_individuelles`.`competence_mis_en_oeuvre` LEFT JOIN `niveaux_ref` as niveaux_ref1 ON `niveaux_ref1`.`id_niveau`=`competences_individuelles`.`niveau` LEFT JOIN `consultant` as consultant1 ON `consultant1`.`id_consultant`=`competences_individuelles`.`consultant_id` "
-				),
 				'consultant_id' => array(
 					'parent-table' => 'consultant',
 					'parent-primary-key' => 'id_consultant',
@@ -94,9 +70,9 @@
 					'display-refresh' => true,
 					'display-add-new' => true,
 					'forced-where' => '',
-					'display-fields' => array(2 => 'Competence mis en oeuvre', 3 => 'Niveau de la comp&#233;tence', 4 => 'detenu par', 5 => 'Documents capitalises', 6 => 'Commentaires'),
-					'display-field-names' => array(2 => 'competence_mis_en_oeuvre', 3 => 'niveau', 4 => 'consultant_id', 5 => 'Documents_capitalises', 6 => 'commentaires'),
-					'sortable-fields' => array(0 => '`competences_individuelles`.`id_comp_indiv`', 1 => 2, 2 => '`competences_ref1`.`titre_competence`', 3 => 4, 4 => 5, 5 => 6, 6 => 7),
+					'display-fields' => array(1 => 'Comp&#233;tences specifiques du consultant', 2 => 'Competence r&#233;f. mis en oeuvre', 3 => 'Niveau de la comp&#233;tence', 4 => 'detenu par', 5 => 'Documents capitalises', 6 => 'Commentaires', 7 => 'Tags'),
+					'display-field-names' => array(1 => 'Competences_specifiques', 2 => 'competence_mis_en_oeuvre', 3 => 'niveau', 4 => 'consultant_id', 5 => 'Documents_capitalises', 6 => 'commentaires', 7 => 'tags'),
+					'sortable-fields' => array(0 => '`competences_individuelles`.`id_comp_indiv`', 1 => 2, 2 => '`competences_ref1`.`titre_competence`', 3 => 4, 4 => 5, 5 => 6, 6 => 7, 7 => 8),
 					'records-per-page' => 10,
 					'default-sort-by' => false,
 					'default-sort-direction' => 'asc',
@@ -105,7 +81,7 @@
 					'show-page-progress' => true,
 					'template' => 'children-competences_individuelles',
 					'template-printable' => 'children-competences_individuelles-printable',
-					'query' => "SELECT `competences_individuelles`.`id_comp_indiv` as 'id_comp_indiv', IF(    CHAR_LENGTH(`missions1`.`description_mission`) || CHAR_LENGTH(`client1`.`nom_du_client`), CONCAT_WS('',   `missions1`.`description_mission`, ' chez ', `client1`.`nom_du_client`), '') as 'rattache_a_mission', IF(    CHAR_LENGTH(`competences_ref1`.`titre_competence`), CONCAT_WS('',   `competences_ref1`.`titre_competence`), '') as 'competence_mis_en_oeuvre', IF(    CHAR_LENGTH(`niveaux_ref1`.`titre`) || CHAR_LENGTH(`niveaux_ref1`.`niveau`), CONCAT_WS('',   `niveaux_ref1`.`titre`, ' : ', `niveaux_ref1`.`niveau`), '') as 'niveau', IF(    CHAR_LENGTH(`consultant1`.`Prenom`) || CHAR_LENGTH(`consultant1`.`Nom`), CONCAT_WS('',   `consultant1`.`Prenom`, ', ', `consultant1`.`Nom`), '') as 'consultant_id', `competences_individuelles`.`Documents_capitalises` as 'Documents_capitalises', if(CHAR_LENGTH(`competences_individuelles`.`commentaires`)>300, concat(left(`competences_individuelles`.`commentaires`,300),' ...'), `competences_individuelles`.`commentaires`) as 'commentaires' FROM `competences_individuelles` LEFT JOIN `missions` as missions1 ON `missions1`.`id_mission`=`competences_individuelles`.`rattache_a_mission` LEFT JOIN `client` as client1 ON `client1`.`id_client`=`missions1`.`client` LEFT JOIN `competences_ref` as competences_ref1 ON `competences_ref1`.`id_competence`=`competences_individuelles`.`competence_mis_en_oeuvre` LEFT JOIN `niveaux_ref` as niveaux_ref1 ON `niveaux_ref1`.`id_niveau`=`competences_individuelles`.`niveau` LEFT JOIN `consultant` as consultant1 ON `consultant1`.`id_consultant`=`competences_individuelles`.`consultant_id` "
+					'query' => "SELECT `competences_individuelles`.`id_comp_indiv` as 'id_comp_indiv', `competences_individuelles`.`Competences_specifiques` as 'Competences_specifiques', IF(    CHAR_LENGTH(`competences_ref1`.`titre_competence`), CONCAT_WS('',   `competences_ref1`.`titre_competence`), '') as 'competence_mis_en_oeuvre', IF(    CHAR_LENGTH(`niveaux_ref1`.`titre`) || CHAR_LENGTH(`niveaux_ref1`.`niveau`), CONCAT_WS('',   `niveaux_ref1`.`titre`, ' : ', `niveaux_ref1`.`niveau`), '') as 'niveau', IF(    CHAR_LENGTH(`consultant1`.`Prenom`) || CHAR_LENGTH(`consultant1`.`Nom`), CONCAT_WS('',   `consultant1`.`Prenom`, ', ', `consultant1`.`Nom`), '') as 'consultant_id', `competences_individuelles`.`Documents_capitalises` as 'Documents_capitalises', if(CHAR_LENGTH(`competences_individuelles`.`commentaires`)>300, concat(left(`competences_individuelles`.`commentaires`,300),' ...'), `competences_individuelles`.`commentaires`) as 'commentaires', `competences_individuelles`.`tags` as 'tags' FROM `competences_individuelles` LEFT JOIN `competences_ref` as competences_ref1 ON `competences_ref1`.`id_competence`=`competences_individuelles`.`competence_mis_en_oeuvre` LEFT JOIN `niveaux_ref` as niveaux_ref1 ON `niveaux_ref1`.`id_niveau`=`competences_individuelles`.`niveau` LEFT JOIN `consultant` as consultant1 ON `consultant1`.`id_consultant`=`competences_individuelles`.`consultant_id` "
 				),
 			),
 			'client' => array(
@@ -149,6 +125,8 @@
 			'feedback' => array(
 			),
 			'emploi_fonctionnel' => array(
+			),
+			'tags' => array(
 			),
 		);
 

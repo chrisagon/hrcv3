@@ -13,8 +13,8 @@ function competences_individuelles_insert() {
 	if(!$arrPerm[1]) return false;
 
 	$data = array();
-	$data['rattache_a_mission'] = $_REQUEST['rattache_a_mission'];
-		if($data['rattache_a_mission'] == empty_lookup_value) { $data['rattache_a_mission'] = ''; }
+	$data['Competences_specifiques'] = $_REQUEST['Competences_specifiques'];
+		if($data['Competences_specifiques'] == empty_lookup_value) { $data['Competences_specifiques'] = ''; }
 	$data['competence_mis_en_oeuvre'] = $_REQUEST['competence_mis_en_oeuvre'];
 		if($data['competence_mis_en_oeuvre'] == empty_lookup_value) { $data['competence_mis_en_oeuvre'] = ''; }
 	$data['niveau'] = $_REQUEST['niveau'];
@@ -23,9 +23,14 @@ function competences_individuelles_insert() {
 		if($data['consultant_id'] == empty_lookup_value) { $data['consultant_id'] = ''; }
 	$data['commentaires'] = $_REQUEST['commentaires'];
 		if($data['commentaires'] == empty_lookup_value) { $data['commentaires'] = ''; }
+	$data['tags'] = '';
+	if(is_array($_REQUEST['tags'])) {
+		$MultipleSeparator = ', ';
+		$data['tags'] = implode($MultipleSeparator, $_REQUEST['tags']);
+	}
 	$data['Documents_capitalises'] = PrepareUploadedFile('Documents_capitalises', 102400,'txt|doc|docx|docm|odt|pdf|rtf', false, '');
 	if($data['competence_mis_en_oeuvre']== '') {
-		echo StyleSheet() . "\n\n<div class=\"alert alert-danger\">" . $Translation['error:'] . " 'Competence mis en oeuvre': " . $Translation['field not null'] . '<br><br>';
+		echo StyleSheet() . "\n\n<div class=\"alert alert-danger\">" . $Translation['error:'] . " 'Competence r&#233;f. mis en oeuvre': " . $Translation['field not null'] . '<br><br>';
 		echo '<a href="" onclick="history.go(-1); return false;">'.$Translation['< back'].'</a></div>';
 		exit;
 	}
@@ -62,11 +67,6 @@ function competences_individuelles_insert() {
 		die("{$error}<br><a href=\"#\" onclick=\"history.go(-1);\">{$Translation['< back']}</a>");
 
 	$recID = db_insert_id(db_link());
-
-	// automatic rattache_a_mission if passed as filterer
-	if($_REQUEST['filterer_rattache_a_mission']) {
-		sql("update `competences_individuelles` set `rattache_a_mission`='" . makeSafe($_REQUEST['filterer_rattache_a_mission']) . "' where `id_comp_indiv`='" . makeSafe($recID, false) . "'", $eo);
-	}
 
 	// hook: competences_individuelles_after_insert
 	if(function_exists('competences_individuelles_after_insert')) {
@@ -154,12 +154,12 @@ function competences_individuelles_update($selected_id) {
 		return false;
 	}
 
-	$data['rattache_a_mission'] = makeSafe($_REQUEST['rattache_a_mission']);
-		if($data['rattache_a_mission'] == empty_lookup_value) { $data['rattache_a_mission'] = ''; }
+	$data['Competences_specifiques'] = makeSafe($_REQUEST['Competences_specifiques']);
+		if($data['Competences_specifiques'] == empty_lookup_value) { $data['Competences_specifiques'] = ''; }
 	$data['competence_mis_en_oeuvre'] = makeSafe($_REQUEST['competence_mis_en_oeuvre']);
 		if($data['competence_mis_en_oeuvre'] == empty_lookup_value) { $data['competence_mis_en_oeuvre'] = ''; }
 	if($data['competence_mis_en_oeuvre']=='') {
-		echo StyleSheet() . "\n\n<div class=\"alert alert-danger\">{$Translation['error:']} 'Competence mis en oeuvre': {$Translation['field not null']}<br><br>";
+		echo StyleSheet() . "\n\n<div class=\"alert alert-danger\">{$Translation['error:']} 'Competence r&#233;f. mis en oeuvre': {$Translation['field not null']}<br><br>";
 		echo '<a href="" onclick="history.go(-1); return false;">'.$Translation['< back'].'</a></div>';
 		exit;
 	}
@@ -179,6 +179,14 @@ function competences_individuelles_update($selected_id) {
 	}
 	$data['commentaires'] = makeSafe($_REQUEST['commentaires']);
 		if($data['commentaires'] == empty_lookup_value) { $data['commentaires'] = ''; }
+	if(is_array($_REQUEST['tags'])) {
+		$MultipleSeparator = ', ';
+		foreach($_REQUEST['tags'] as $k => $v)
+			$data['tags'] .= makeSafe($v) . $MultipleSeparator;
+		$data['tags']=substr($data['tags'], 0, -1 * strlen($MultipleSeparator));
+	}else{
+		$data['tags']='';
+	}
 	$data['selectedID'] = makeSafe($selected_id);
 	if($_REQUEST['Documents_capitalises_remove'] == 1) {
 		$data['Documents_capitalises'] = '';
@@ -209,7 +217,7 @@ function competences_individuelles_update($selected_id) {
 	}
 
 	$o = array('silentErrors' => true);
-	sql('update `competences_individuelles` set       `competence_mis_en_oeuvre`=' . (($data['competence_mis_en_oeuvre'] !== '' && $data['competence_mis_en_oeuvre'] !== NULL) ? "'{$data['competence_mis_en_oeuvre']}'" : 'NULL') . ', `niveau`=' . (($data['niveau'] !== '' && $data['niveau'] !== NULL) ? "'{$data['niveau']}'" : 'NULL') . ', `consultant_id`=' . (($data['consultant_id'] !== '' && $data['consultant_id'] !== NULL) ? "'{$data['consultant_id']}'" : 'NULL') . ', ' . ($data['Documents_capitalises']!='' ? "`Documents_capitalises`='{$data['Documents_capitalises']}'" : ($_REQUEST['Documents_capitalises_remove'] != 1 ? '`Documents_capitalises`=`Documents_capitalises`' : '`Documents_capitalises`=NULL')) . ', `commentaires`=' . (($data['commentaires'] !== '' && $data['commentaires'] !== NULL) ? "'{$data['commentaires']}'" : 'NULL') . " where `id_comp_indiv`='".makeSafe($selected_id)."'", $o);
+	sql('update `competences_individuelles` set       `Competences_specifiques`=' . (($data['Competences_specifiques'] !== '' && $data['Competences_specifiques'] !== NULL) ? "'{$data['Competences_specifiques']}'" : 'NULL') . ', `competence_mis_en_oeuvre`=' . (($data['competence_mis_en_oeuvre'] !== '' && $data['competence_mis_en_oeuvre'] !== NULL) ? "'{$data['competence_mis_en_oeuvre']}'" : 'NULL') . ', `niveau`=' . (($data['niveau'] !== '' && $data['niveau'] !== NULL) ? "'{$data['niveau']}'" : 'NULL') . ', `consultant_id`=' . (($data['consultant_id'] !== '' && $data['consultant_id'] !== NULL) ? "'{$data['consultant_id']}'" : 'NULL') . ', ' . ($data['Documents_capitalises']!='' ? "`Documents_capitalises`='{$data['Documents_capitalises']}'" : ($_REQUEST['Documents_capitalises_remove'] != 1 ? '`Documents_capitalises`=`Documents_capitalises`' : '`Documents_capitalises`=NULL')) . ', `commentaires`=' . (($data['commentaires'] !== '' && $data['commentaires'] !== NULL) ? "'{$data['commentaires']}'" : 'NULL') . ', `tags`=' . (($data['tags'] !== '' && $data['tags'] !== NULL) ? "'{$data['tags']}'" : 'NULL') . " where `id_comp_indiv`='".makeSafe($selected_id)."'", $o);
 	if($o['error']!='') {
 		echo $o['error'];
 		echo '<a href="competences_individuelles_view.php?SelectedID='.urlencode($selected_id)."\">{$Translation['< back']}</a>";
@@ -251,24 +259,35 @@ function competences_individuelles_form($selected_id = '', $AllowUpdate = 1, $Al
 		$dvprint = true;
 	}
 
-	$filterer_rattache_a_mission = thisOr(undo_magic_quotes($_REQUEST['filterer_rattache_a_mission']), '');
 	$filterer_competence_mis_en_oeuvre = thisOr(undo_magic_quotes($_REQUEST['filterer_competence_mis_en_oeuvre']), '');
 	$filterer_niveau = thisOr(undo_magic_quotes($_REQUEST['filterer_niveau']), '');
 	$filterer_consultant_id = thisOr(undo_magic_quotes($_REQUEST['filterer_consultant_id']), '');
 
 	// populate filterers, starting from children to grand-parents
-	if($filterer_rattache_a_mission && !$filterer_consultant_id) $filterer_consultant_id = sqlValue("select id_consultant from missions where id_mission='" . makeSafe($filterer_rattache_a_mission) . "'");
 
 	// unique random identifier
 	$rnd1 = ($dvprint ? rand(1000000, 9999999) : '');
-	// combobox: rattache_a_mission, filterable by: consultant_id
-	$combo_rattache_a_mission = new DataCombo;
 	// combobox: competence_mis_en_oeuvre
 	$combo_competence_mis_en_oeuvre = new DataCombo;
 	// combobox: niveau
 	$combo_niveau = new DataCombo;
 	// combobox: consultant_id
 	$combo_consultant_id = new DataCombo;
+	// combobox: tags
+	$combo_tags = new Combo;
+	$combo_tags->ListType = 3;
+	$combo_tags->MultipleSeparator = ', ';
+	$combo_tags->ListBoxHeight = 10;
+	$combo_tags->RadiosPerLine = 1;
+	if(is_file(dirname(__FILE__).'/hooks/competences_individuelles.tags.csv')) {
+		$tags_data = addslashes(implode('', @file(dirname(__FILE__).'/hooks/competences_individuelles.tags.csv')));
+		$combo_tags->ListItem = explode('||', entitiesToUTF8(convertLegacyOptions($tags_data)));
+		$combo_tags->ListData = $combo_tags->ListItem;
+	}else{
+		$combo_tags->ListItem = explode('||', entitiesToUTF8(convertLegacyOptions("A compl&#233;ter;;important;;A suivre")));
+		$combo_tags->ListData = $combo_tags->ListItem;
+	}
+	$combo_tags->SelectName = 'tags';
 
 	if($selected_id) {
 		// mm: check member permissions
@@ -296,123 +315,42 @@ function competences_individuelles_form($selected_id = '', $AllowUpdate = 1, $Al
 		if(!($row = db_fetch_array($res))) {
 			return error_message($Translation['No records found'], 'competences_individuelles_view.php', false);
 		}
-		$combo_rattache_a_mission->SelectedData = $row['rattache_a_mission'];
 		$combo_competence_mis_en_oeuvre->SelectedData = $row['competence_mis_en_oeuvre'];
 		$combo_niveau->SelectedData = $row['niveau'];
 		$combo_consultant_id->SelectedData = $row['consultant_id'];
+		$combo_tags->SelectedData = $row['tags'];
 		$urow = $row; /* unsanitized data */
 		$hc = new CI_Input();
 		$row = $hc->xss_clean($row); /* sanitize data */
 	} else {
-		$combo_rattache_a_mission->SelectedData = $filterer_rattache_a_mission;
 		$combo_competence_mis_en_oeuvre->SelectedData = $filterer_competence_mis_en_oeuvre;
 		$combo_niveau->SelectedData = $filterer_niveau;
 		$combo_consultant_id->SelectedData = $filterer_consultant_id;
 	}
-	$combo_rattache_a_mission->HTML = '<span id="rattache_a_mission-container' . $rnd1 . '"></span><input type="hidden" name="rattache_a_mission" id="rattache_a_mission' . $rnd1 . '" value="' . html_attr($combo_rattache_a_mission->SelectedData) . '">';
-	$combo_rattache_a_mission->MatchText = '<span id="rattache_a_mission-container-readonly' . $rnd1 . '"></span><input type="hidden" name="rattache_a_mission" id="rattache_a_mission' . $rnd1 . '" value="' . html_attr($combo_rattache_a_mission->SelectedData) . '">';
 	$combo_competence_mis_en_oeuvre->HTML = '<span id="competence_mis_en_oeuvre-container' . $rnd1 . '"></span><input type="hidden" name="competence_mis_en_oeuvre" id="competence_mis_en_oeuvre' . $rnd1 . '" value="' . html_attr($combo_competence_mis_en_oeuvre->SelectedData) . '">';
 	$combo_competence_mis_en_oeuvre->MatchText = '<span id="competence_mis_en_oeuvre-container-readonly' . $rnd1 . '"></span><input type="hidden" name="competence_mis_en_oeuvre" id="competence_mis_en_oeuvre' . $rnd1 . '" value="' . html_attr($combo_competence_mis_en_oeuvre->SelectedData) . '">';
 	$combo_niveau->HTML = '<span id="niveau-container' . $rnd1 . '"></span><input type="hidden" name="niveau" id="niveau' . $rnd1 . '" value="' . html_attr($combo_niveau->SelectedData) . '">';
 	$combo_niveau->MatchText = '<span id="niveau-container-readonly' . $rnd1 . '"></span><input type="hidden" name="niveau" id="niveau' . $rnd1 . '" value="' . html_attr($combo_niveau->SelectedData) . '">';
 	$combo_consultant_id->HTML = '<span id="consultant_id-container' . $rnd1 . '"></span><input type="hidden" name="consultant_id" id="consultant_id' . $rnd1 . '" value="' . html_attr($combo_consultant_id->SelectedData) . '">';
 	$combo_consultant_id->MatchText = '<span id="consultant_id-container-readonly' . $rnd1 . '"></span><input type="hidden" name="consultant_id" id="consultant_id' . $rnd1 . '" value="' . html_attr($combo_consultant_id->SelectedData) . '">';
+	$combo_tags->Render();
 
 	ob_start();
 	?>
 
 	<script>
 		// initial lookup values
-		AppGini.current_rattache_a_mission__RAND__ = { text: "", value: "<?php echo addslashes($selected_id ? $urow['rattache_a_mission'] : $filterer_rattache_a_mission); ?>"};
 		AppGini.current_competence_mis_en_oeuvre__RAND__ = { text: "", value: "<?php echo addslashes($selected_id ? $urow['competence_mis_en_oeuvre'] : $filterer_competence_mis_en_oeuvre); ?>"};
 		AppGini.current_niveau__RAND__ = { text: "", value: "<?php echo addslashes($selected_id ? $urow['niveau'] : $filterer_niveau); ?>"};
 		AppGini.current_consultant_id__RAND__ = { text: "", value: "<?php echo addslashes($selected_id ? $urow['consultant_id'] : $filterer_consultant_id); ?>"};
 
 		jQuery(function() {
 			setTimeout(function() {
-				<?php echo (!$AllowUpdate || $dvprint ? 'if(typeof(rattache_a_mission_reload__RAND__) == \'function\') rattache_a_mission_reload__RAND__(AppGini.current_consultant_id__RAND__.value);' : ''); ?>
 				if(typeof(competence_mis_en_oeuvre_reload__RAND__) == 'function') competence_mis_en_oeuvre_reload__RAND__();
 				if(typeof(niveau_reload__RAND__) == 'function') niveau_reload__RAND__();
 				if(typeof(consultant_id_reload__RAND__) == 'function') consultant_id_reload__RAND__();
 			}, 10); /* we need to slightly delay client-side execution of the above code to allow AppGini.ajaxCache to work */
 		});
-		function rattache_a_mission_reload__RAND__(filterer_consultant_id) {
-		<?php if(($AllowUpdate || $AllowInsert) && !$dvprint) { ?>
-
-			$j("#rattache_a_mission-container__RAND__").select2({
-				/* initial default value */
-				initSelection: function(e, c) {
-					$j.ajax({
-						url: 'ajax_combo.php',
-						dataType: 'json',
-						data: { filterer_consultant_id: filterer_consultant_id, id: AppGini.current_rattache_a_mission__RAND__.value, t: 'competences_individuelles', f: 'rattache_a_mission' },
-						success: function(resp) {
-							c({
-								id: resp.results[0].id,
-								text: resp.results[0].text
-							});
-							$j('[name="rattache_a_mission"]').val(resp.results[0].id);
-							$j('[id=rattache_a_mission-container-readonly__RAND__]').html('<span id="rattache_a_mission-match-text">' + resp.results[0].text + '</span>');
-							if(resp.results[0].id == '<?php echo empty_lookup_value; ?>') { $j('.btn[id=missions_view_parent]').hide(); }else{ $j('.btn[id=missions_view_parent]').show(); }
-
-
-							if(typeof(rattache_a_mission_update_autofills__RAND__) == 'function') rattache_a_mission_update_autofills__RAND__();
-						}
-					});
-				},
-				width: '100%',
-				formatNoMatches: function(term) { /* */ return '<?php echo addslashes($Translation['No matches found!']); ?>'; },
-				minimumResultsForSearch: 5,
-				loadMorePadding: 200,
-				ajax: {
-					url: 'ajax_combo.php',
-					dataType: 'json',
-					cache: true,
-					data: function(term, page) { /* */ return { filterer_consultant_id: filterer_consultant_id, s: term, p: page, t: 'competences_individuelles', f: 'rattache_a_mission' }; },
-					results: function(resp, page) { /* */ return resp; }
-				},
-				escapeMarkup: function(str) { /* */ return str; }
-			}).on('change', function(e) {
-				AppGini.current_rattache_a_mission__RAND__.value = e.added.id;
-				AppGini.current_rattache_a_mission__RAND__.text = e.added.text;
-				$j('[name="rattache_a_mission"]').val(e.added.id);
-				if(e.added.id == '<?php echo empty_lookup_value; ?>') { $j('.btn[id=missions_view_parent]').hide(); }else{ $j('.btn[id=missions_view_parent]').show(); }
-
-
-				if(typeof(rattache_a_mission_update_autofills__RAND__) == 'function') rattache_a_mission_update_autofills__RAND__();
-			});
-
-			if(!$j("#rattache_a_mission-container__RAND__").length) {
-				$j.ajax({
-					url: 'ajax_combo.php',
-					dataType: 'json',
-					data: { id: AppGini.current_rattache_a_mission__RAND__.value, t: 'competences_individuelles', f: 'rattache_a_mission' },
-					success: function(resp) {
-						$j('[name="rattache_a_mission"]').val(resp.results[0].id);
-						$j('[id=rattache_a_mission-container-readonly__RAND__]').html('<span id="rattache_a_mission-match-text">' + resp.results[0].text + '</span>');
-						if(resp.results[0].id == '<?php echo empty_lookup_value; ?>') { $j('.btn[id=missions_view_parent]').hide(); }else{ $j('.btn[id=missions_view_parent]').show(); }
-
-						if(typeof(rattache_a_mission_update_autofills__RAND__) == 'function') rattache_a_mission_update_autofills__RAND__();
-					}
-				});
-			}
-
-		<?php }else{ ?>
-
-			$j.ajax({
-				url: 'ajax_combo.php',
-				dataType: 'json',
-				data: { id: AppGini.current_rattache_a_mission__RAND__.value, t: 'competences_individuelles', f: 'rattache_a_mission' },
-				success: function(resp) {
-					$j('[id=rattache_a_mission-container__RAND__], [id=rattache_a_mission-container-readonly__RAND__]').html('<span id="rattache_a_mission-match-text">' + resp.results[0].text + '</span>');
-					if(resp.results[0].id == '<?php echo empty_lookup_value; ?>') { $j('.btn[id=missions_view_parent]').hide(); }else{ $j('.btn[id=missions_view_parent]').show(); }
-
-					if(typeof(rattache_a_mission_update_autofills__RAND__) == 'function') rattache_a_mission_update_autofills__RAND__();
-				}
-			});
-		<?php } ?>
-
-		}
 		function competence_mis_en_oeuvre_reload__RAND__() {
 		<?php if(($AllowUpdate || $AllowInsert) && !$dvprint) { ?>
 
@@ -586,7 +524,6 @@ function competences_individuelles_form($selected_id = '', $AllowUpdate = 1, $Al
 							$j('[id=consultant_id-container-readonly__RAND__]').html('<span id="consultant_id-match-text">' + resp.results[0].text + '</span>');
 							if(resp.results[0].id == '<?php echo empty_lookup_value; ?>') { $j('.btn[id=consultant_view_parent]').hide(); }else{ $j('.btn[id=consultant_view_parent]').show(); }
 
-						if(typeof(rattache_a_mission_reload__RAND__) == 'function') rattache_a_mission_reload__RAND__(AppGini.current_consultant_id__RAND__.value);
 
 							if(typeof(consultant_id_update_autofills__RAND__) == 'function') consultant_id_update_autofills__RAND__();
 						}
@@ -610,7 +547,6 @@ function competences_individuelles_form($selected_id = '', $AllowUpdate = 1, $Al
 				$j('[name="consultant_id"]').val(e.added.id);
 				if(e.added.id == '<?php echo empty_lookup_value; ?>') { $j('.btn[id=consultant_view_parent]').hide(); }else{ $j('.btn[id=consultant_view_parent]').show(); }
 
-						if(typeof(rattache_a_mission_reload__RAND__) == 'function') rattache_a_mission_reload__RAND__(AppGini.current_consultant_id__RAND__.value);
 
 				if(typeof(consultant_id_update_autofills__RAND__) == 'function') consultant_id_update_autofills__RAND__();
 			});
@@ -704,6 +640,7 @@ function competences_individuelles_form($selected_id = '', $AllowUpdate = 1, $Al
 
 	// set records to read only if user can't insert new records and can't edit current record
 	if(($selected_id && !$AllowUpdate) || (!$selected_id && !$AllowInsert)) {
+		$jsReadOnly .= "\tjQuery('#Competences_specifiques').replaceWith('<div class=\"form-control-static\" id=\"Competences_specifiques\">' + (jQuery('#Competences_specifiques').val() || '') + '</div>');\n";
 		$jsReadOnly .= "\tjQuery('#competence_mis_en_oeuvre').prop('disabled', true).css({ color: '#555', backgroundColor: '#fff' });\n";
 		$jsReadOnly .= "\tjQuery('#competence_mis_en_oeuvre_caption').prop('disabled', true).css({ color: '#555', backgroundColor: 'white' });\n";
 		$jsReadOnly .= "\tjQuery('#niveau').prop('disabled', true).css({ color: '#555', backgroundColor: '#fff' });\n";
@@ -712,6 +649,8 @@ function competences_individuelles_form($selected_id = '', $AllowUpdate = 1, $Al
 		$jsReadOnly .= "\tjQuery('#consultant_id_caption').prop('disabled', true).css({ color: '#555', backgroundColor: 'white' });\n";
 		$jsReadOnly .= "\tjQuery('#Documents_capitalises').replaceWith('<div class=\"form-control-static\" id=\"Documents_capitalises\">' + (jQuery('#Documents_capitalises').val() || '') + '</div>');\n";
 		$jsReadOnly .= "\tjQuery('#Documents_capitalises, #Documents_capitalises-edit-link').hide();\n";
+		$jsReadOnly .= "\tjQuery('#tags').replaceWith('<div class=\"form-control-static\" id=\"tags\">' + (jQuery('#tags').val() || '') + '</div>'); jQuery('#tags-multi-selection-help').hide();\n";
+		$jsReadOnly .= "\tjQuery('#s2id_tags').remove();\n";
 		$jsReadOnly .= "\tjQuery('.select2-container').hide();\n";
 
 		$noUploads = true;
@@ -721,9 +660,6 @@ function competences_individuelles_form($selected_id = '', $AllowUpdate = 1, $Al
 	}
 
 	// process combos
-	$templateCode = str_replace('<%%COMBO(rattache_a_mission)%%>', $combo_rattache_a_mission->HTML, $templateCode);
-	$templateCode = str_replace('<%%COMBOTEXT(rattache_a_mission)%%>', $combo_rattache_a_mission->MatchText, $templateCode);
-	$templateCode = str_replace('<%%URLCOMBOTEXT(rattache_a_mission)%%>', urlencode($combo_rattache_a_mission->MatchText), $templateCode);
 	$templateCode = str_replace('<%%COMBO(competence_mis_en_oeuvre)%%>', $combo_competence_mis_en_oeuvre->HTML, $templateCode);
 	$templateCode = str_replace('<%%COMBOTEXT(competence_mis_en_oeuvre)%%>', $combo_competence_mis_en_oeuvre->MatchText, $templateCode);
 	$templateCode = str_replace('<%%URLCOMBOTEXT(competence_mis_en_oeuvre)%%>', urlencode($combo_competence_mis_en_oeuvre->MatchText), $templateCode);
@@ -733,9 +669,11 @@ function competences_individuelles_form($selected_id = '', $AllowUpdate = 1, $Al
 	$templateCode = str_replace('<%%COMBO(consultant_id)%%>', $combo_consultant_id->HTML, $templateCode);
 	$templateCode = str_replace('<%%COMBOTEXT(consultant_id)%%>', $combo_consultant_id->MatchText, $templateCode);
 	$templateCode = str_replace('<%%URLCOMBOTEXT(consultant_id)%%>', urlencode($combo_consultant_id->MatchText), $templateCode);
+	$templateCode = str_replace('<%%COMBO(tags)%%>', $combo_tags->HTML, $templateCode);
+	$templateCode = str_replace('<%%COMBOTEXT(tags)%%>', $combo_tags->SelectedData, $templateCode);
 
 	/* lookup fields array: 'lookup field name' => array('parent table name', 'lookup field caption') */
-	$lookup_fields = array('rattache_a_mission' => array('missions', 'Rattache a la mission'), 'competence_mis_en_oeuvre' => array('competences_ref', 'Competence mis en oeuvre'), 'niveau' => array('niveaux_ref', 'Niveau de la comp&#233;tence'), 'consultant_id' => array('consultant', 'detenu par'), );
+	$lookup_fields = array('competence_mis_en_oeuvre' => array('competences_ref', 'Competence r&#233;f. mis en oeuvre'), 'niveau' => array('niveaux_ref', 'Niveau de la comp&#233;tence'), 'consultant_id' => array('consultant', 'detenu par'), );
 	foreach($lookup_fields as $luf => $ptfc) {
 		$pt_perm = getTablePermissions($ptfc[0]);
 
@@ -752,7 +690,7 @@ function competences_individuelles_form($selected_id = '', $AllowUpdate = 1, $Al
 
 	// process images
 	$templateCode = str_replace('<%%UPLOADFILE(id_comp_indiv)%%>', '', $templateCode);
-	$templateCode = str_replace('<%%UPLOADFILE(rattache_a_mission)%%>', '', $templateCode);
+	$templateCode = str_replace('<%%UPLOADFILE(Competences_specifiques)%%>', '', $templateCode);
 	$templateCode = str_replace('<%%UPLOADFILE(competence_mis_en_oeuvre)%%>', '', $templateCode);
 	$templateCode = str_replace('<%%UPLOADFILE(niveau)%%>', '', $templateCode);
 	$templateCode = str_replace('<%%UPLOADFILE(consultant_id)%%>', '', $templateCode);
@@ -763,15 +701,16 @@ function competences_individuelles_form($selected_id = '', $AllowUpdate = 1, $Al
 		$templateCode = str_replace('<%%REMOVEFILE(Documents_capitalises)%%>', '', $templateCode);
 	}
 	$templateCode = str_replace('<%%UPLOADFILE(commentaires)%%>', '', $templateCode);
+	$templateCode = str_replace('<%%UPLOADFILE(tags)%%>', '', $templateCode);
 
 	// process values
 	if($selected_id) {
 		if( $dvprint) $templateCode = str_replace('<%%VALUE(id_comp_indiv)%%>', safe_html($urow['id_comp_indiv']), $templateCode);
 		if(!$dvprint) $templateCode = str_replace('<%%VALUE(id_comp_indiv)%%>', html_attr($row['id_comp_indiv']), $templateCode);
 		$templateCode = str_replace('<%%URLVALUE(id_comp_indiv)%%>', urlencode($urow['id_comp_indiv']), $templateCode);
-		if( $dvprint) $templateCode = str_replace('<%%VALUE(rattache_a_mission)%%>', safe_html($urow['rattache_a_mission']), $templateCode);
-		if(!$dvprint) $templateCode = str_replace('<%%VALUE(rattache_a_mission)%%>', html_attr($row['rattache_a_mission']), $templateCode);
-		$templateCode = str_replace('<%%URLVALUE(rattache_a_mission)%%>', urlencode($urow['rattache_a_mission']), $templateCode);
+		if( $dvprint) $templateCode = str_replace('<%%VALUE(Competences_specifiques)%%>', safe_html($urow['Competences_specifiques']), $templateCode);
+		if(!$dvprint) $templateCode = str_replace('<%%VALUE(Competences_specifiques)%%>', html_attr($row['Competences_specifiques']), $templateCode);
+		$templateCode = str_replace('<%%URLVALUE(Competences_specifiques)%%>', urlencode($urow['Competences_specifiques']), $templateCode);
 		if( $dvprint) $templateCode = str_replace('<%%VALUE(competence_mis_en_oeuvre)%%>', safe_html($urow['competence_mis_en_oeuvre']), $templateCode);
 		if(!$dvprint) $templateCode = str_replace('<%%VALUE(competence_mis_en_oeuvre)%%>', html_attr($row['competence_mis_en_oeuvre']), $templateCode);
 		$templateCode = str_replace('<%%URLVALUE(competence_mis_en_oeuvre)%%>', urlencode($urow['competence_mis_en_oeuvre']), $templateCode);
@@ -791,11 +730,14 @@ function competences_individuelles_form($selected_id = '', $AllowUpdate = 1, $Al
 		}
 		$templateCode = str_replace('<%%VALUE(commentaires)%%>', nl2br($row['commentaires']), $templateCode);
 		$templateCode = str_replace('<%%URLVALUE(commentaires)%%>', urlencode($urow['commentaires']), $templateCode);
+		if( $dvprint) $templateCode = str_replace('<%%VALUE(tags)%%>', safe_html($urow['tags']), $templateCode);
+		if(!$dvprint) $templateCode = str_replace('<%%VALUE(tags)%%>', html_attr($row['tags']), $templateCode);
+		$templateCode = str_replace('<%%URLVALUE(tags)%%>', urlencode($urow['tags']), $templateCode);
 	}else{
 		$templateCode = str_replace('<%%VALUE(id_comp_indiv)%%>', '', $templateCode);
 		$templateCode = str_replace('<%%URLVALUE(id_comp_indiv)%%>', urlencode(''), $templateCode);
-		$templateCode = str_replace('<%%VALUE(rattache_a_mission)%%>', ( $_REQUEST['FilterField'][1]=='2' && $_REQUEST['FilterOperator'][1]=='<=>' ? $combo_rattache_a_mission->SelectedData : ''), $templateCode);
-		$templateCode = str_replace('<%%URLVALUE(rattache_a_mission)%%>', urlencode( $_REQUEST['FilterField'][1]=='2' && $_REQUEST['FilterOperator'][1]=='<=>' ? $combo_rattache_a_mission->SelectedData : ''), $templateCode);
+		$templateCode = str_replace('<%%VALUE(Competences_specifiques)%%>', '', $templateCode);
+		$templateCode = str_replace('<%%URLVALUE(Competences_specifiques)%%>', urlencode(''), $templateCode);
 		$templateCode = str_replace('<%%VALUE(competence_mis_en_oeuvre)%%>', '', $templateCode);
 		$templateCode = str_replace('<%%URLVALUE(competence_mis_en_oeuvre)%%>', urlencode(''), $templateCode);
 		$templateCode = str_replace('<%%VALUE(niveau)%%>', '', $templateCode);
@@ -805,6 +747,8 @@ function competences_individuelles_form($selected_id = '', $AllowUpdate = 1, $Al
 		$templateCode = str_replace('<%%VALUE(Documents_capitalises)%%>', '', $templateCode);
 		$templateCode = str_replace('<%%URLVALUE(Documents_capitalises)%%>', urlencode(''), $templateCode);
 		$templateCode = str_replace('<%%HTMLAREA(commentaires)%%>', '<textarea name="commentaires" id="commentaires" rows="5"></textarea>', $templateCode);
+		$templateCode = str_replace('<%%VALUE(tags)%%>', '', $templateCode);
+		$templateCode = str_replace('<%%URLVALUE(tags)%%>', urlencode(''), $templateCode);
 	}
 
 	// process translations

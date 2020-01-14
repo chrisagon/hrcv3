@@ -104,17 +104,6 @@
 			),
 		),
 		'competences_individuelles' => array(
-			'rattache_a_mission' => array(
-				'parent_table' => 'missions',
-				'parent_pk_field' => 'id_mission',
-				'parent_caption' => 'IF(CHAR_LENGTH(`missions`.`description_mission`) || CHAR_LENGTH(`missions`.`client`), CONCAT_WS(\'\', `missions`.`description_mission`, \' chez \', IF(    CHAR_LENGTH(`client1`.`nom_du_client`), CONCAT_WS(\'\',   `client1`.`nom_du_client`), \'\')), \'\')',
-				'parent_from' => '`missions` LEFT JOIN `consultant` as consultant1 ON `consultant1`.`id_consultant`=`missions`.`id_consultant` LEFT JOIN `filiere` as filiere1 ON `filiere1`.`id_filiere`=`missions`.`rattache_a_filiere` LEFT JOIN `client` as client1 ON `client1`.`id_client`=`missions`.`client` LEFT JOIN `competences_ref` as competences_ref1 ON `competences_ref1`.`id_competence`=`missions`.`competences_utilisees` LEFT JOIN `domaine` as domaine1 ON `domaine1`.`id_domaine`=`competences_ref1`.`domaine_principal` LEFT JOIN `filiere` as filiere2 ON `filiere2`.`id_filiere`=`domaine1`.`rattache_a_filiere` ',
-				'filterers' => array('consultant_id' => 'id_consultant'),
-				'custom_query' => '',
-				'inherit_permissions' => false,
-				'list_type' => 0,
-				'not_null' => false
-			),
 			'competence_mis_en_oeuvre' => array(
 				'parent_table' => 'competences_ref',
 				'parent_pk_field' => 'id_competence',
@@ -221,6 +210,8 @@
 		'feedback' => array(
 		),
 		'emploi_fonctionnel' => array(
+		),
+		'tags' => array(
 		),
 	);
 

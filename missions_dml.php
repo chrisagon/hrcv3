@@ -34,6 +34,11 @@ function missions_insert() {
 		if($data['environnement'] == empty_lookup_value) { $data['environnement'] = ''; }
 	$data['competences_utilisees'] = $_REQUEST['competences_utilisees'];
 		if($data['competences_utilisees'] == empty_lookup_value) { $data['competences_utilisees'] = ''; }
+	$data['tags'] = '';
+	if(is_array($_REQUEST['tags'])) {
+		$MultipleSeparator = ', ';
+		$data['tags'] = implode($MultipleSeparator, $_REQUEST['tags']);
+	}
 	if($data['description_mission']== '') {
 		echo StyleSheet() . "\n\n<div class=\"alert alert-danger\">" . $Translation['error:'] . " 'Objet de la mission': " . $Translation['field not null'] . '<br><br>';
 		echo '<a href="" onclick="history.go(-1); return false;">'.$Translation['< back'].'</a></div>';
@@ -113,25 +118,6 @@ function missions_delete($selected_id, $AllowDeleteOfParents=false, $skipChecks=
 			return $Translation['Couldn\'t delete this record'];
 	}
 
-	// child table: competences_individuelles
-	$res = sql("select `id_mission` from `missions` where `id_mission`='$selected_id'", $eo);
-	$id_mission = db_fetch_row($res);
-	$rires = sql("select count(1) from `competences_individuelles` where `rattache_a_mission`='".addslashes($id_mission[0])."'", $eo);
-	$rirow = db_fetch_row($rires);
-	if($rirow[0] && !$AllowDeleteOfParents && !$skipChecks) {
-		$RetMsg = $Translation["couldn't delete"];
-		$RetMsg = str_replace("<RelatedRecords>", $rirow[0], $RetMsg);
-		$RetMsg = str_replace("<TableName>", "competences_individuelles", $RetMsg);
-		return $RetMsg;
-	}elseif($rirow[0] && $AllowDeleteOfParents && !$skipChecks) {
-		$RetMsg = $Translation["confirm delete"];
-		$RetMsg = str_replace("<RelatedRecords>", $rirow[0], $RetMsg);
-		$RetMsg = str_replace("<TableName>", "competences_individuelles", $RetMsg);
-		$RetMsg = str_replace("<Delete>", "<input type=\"button\" class=\"button\" value=\"".$Translation['yes']."\" onClick=\"window.location='missions_view.php?SelectedID=".urlencode($selected_id)."&delete_x=1&confirmed=1';\">", $RetMsg);
-		$RetMsg = str_replace("<Cancel>", "<input type=\"button\" class=\"button\" value=\"".$Translation['no']."\" onClick=\"window.location='missions_view.php?SelectedID=".urlencode($selected_id)."';\">", $RetMsg);
-		return $RetMsg;
-	}
-
 	sql("delete from `missions` where `id_mission`='$selected_id'", $eo);
 
 	// hook: missions_after_delete
@@ -183,6 +169,14 @@ function missions_update($selected_id) {
 		if($data['environnement'] == empty_lookup_value) { $data['environnement'] = ''; }
 	$data['competences_utilisees'] = makeSafe($_REQUEST['competences_utilisees']);
 		if($data['competences_utilisees'] == empty_lookup_value) { $data['competences_utilisees'] = ''; }
+	if(is_array($_REQUEST['tags'])) {
+		$MultipleSeparator = ', ';
+		foreach($_REQUEST['tags'] as $k => $v)
+			$data['tags'] .= makeSafe($v) . $MultipleSeparator;
+		$data['tags']=substr($data['tags'], 0, -1 * strlen($MultipleSeparator));
+	}else{
+		$data['tags']='';
+	}
 	$data['selectedID'] = makeSafe($selected_id);
 
 	// hook: missions_before_update
@@ -192,7 +186,7 @@ function missions_update($selected_id) {
 	}
 
 	$o = array('silentErrors' => true);
-	sql('update `missions` set       `id_consultant`=' . (($data['id_consultant'] !== '' && $data['id_consultant'] !== NULL) ? "'{$data['id_consultant']}'" : 'NULL') . ', `site_mission`=' . (($data['site_mission'] !== '' && $data['site_mission'] !== NULL) ? "'{$data['site_mission']}'" : 'NULL') . ', `periode`=' . (($data['periode'] !== '' && $data['periode'] !== NULL) ? "'{$data['periode']}'" : 'NULL') . ', `date_debut`=' . (($data['date_debut'] !== '' && $data['date_debut'] !== NULL) ? "'{$data['date_debut']}'" : 'NULL') . ', `date_fin`=' . (($data['date_fin'] !== '' && $data['date_fin'] !== NULL) ? "'{$data['date_fin']}'" : 'NULL') . ', `description_mission`=' . (($data['description_mission'] !== '' && $data['description_mission'] !== NULL) ? "'{$data['description_mission']}'" : 'NULL') . ', `description_detaille`=' . (($data['description_detaille'] !== '' && $data['description_detaille'] !== NULL) ? "'{$data['description_detaille']}'" : 'NULL') . ', `client`=' . (($data['client'] !== '' && $data['client'] !== NULL) ? "'{$data['client']}'" : 'NULL') . ', `environnement`=' . (($data['environnement'] !== '' && $data['environnement'] !== NULL) ? "'{$data['environnement']}'" : 'NULL') . ', `competences_utilisees`=' . (($data['competences_utilisees'] !== '' && $data['competences_utilisees'] !== NULL) ? "'{$data['competences_utilisees']}'" : 'NULL') . " where `id_mission`='".makeSafe($selected_id)."'", $o);
+	sql('update `missions` set       `id_consultant`=' . (($data['id_consultant'] !== '' && $data['id_consultant'] !== NULL) ? "'{$data['id_consultant']}'" : 'NULL') . ', `site_mission`=' . (($data['site_mission'] !== '' && $data['site_mission'] !== NULL) ? "'{$data['site_mission']}'" : 'NULL') . ', `periode`=' . (($data['periode'] !== '' && $data['periode'] !== NULL) ? "'{$data['periode']}'" : 'NULL') . ', `date_debut`=' . (($data['date_debut'] !== '' && $data['date_debut'] !== NULL) ? "'{$data['date_debut']}'" : 'NULL') . ', `date_fin`=' . (($data['date_fin'] !== '' && $data['date_fin'] !== NULL) ? "'{$data['date_fin']}'" : 'NULL') . ', `description_mission`=' . (($data['description_mission'] !== '' && $data['description_mission'] !== NULL) ? "'{$data['description_mission']}'" : 'NULL') . ', `description_detaille`=' . (($data['description_detaille'] !== '' && $data['description_detaille'] !== NULL) ? "'{$data['description_detaille']}'" : 'NULL') . ', `client`=' . (($data['client'] !== '' && $data['client'] !== NULL) ? "'{$data['client']}'" : 'NULL') . ', `environnement`=' . (($data['environnement'] !== '' && $data['environnement'] !== NULL) ? "'{$data['environnement']}'" : 'NULL') . ', `competences_utilisees`=' . (($data['competences_utilisees'] !== '' && $data['competences_utilisees'] !== NULL) ? "'{$data['competences_utilisees']}'" : 'NULL') . ', `tags`=' . (($data['tags'] !== '' && $data['tags'] !== NULL) ? "'{$data['tags']}'" : 'NULL') . " where `id_mission`='".makeSafe($selected_id)."'", $o);
 	if($o['error']!='') {
 		echo $o['error'];
 		echo '<a href="missions_view.php?SelectedID='.urlencode($selected_id)."\">{$Translation['< back']}</a>";
@@ -268,6 +262,21 @@ function missions_form($selected_id = '', $AllowUpdate = 1, $AllowInsert = 1, $A
 	$combo_client = new DataCombo;
 	// combobox: competences_utilisees
 	$combo_competences_utilisees = new DataCombo;
+	// combobox: tags
+	$combo_tags = new Combo;
+	$combo_tags->ListType = 3;
+	$combo_tags->MultipleSeparator = ', ';
+	$combo_tags->ListBoxHeight = 10;
+	$combo_tags->RadiosPerLine = 1;
+	if(is_file(dirname(__FILE__).'/hooks/missions.tags.csv')) {
+		$tags_data = addslashes(implode('', @file(dirname(__FILE__).'/hooks/missions.tags.csv')));
+		$combo_tags->ListItem = explode('||', entitiesToUTF8(convertLegacyOptions($tags_data)));
+		$combo_tags->ListData = $combo_tags->ListItem;
+	}else{
+		$combo_tags->ListItem = explode('||', entitiesToUTF8(convertLegacyOptions("A compl&#233;ter;;important;;A suivre")));
+		$combo_tags->ListData = $combo_tags->ListItem;
+	}
+	$combo_tags->SelectName = 'tags';
 
 	if($selected_id) {
 		// mm: check member permissions
@@ -301,6 +310,7 @@ function missions_form($selected_id = '', $AllowUpdate = 1, $AllowInsert = 1, $A
 		$combo_date_fin->DefaultDate = $row['date_fin'];
 		$combo_client->SelectedData = $row['client'];
 		$combo_competences_utilisees->SelectedData = $row['competences_utilisees'];
+		$combo_tags->SelectedData = $row['tags'];
 		$urow = $row; /* unsanitized data */
 		$hc = new CI_Input();
 		$row = $hc->xss_clean($row); /* sanitize data */
@@ -318,6 +328,7 @@ function missions_form($selected_id = '', $AllowUpdate = 1, $AllowInsert = 1, $A
 	$combo_client->MatchText = '<span id="client-container-readonly' . $rnd1 . '"></span><input type="hidden" name="client" id="client' . $rnd1 . '" value="' . html_attr($combo_client->SelectedData) . '">';
 	$combo_competences_utilisees->HTML = '<span id="competences_utilisees-container' . $rnd1 . '"></span><input type="hidden" name="competences_utilisees" id="competences_utilisees' . $rnd1 . '" value="' . html_attr($combo_competences_utilisees->SelectedData) . '">';
 	$combo_competences_utilisees->MatchText = '<span id="competences_utilisees-container-readonly' . $rnd1 . '"></span><input type="hidden" name="competences_utilisees" id="competences_utilisees' . $rnd1 . '" value="' . html_attr($combo_competences_utilisees->SelectedData) . '">';
+	$combo_tags->Render();
 
 	ob_start();
 	?>
@@ -719,6 +730,8 @@ function missions_form($selected_id = '', $AllowUpdate = 1, $AllowInsert = 1, $A
 		$jsReadOnly .= "\tjQuery('#environnement').replaceWith('<div class=\"form-control-static\" id=\"environnement\">' + (jQuery('#environnement').val() || '') + '</div>');\n";
 		$jsReadOnly .= "\tjQuery('#competences_utilisees').prop('disabled', true).css({ color: '#555', backgroundColor: '#fff' });\n";
 		$jsReadOnly .= "\tjQuery('#competences_utilisees_caption').prop('disabled', true).css({ color: '#555', backgroundColor: 'white' });\n";
+		$jsReadOnly .= "\tjQuery('#tags').replaceWith('<div class=\"form-control-static\" id=\"tags\">' + (jQuery('#tags').val() || '') + '</div>'); jQuery('#tags-multi-selection-help').hide();\n";
+		$jsReadOnly .= "\tjQuery('#s2id_tags').remove();\n";
 		$jsReadOnly .= "\tjQuery('.select2-container').hide();\n";
 
 		$noUploads = true;
@@ -744,6 +757,8 @@ function missions_form($selected_id = '', $AllowUpdate = 1, $AllowInsert = 1, $A
 	$templateCode = str_replace('<%%COMBO(competences_utilisees)%%>', $combo_competences_utilisees->HTML, $templateCode);
 	$templateCode = str_replace('<%%COMBOTEXT(competences_utilisees)%%>', $combo_competences_utilisees->MatchText, $templateCode);
 	$templateCode = str_replace('<%%URLCOMBOTEXT(competences_utilisees)%%>', urlencode($combo_competences_utilisees->MatchText), $templateCode);
+	$templateCode = str_replace('<%%COMBO(tags)%%>', $combo_tags->HTML, $templateCode);
+	$templateCode = str_replace('<%%COMBOTEXT(tags)%%>', $combo_tags->SelectedData, $templateCode);
 
 	/* lookup fields array: 'lookup field name' => array('parent table name', 'lookup field caption') */
 	$lookup_fields = array('id_consultant' => array('consultant', 'Consultant'), 'rattache_a_filiere' => array('filiere', 'Fili&#232;re'), 'client' => array('client', 'Client'), 'competences_utilisees' => array('competences_ref', 'Comp&#233;tences utilis&#233;es'), );
@@ -774,6 +789,7 @@ function missions_form($selected_id = '', $AllowUpdate = 1, $AllowInsert = 1, $A
 	$templateCode = str_replace('<%%UPLOADFILE(client)%%>', '', $templateCode);
 	$templateCode = str_replace('<%%UPLOADFILE(environnement)%%>', '', $templateCode);
 	$templateCode = str_replace('<%%UPLOADFILE(competences_utilisees)%%>', '', $templateCode);
+	$templateCode = str_replace('<%%UPLOADFILE(tags)%%>', '', $templateCode);
 
 	// process values
 	if($selected_id) {
@@ -818,6 +834,9 @@ function missions_form($selected_id = '', $AllowUpdate = 1, $AllowInsert = 1, $A
 		if( $dvprint) $templateCode = str_replace('<%%VALUE(competences_utilisees)%%>', safe_html($urow['competences_utilisees']), $templateCode);
 		if(!$dvprint) $templateCode = str_replace('<%%VALUE(competences_utilisees)%%>', html_attr($row['competences_utilisees']), $templateCode);
 		$templateCode = str_replace('<%%URLVALUE(competences_utilisees)%%>', urlencode($urow['competences_utilisees']), $templateCode);
+		if( $dvprint) $templateCode = str_replace('<%%VALUE(tags)%%>', safe_html($urow['tags']), $templateCode);
+		if(!$dvprint) $templateCode = str_replace('<%%VALUE(tags)%%>', html_attr($row['tags']), $templateCode);
+		$templateCode = str_replace('<%%URLVALUE(tags)%%>', urlencode($urow['tags']), $templateCode);
 	}else{
 		$templateCode = str_replace('<%%VALUE(id_mission)%%>', '', $templateCode);
 		$templateCode = str_replace('<%%URLVALUE(id_mission)%%>', urlencode(''), $templateCode);
@@ -842,6 +861,8 @@ function missions_form($selected_id = '', $AllowUpdate = 1, $AllowInsert = 1, $A
 		$templateCode = str_replace('<%%URLVALUE(environnement)%%>', urlencode(''), $templateCode);
 		$templateCode = str_replace('<%%VALUE(competences_utilisees)%%>', '', $templateCode);
 		$templateCode = str_replace('<%%URLVALUE(competences_utilisees)%%>', urlencode(''), $templateCode);
+		$templateCode = str_replace('<%%VALUE(tags)%%>', '', $templateCode);
+		$templateCode = str_replace('<%%URLVALUE(tags)%%>', urlencode(''), $templateCode);
 	}
 
 	// process translations

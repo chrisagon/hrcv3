@@ -23,12 +23,13 @@
 	// Fields that can be displayed in the table view
 	$x->QueryFieldsTV = array(
 		"`competences_individuelles`.`id_comp_indiv`" => "id_comp_indiv",
-		"IF(    CHAR_LENGTH(`missions1`.`description_mission`) || CHAR_LENGTH(`client1`.`nom_du_client`), CONCAT_WS('',   `missions1`.`description_mission`, ' chez ', `client1`.`nom_du_client`), '') /* Rattache a la mission */" => "rattache_a_mission",
-		"IF(    CHAR_LENGTH(`competences_ref1`.`titre_competence`), CONCAT_WS('',   `competences_ref1`.`titre_competence`), '') /* Competence mis en oeuvre */" => "competence_mis_en_oeuvre",
+		"`competences_individuelles`.`Competences_specifiques`" => "Competences_specifiques",
+		"IF(    CHAR_LENGTH(`competences_ref1`.`titre_competence`), CONCAT_WS('',   `competences_ref1`.`titre_competence`), '') /* Competence r&#233;f. mis en oeuvre */" => "competence_mis_en_oeuvre",
 		"IF(    CHAR_LENGTH(`niveaux_ref1`.`titre`) || CHAR_LENGTH(`niveaux_ref1`.`niveau`), CONCAT_WS('',   `niveaux_ref1`.`titre`, ' : ', `niveaux_ref1`.`niveau`), '') /* Niveau de la comp&#233;tence */" => "niveau",
 		"IF(    CHAR_LENGTH(`consultant1`.`Prenom`) || CHAR_LENGTH(`consultant1`.`Nom`), CONCAT_WS('',   `consultant1`.`Prenom`, ', ', `consultant1`.`Nom`), '') /* detenu par */" => "consultant_id",
 		"`competences_individuelles`.`Documents_capitalises`" => "Documents_capitalises",
 		"if(CHAR_LENGTH(`competences_individuelles`.`commentaires`)>300, concat(left(`competences_individuelles`.`commentaires`,300),' ...'), `competences_individuelles`.`commentaires`)" => "commentaires",
+		"`competences_individuelles`.`tags`" => "tags",
 	);
 	// mapping incoming sort by requests to actual query fields
 	$x->SortFields = array(
@@ -39,44 +40,48 @@
 		5 => 5,
 		6 => 6,
 		7 => 7,
+		8 => 8,
 	);
 
 	// Fields that can be displayed in the csv file
 	$x->QueryFieldsCSV = array(
 		"`competences_individuelles`.`id_comp_indiv`" => "id_comp_indiv",
-		"IF(    CHAR_LENGTH(`missions1`.`description_mission`) || CHAR_LENGTH(`client1`.`nom_du_client`), CONCAT_WS('',   `missions1`.`description_mission`, ' chez ', `client1`.`nom_du_client`), '') /* Rattache a la mission */" => "rattache_a_mission",
-		"IF(    CHAR_LENGTH(`competences_ref1`.`titre_competence`), CONCAT_WS('',   `competences_ref1`.`titre_competence`), '') /* Competence mis en oeuvre */" => "competence_mis_en_oeuvre",
+		"`competences_individuelles`.`Competences_specifiques`" => "Competences_specifiques",
+		"IF(    CHAR_LENGTH(`competences_ref1`.`titre_competence`), CONCAT_WS('',   `competences_ref1`.`titre_competence`), '') /* Competence r&#233;f. mis en oeuvre */" => "competence_mis_en_oeuvre",
 		"IF(    CHAR_LENGTH(`niveaux_ref1`.`titre`) || CHAR_LENGTH(`niveaux_ref1`.`niveau`), CONCAT_WS('',   `niveaux_ref1`.`titre`, ' : ', `niveaux_ref1`.`niveau`), '') /* Niveau de la comp&#233;tence */" => "niveau",
 		"IF(    CHAR_LENGTH(`consultant1`.`Prenom`) || CHAR_LENGTH(`consultant1`.`Nom`), CONCAT_WS('',   `consultant1`.`Prenom`, ', ', `consultant1`.`Nom`), '') /* detenu par */" => "consultant_id",
 		"`competences_individuelles`.`Documents_capitalises`" => "Documents_capitalises",
 		"`competences_individuelles`.`commentaires`" => "commentaires",
+		"`competences_individuelles`.`tags`" => "tags",
 	);
 	// Fields that can be filtered
 	$x->QueryFieldsFilters = array(
 		"`competences_individuelles`.`id_comp_indiv`" => "Id comp indiv",
-		"IF(    CHAR_LENGTH(`missions1`.`description_mission`) || CHAR_LENGTH(`client1`.`nom_du_client`), CONCAT_WS('',   `missions1`.`description_mission`, ' chez ', `client1`.`nom_du_client`), '') /* Rattache a la mission */" => "Rattache a la mission",
-		"IF(    CHAR_LENGTH(`competences_ref1`.`titre_competence`), CONCAT_WS('',   `competences_ref1`.`titre_competence`), '') /* Competence mis en oeuvre */" => "Competence mis en oeuvre",
+		"`competences_individuelles`.`Competences_specifiques`" => "Comp&#233;tences specifiques du consultant",
+		"IF(    CHAR_LENGTH(`competences_ref1`.`titre_competence`), CONCAT_WS('',   `competences_ref1`.`titre_competence`), '') /* Competence r&#233;f. mis en oeuvre */" => "Competence r&#233;f. mis en oeuvre",
 		"IF(    CHAR_LENGTH(`niveaux_ref1`.`titre`) || CHAR_LENGTH(`niveaux_ref1`.`niveau`), CONCAT_WS('',   `niveaux_ref1`.`titre`, ' : ', `niveaux_ref1`.`niveau`), '') /* Niveau de la comp&#233;tence */" => "Niveau de la comp&#233;tence",
 		"IF(    CHAR_LENGTH(`consultant1`.`Prenom`) || CHAR_LENGTH(`consultant1`.`Nom`), CONCAT_WS('',   `consultant1`.`Prenom`, ', ', `consultant1`.`Nom`), '') /* detenu par */" => "detenu par",
 		"`competences_individuelles`.`Documents_capitalises`" => "Documents capitalises",
 		"`competences_individuelles`.`commentaires`" => "Commentaires",
+		"`competences_individuelles`.`tags`" => "Tags",
 	);
 
 	// Fields that can be quick searched
 	$x->QueryFieldsQS = array(
 		"`competences_individuelles`.`id_comp_indiv`" => "id_comp_indiv",
-		"IF(    CHAR_LENGTH(`missions1`.`description_mission`) || CHAR_LENGTH(`client1`.`nom_du_client`), CONCAT_WS('',   `missions1`.`description_mission`, ' chez ', `client1`.`nom_du_client`), '') /* Rattache a la mission */" => "rattache_a_mission",
-		"IF(    CHAR_LENGTH(`competences_ref1`.`titre_competence`), CONCAT_WS('',   `competences_ref1`.`titre_competence`), '') /* Competence mis en oeuvre */" => "competence_mis_en_oeuvre",
+		"`competences_individuelles`.`Competences_specifiques`" => "Competences_specifiques",
+		"IF(    CHAR_LENGTH(`competences_ref1`.`titre_competence`), CONCAT_WS('',   `competences_ref1`.`titre_competence`), '') /* Competence r&#233;f. mis en oeuvre */" => "competence_mis_en_oeuvre",
 		"IF(    CHAR_LENGTH(`niveaux_ref1`.`titre`) || CHAR_LENGTH(`niveaux_ref1`.`niveau`), CONCAT_WS('',   `niveaux_ref1`.`titre`, ' : ', `niveaux_ref1`.`niveau`), '') /* Niveau de la comp&#233;tence */" => "niveau",
 		"IF(    CHAR_LENGTH(`consultant1`.`Prenom`) || CHAR_LENGTH(`consultant1`.`Nom`), CONCAT_WS('',   `consultant1`.`Prenom`, ', ', `consultant1`.`Nom`), '') /* detenu par */" => "consultant_id",
 		"`competences_individuelles`.`Documents_capitalises`" => "Documents_capitalises",
 		"`competences_individuelles`.`commentaires`" => "Commentaires",
+		"`competences_individuelles`.`tags`" => "tags",
 	);
 
 	// Lookup fields that can be used as filterers
-	$x->filterers = array('rattache_a_mission' => 'Rattache a la mission', 'competence_mis_en_oeuvre' => 'Competence mis en oeuvre', 'niveau' => 'Niveau de la comp&#233;tence', 'consultant_id' => 'detenu par', );
+	$x->filterers = array('competence_mis_en_oeuvre' => 'Competence r&#233;f. mis en oeuvre', 'niveau' => 'Niveau de la comp&#233;tence', 'consultant_id' => 'detenu par', );
 
-	$x->QueryFrom = "`competences_individuelles` LEFT JOIN `missions` as missions1 ON `missions1`.`id_mission`=`competences_individuelles`.`rattache_a_mission` LEFT JOIN `client` as client1 ON `client1`.`id_client`=`missions1`.`client` LEFT JOIN `competences_ref` as competences_ref1 ON `competences_ref1`.`id_competence`=`competences_individuelles`.`competence_mis_en_oeuvre` LEFT JOIN `niveaux_ref` as niveaux_ref1 ON `niveaux_ref1`.`id_niveau`=`competences_individuelles`.`niveau` LEFT JOIN `consultant` as consultant1 ON `consultant1`.`id_consultant`=`competences_individuelles`.`consultant_id` ";
+	$x->QueryFrom = "`competences_individuelles` LEFT JOIN `competences_ref` as competences_ref1 ON `competences_ref1`.`id_competence`=`competences_individuelles`.`competence_mis_en_oeuvre` LEFT JOIN `niveaux_ref` as niveaux_ref1 ON `niveaux_ref1`.`id_niveau`=`competences_individuelles`.`niveau` LEFT JOIN `consultant` as consultant1 ON `consultant1`.`id_consultant`=`competences_individuelles`.`consultant_id` ";
 	$x->QueryWhere = '';
 	$x->QueryOrder = '';
 
@@ -104,10 +109,10 @@
 	$x->TableIcon = "resources/table_icons/brick.png";
 	$x->PrimaryKey = "`competences_individuelles`.`id_comp_indiv`";
 
-	$x->ColWidth   = array(  150, 150, 80, 150, 150);
-	$x->ColCaption = array("Competence mis en oeuvre", "Niveau de la comp&#233;tence", "detenu par", "Documents capitalises", "Commentaires");
-	$x->ColFieldName = array('competence_mis_en_oeuvre', 'niveau', 'consultant_id', 'Documents_capitalises', 'commentaires');
-	$x->ColNumber  = array(3, 4, 5, 6, 7);
+	$x->ColWidth   = array(  150, 150, 150, 80, 150, 150, 150);
+	$x->ColCaption = array("Comp&#233;tences specifiques du consultant", "Competence r&#233;f. mis en oeuvre", "Niveau de la comp&#233;tence", "detenu par", "Documents capitalises", "Commentaires", "Tags");
+	$x->ColFieldName = array('Competences_specifiques', 'competence_mis_en_oeuvre', 'niveau', 'consultant_id', 'Documents_capitalises', 'commentaires', 'tags');
+	$x->ColNumber  = array(2, 3, 4, 5, 6, 7, 8);
 
 	// template paths below are based on the app main directory
 	$x->Template = 'templates/competences_individuelles_templateTV.html';

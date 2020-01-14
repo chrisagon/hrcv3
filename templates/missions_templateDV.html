@@ -7,9 +7,6 @@
 	<!-- child links -->
 	<div class="row vspacer-md">
 		<div class="col-xs-12">
-			<a class="hidden-xs btn btn-default btn-lg pull-right hidden hspacer-sm" href="competences_individuelles_view.php?filterer_rattache_a_mission=<%%URLVALUE(id_mission)%%>&<%%EMBEDDED%%>" id="competences_individuelles_link"><i class="glyphicon glyphicon-list-alt"></i> Vos Competences </a>
-			<a class="visible-xs btn btn-default btn-lg btn-block hidden vspacer-sm" href="competences_individuelles_view.php?filterer_rattache_a_mission=<%%URLVALUE(id_mission)%%>&<%%EMBEDDED%%>" id="xs_competences_individuelles_link"><i class="glyphicon glyphicon-list-alt"></i> Vos Competences </a>
-			<input type="hidden" id="competences_individuelles_hclink" value="competences_individuelles_view.php?filterer_rattache_a_mission=<%%URLVALUE(id_mission)%%>&<%%EMBEDDED%%>">
 			<div class="clearfix"></div>
 		</div>
 	</div>
@@ -110,6 +107,14 @@
 					</div>
 				</div>
 
+				<div class="form-group">
+					<hr class="hidden-md hidden-lg">
+					<label for="tags" class="control-label col-lg-3">Tags</label>
+					<div class="col-lg-9">
+						<%%COMBO(tags)%%>
+					</div>
+				</div>
+
 			</fieldset>
 		</div>
 
@@ -133,14 +138,6 @@
 	</div>
 
 	<input type="hidden" name="rattache_a_filiere" value="<%%VALUE(rattache_a_filiere)%%>">
-
-	<!-- child records -->
-	<hr>
-	<div class="row">
-		<div class="col-lg-10 col-lg-offset-1">
-			<div id="missions-children" class="children-tabs"></div>
-		</div>
-	</div>
 
 </div><!-- /div class="panel-body" -->
 	<script src="nicEdit.js"></script>
@@ -180,38 +177,6 @@
 
 			$j('a[href="<%%TRANSLATION(ImageFolder)%%>"]').click(function() { /* */ return false; });
 
-			if(embedded_mode) {
-				/* hide links to children tables in embedded mode */
-				$j('.detail_view a[id$=_link]').remove();
-
-				/* append embedded mode to all links */
-				var append_embedded = function() {
-					$j('a[href]:not([href^="#"]):not([href^="javascript"]):not([href$="Embedded=1"]):not([href*="link.php?t="]):not([href^="mailto:"])').each(
-						function() {
-							$j(this).attr('href', $j(this).attr('href') + '&Embedded=1');
-						}
-					);
-				}
-				setTimeout(append_embedded, 500);
-				setTimeout(append_embedded, 1500);
-				setTimeout(append_embedded, 2500);
-				setTimeout(append_embedded, 3500);
-			}
-
-			/* when no record is selected ('add new' mode) */
-			if(add_new_mode) {
-				/* hide links to children tables */
-				$j('.detail_view a[id$=_link]').remove();
-			}else{
-				post(
-					'parent-children.php', {
-						ParentTable: 'missions',
-						SelectedID: '<%%VALUE(id_mission)%%>',
-						Operation: 'show-children'
-					},
-					'missions-children'
-				);
-			}
 
 			if(!embedded_mode) {
 				/* add a horizontal spacer to [add new parent] buttons that don't have a spacered element before them */

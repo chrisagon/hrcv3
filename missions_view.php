@@ -34,6 +34,7 @@
 		"IF(    CHAR_LENGTH(`client1`.`nom_du_client`), CONCAT_WS('',   `client1`.`nom_du_client`), '') /* Client */" => "client",
 		"if(CHAR_LENGTH(`missions`.`environnement`)>40, concat(left(`missions`.`environnement`,40),' ...'), `missions`.`environnement`)" => "environnement",
 		"IF(    CHAR_LENGTH(`domaine1`.`titre_domaine`) || CHAR_LENGTH(`filiere2`.`titre_filiere`) || CHAR_LENGTH(`competences_ref1`.`titre_competence`), CONCAT_WS('',   `domaine1`.`titre_domaine`, '>', `filiere2`.`titre_filiere`, `competences_ref1`.`titre_competence`), '') /* Comp&#233;tences utilis&#233;es */" => "competences_utilisees",
+		"`missions`.`tags`" => "tags",
 	);
 	// mapping incoming sort by requests to actual query fields
 	$x->SortFields = array(
@@ -49,6 +50,7 @@
 		10 => '`client1`.`nom_du_client`',
 		11 => 11,
 		12 => 12,
+		13 => 13,
 	);
 
 	// Fields that can be displayed in the csv file
@@ -65,6 +67,7 @@
 		"IF(    CHAR_LENGTH(`client1`.`nom_du_client`), CONCAT_WS('',   `client1`.`nom_du_client`), '') /* Client */" => "client",
 		"`missions`.`environnement`" => "environnement",
 		"IF(    CHAR_LENGTH(`domaine1`.`titre_domaine`) || CHAR_LENGTH(`filiere2`.`titre_filiere`) || CHAR_LENGTH(`competences_ref1`.`titre_competence`), CONCAT_WS('',   `domaine1`.`titre_domaine`, '>', `filiere2`.`titre_filiere`, `competences_ref1`.`titre_competence`), '') /* Comp&#233;tences utilis&#233;es */" => "competences_utilisees",
+		"`missions`.`tags`" => "tags",
 	);
 	// Fields that can be filtered
 	$x->QueryFieldsFilters = array(
@@ -80,6 +83,7 @@
 		"IF(    CHAR_LENGTH(`client1`.`nom_du_client`), CONCAT_WS('',   `client1`.`nom_du_client`), '') /* Client */" => "Client",
 		"`missions`.`environnement`" => "Environnement",
 		"IF(    CHAR_LENGTH(`domaine1`.`titre_domaine`) || CHAR_LENGTH(`filiere2`.`titre_filiere`) || CHAR_LENGTH(`competences_ref1`.`titre_competence`), CONCAT_WS('',   `domaine1`.`titre_domaine`, '>', `filiere2`.`titre_filiere`, `competences_ref1`.`titre_competence`), '') /* Comp&#233;tences utilis&#233;es */" => "Comp&#233;tences utilis&#233;es",
+		"`missions`.`tags`" => "Tags",
 	);
 
 	// Fields that can be quick searched
@@ -96,6 +100,7 @@
 		"IF(    CHAR_LENGTH(`client1`.`nom_du_client`), CONCAT_WS('',   `client1`.`nom_du_client`), '') /* Client */" => "client",
 		"`missions`.`environnement`" => "Environnement",
 		"IF(    CHAR_LENGTH(`domaine1`.`titre_domaine`) || CHAR_LENGTH(`filiere2`.`titre_filiere`) || CHAR_LENGTH(`competences_ref1`.`titre_competence`), CONCAT_WS('',   `domaine1`.`titre_domaine`, '>', `filiere2`.`titre_filiere`, `competences_ref1`.`titre_competence`), '') /* Comp&#233;tences utilis&#233;es */" => "competences_utilisees",
+		"`missions`.`tags`" => "tags",
 	);
 
 	// Lookup fields that can be used as filterers
@@ -131,10 +136,10 @@
 	$x->DefaultSortField = '`missions`.`date_debut`';
 	$x->DefaultSortDirection = 'desc';
 
-	$x->ColWidth   = array(  80, 150, 150, 150, 150, 150, 150, 150, 150, 150);
-	$x->ColCaption = array("Consultant", "Fili&#232;re", "Site mission", "Periode de la mission", "Date debut", "Date fin", "Objet de la mission", "Client", "Environnement", "Comp&#233;tences utilis&#233;es");
-	$x->ColFieldName = array('id_consultant', 'rattache_a_filiere', 'site_mission', 'periode', 'date_debut', 'date_fin', 'description_mission', 'client', 'environnement', 'competences_utilisees');
-	$x->ColNumber  = array(2, 3, 4, 5, 6, 7, 8, 10, 11, 12);
+	$x->ColWidth   = array(  80, 150, 150, 150, 150, 150, 150, 150, 150, 150, 150);
+	$x->ColCaption = array("Consultant", "Fili&#232;re", "Site mission", "Periode de la mission", "Date debut", "Date fin", "Objet de la mission", "Client", "Environnement", "Comp&#233;tences utilis&#233;es", "Tags");
+	$x->ColFieldName = array('id_consultant', 'rattache_a_filiere', 'site_mission', 'periode', 'date_debut', 'date_fin', 'description_mission', 'client', 'environnement', 'competences_utilisees', 'tags');
+	$x->ColNumber  = array(2, 3, 4, 5, 6, 7, 8, 10, 11, 12, 13);
 
 	// template paths below are based on the app main directory
 	$x->Template = 'templates/missions_templateTV.html';

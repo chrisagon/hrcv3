@@ -328,7 +328,7 @@ function missions_validateData() {
 function competences_individuelles_validateData() {
 	$j('.has-error').removeClass('has-error');
 	/* Field competence_mis_en_oeuvre can't be empty */
-	if($j('#competence_mis_en_oeuvre').val() == ''){ modal_window({ message: '<div class="alert alert-danger"><?php echo addslashes($Translation['field not null']); ?></div>', title: "<?php echo addslashes($Translation['error:']); ?> Competence mis en oeuvre", close: function() { /* */ $j('[name=competence_mis_en_oeuvre]').eq(0).focus().parents('.form-group').addClass('has-error'); }, footer: [{ label: '<?php echo addslashes($Translation['ok']); ?>' }] }); return false; };
+	if($j('#competence_mis_en_oeuvre').val() == ''){ modal_window({ message: '<div class="alert alert-danger"><?php echo addslashes($Translation['field not null']); ?></div>', title: "<?php echo addslashes($Translation['error:']); ?> Competence r&#233;f. mis en oeuvre", close: function() { /* */ $j('[name=competence_mis_en_oeuvre]').eq(0).focus().parents('.form-group').addClass('has-error'); }, footer: [{ label: '<?php echo addslashes($Translation['ok']); ?>' }] }); return false; };
 	/* Field niveau can't be empty */
 	if($j('#niveau').val() == ''){ modal_window({ message: '<div class="alert alert-danger"><?php echo addslashes($Translation['field not null']); ?></div>', title: "<?php echo addslashes($Translation['error:']); ?> Niveau de la comp&#233;tence", close: function() { /* */ $j('[name=niveau]').eq(0).focus().parents('.form-group').addClass('has-error'); }, footer: [{ label: '<?php echo addslashes($Translation['ok']); ?>' }] }); return false; };
 	/* Field consultant_id can't be empty */
@@ -379,6 +379,10 @@ function feedback_validateData() {
 	return true;
 }
 function emploi_fonctionnel_validateData() {
+	$j('.has-error').removeClass('has-error');
+	return true;
+}
+function tags_validateData() {
 	$j('.has-error').removeClass('has-error');
 	return true;
 }

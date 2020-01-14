@@ -8,7 +8,6 @@
 
 		/* data for selected record, or defaults if none is selected */
 		var data = {
-			rattache_a_mission: <?php echo json_encode(array('id' => $rdata['rattache_a_mission'], 'value' => $rdata['rattache_a_mission'], 'text' => $jdata['rattache_a_mission'])); ?>,
 			competence_mis_en_oeuvre: <?php echo json_encode(array('id' => $rdata['competence_mis_en_oeuvre'], 'value' => $rdata['competence_mis_en_oeuvre'], 'text' => $jdata['competence_mis_en_oeuvre'])); ?>,
 			niveau: <?php echo json_encode(array('id' => $rdata['niveau'], 'value' => $rdata['niveau'], 'text' => $jdata['niveau'])); ?>,
 			consultant_id: <?php echo json_encode(array('id' => $rdata['consultant_id'], 'value' => $rdata['consultant_id'], 'text' => $jdata['consultant_id'])); ?>
@@ -18,14 +17,6 @@
 		AppGini.cache = AppGini.cache || {};
 		AppGini.cache[tn] = AppGini.cache[tn] || AppGini.ajaxCache();
 		var cache = AppGini.cache[tn];
-
-		/* saved value for rattache_a_mission */
-		cache.addCheck(function(u, d) {
-			if(u != 'ajax_combo.php') return false;
-			if(d.t == tn && d.f == 'rattache_a_mission' && d.id == data.rattache_a_mission.id)
-				return { results: [ data.rattache_a_mission ], more: false, elapsed: 0.01 };
-			return false;
-		});
 
 		/* saved value for competence_mis_en_oeuvre */
 		cache.addCheck(function(u, d) {

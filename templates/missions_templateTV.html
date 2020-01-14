@@ -1,4 +1,4 @@
-		<td colspan="10" class="row">
+		<td colspan="11" class="row">
 			<div class="col-md-6">
 				<dl class="dl-horizontal">
 					<dt class="missions-id_consultant-caption field-caption-tv">Consultant</dt>
@@ -16,13 +16,13 @@
 					<dt class="missions-date_debut-caption field-caption-tv">Date debut</dt>
 					<dd id="missions-date_debut-<%%VALUE(id_mission)%%>" class="missions-date_debut"><%%SELECT%%><%%VALUE(date_debut)%%><%%ENDSELECT%%></dd>
 
+					<dt class="missions-date_fin-caption field-caption-tv">Date fin</dt>
+					<dd id="missions-date_fin-<%%VALUE(id_mission)%%>" class="missions-date_fin"><%%SELECT%%><%%VALUE(date_fin)%%><%%ENDSELECT%%></dd>
+
 				</dl>
 			</div>
 			<div class="col-md-6">
 				<dl class="dl-horizontal">
-					<dt class="missions-date_fin-caption field-caption-tv">Date fin</dt>
-					<dd id="missions-date_fin-<%%VALUE(id_mission)%%>" class="missions-date_fin"><%%SELECT%%><%%VALUE(date_fin)%%><%%ENDSELECT%%></dd>
-
 					<dt class="missions-description_mission-caption field-caption-tv">Objet de la mission</dt>
 					<dd id="missions-description_mission-<%%VALUE(id_mission)%%>" class="missions-description_mission"><%%SELECT%%><%%VALUE(description_mission)%%><%%ENDSELECT%%></dd>
 
@@ -34,6 +34,9 @@
 
 					<dt class="missions-competences_utilisees-caption field-caption-tv">Comp&#233;tences utilis&#233;es</dt>
 					<dd id="missions-competences_utilisees-<%%VALUE(id_mission)%%>" class="missions-competences_utilisees"><%%SELECT%%><%%VALUE(competences_utilisees)%%><%%ENDSELECT%%></dd>
+
+					<dt class="missions-tags-caption field-caption-tv">Tags</dt>
+					<dd id="missions-tags-<%%VALUE(id_mission)%%>" class="missions-tags"><%%SELECT%%><%%VALUE(tags)%%><%%ENDSELECT%%></dd>
 
 				</dl>
 			</div>

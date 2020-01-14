@@ -175,6 +175,13 @@
 					'group' => $tg[2],
 					'homepageShowCount' => 1
 				),
+				'tags' => array(
+					'Caption' => 'Tags',
+					'Description' => '',
+					'tableIcon' => 'table.gif',
+					'group' => $tg[2],
+					'homepageShowCount' => 0
+				),
 		);
 
 		if($skip_authentication || getLoggedAdmin()) return $all_tables;
@@ -202,6 +209,7 @@
 				'formation_suivi' => 'Formations suivis',
 				'feedback' => 'Feedback',
 				'emploi_fonctionnel' => 'Emploi fonctionnel',
+				'tags' => 'Tags',
 			);
 
 			return $arrTables;
@@ -1982,7 +1990,6 @@
 				'competences_ref' => array('competences_utilisees'),
 			),
 			'competences_individuelles' => array(
-				'missions' => array('rattache_a_mission'),
 				'competences_ref' => array('competence_mis_en_oeuvre'),
 				'niveaux_ref' => array('niveau'),
 				'consultant' => array('consultant_id'),

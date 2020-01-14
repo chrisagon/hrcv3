@@ -56,7 +56,8 @@
 			'carriere_consultant' => array('Votre Carriere', 'Les grandes &#233;tapes de votre vie de consultant.', 'resources/table_icons/chair.png', 'Votre CV'),
 			'formation_suivi' => array('Formations suivis', 'Indiquez ici la liste des formations internes ou externes que vous avez suivis', 'resources/table_icons/books.png', 'Votre CV'),
 			'feedback' => array('Feedback', 'Merci d\'utiliser cette fiche de remarque pour nous permettre d\'am&#233;liorer cette application', 'resources/table_icons/bulb.png', 'Votre CV'),
-			'emploi_fonctionnel' => array('Emploi fonctionnel', '', 'table.gif', 'R&#233;ferentiel')
+			'emploi_fonctionnel' => array('Emploi fonctionnel', '', 'table.gif', 'R&#233;ferentiel'),
+			'tags' => array('Tags', '', 'table.gif', 'R&#233;ferentiel')
 		);
 		if($skip_authentication || getLoggedAdmin()) return $arrTables;
 
@@ -144,8 +145,8 @@
 	function get_sql_fields($table_name) {
 		$sql_fields = array(
 			'consultant' => "`consultant`.`id_consultant` as 'id_consultant', `consultant`.`Matricule` as 'Matricule', `consultant`.`Prenom` as 'Prenom', `consultant`.`Nom` as 'Nom', `consultant`.`nom_complet` as 'nom_complet', `consultant`.`email` as 'email', `consultant`.`adresse_postale` as 'adresse_postale', `consultant`.`saisie_par` as 'saisie_par', IF(    CHAR_LENGTH(`consultant1`.`Prenom`) || CHAR_LENGTH(`consultant1`.`Nom`), CONCAT_WS('',   `consultant1`.`Prenom`, ', ', `consultant1`.`Nom`), '') as 'coache_par', IF(    CHAR_LENGTH(`emploi_fonctionnel1`.`titre_emploifct`), CONCAT_WS('',   `emploi_fonctionnel1`.`titre_emploifct`), '') as 'emploi_fonctionnel', `consultant`.`cv_hrc` as 'cv_hrc'",
-			'missions' => "`missions`.`id_mission` as 'id_mission', IF(    CHAR_LENGTH(`consultant1`.`Prenom`) || CHAR_LENGTH(`consultant1`.`Nom`), CONCAT_WS('',   `consultant1`.`Prenom`, ', ', `consultant1`.`Nom`), '') as 'id_consultant', IF(    CHAR_LENGTH(`filiere1`.`titre_filiere`), CONCAT_WS('',   `filiere1`.`titre_filiere`), '') as 'rattache_a_filiere', `missions`.`site_mission` as 'site_mission', `missions`.`periode` as 'periode', if(`missions`.`date_debut`,date_format(`missions`.`date_debut`,'%d/%m/%Y'),'') as 'date_debut', if(`missions`.`date_fin`,date_format(`missions`.`date_fin`,'%d/%m/%Y'),'') as 'date_fin', `missions`.`description_mission` as 'description_mission', `missions`.`description_detaille` as 'description_detaille', IF(    CHAR_LENGTH(`client1`.`nom_du_client`), CONCAT_WS('',   `client1`.`nom_du_client`), '') as 'client', `missions`.`environnement` as 'environnement', IF(    CHAR_LENGTH(`domaine1`.`titre_domaine`) || CHAR_LENGTH(`filiere2`.`titre_filiere`) || CHAR_LENGTH(`competences_ref1`.`titre_competence`), CONCAT_WS('',   `domaine1`.`titre_domaine`, '>', `filiere2`.`titre_filiere`, `competences_ref1`.`titre_competence`), '') as 'competences_utilisees'",
-			'competences_individuelles' => "`competences_individuelles`.`id_comp_indiv` as 'id_comp_indiv', IF(    CHAR_LENGTH(`missions1`.`description_mission`) || CHAR_LENGTH(`client1`.`nom_du_client`), CONCAT_WS('',   `missions1`.`description_mission`, ' chez ', `client1`.`nom_du_client`), '') as 'rattache_a_mission', IF(    CHAR_LENGTH(`competences_ref1`.`titre_competence`), CONCAT_WS('',   `competences_ref1`.`titre_competence`), '') as 'competence_mis_en_oeuvre', IF(    CHAR_LENGTH(`niveaux_ref1`.`titre`) || CHAR_LENGTH(`niveaux_ref1`.`niveau`), CONCAT_WS('',   `niveaux_ref1`.`titre`, ' : ', `niveaux_ref1`.`niveau`), '') as 'niveau', IF(    CHAR_LENGTH(`consultant1`.`Prenom`) || CHAR_LENGTH(`consultant1`.`Nom`), CONCAT_WS('',   `consultant1`.`Prenom`, ', ', `consultant1`.`Nom`), '') as 'consultant_id', `competences_individuelles`.`Documents_capitalises` as 'Documents_capitalises', `competences_individuelles`.`commentaires` as 'commentaires'",
+			'missions' => "`missions`.`id_mission` as 'id_mission', IF(    CHAR_LENGTH(`consultant1`.`Prenom`) || CHAR_LENGTH(`consultant1`.`Nom`), CONCAT_WS('',   `consultant1`.`Prenom`, ', ', `consultant1`.`Nom`), '') as 'id_consultant', IF(    CHAR_LENGTH(`filiere1`.`titre_filiere`), CONCAT_WS('',   `filiere1`.`titre_filiere`), '') as 'rattache_a_filiere', `missions`.`site_mission` as 'site_mission', `missions`.`periode` as 'periode', if(`missions`.`date_debut`,date_format(`missions`.`date_debut`,'%d/%m/%Y'),'') as 'date_debut', if(`missions`.`date_fin`,date_format(`missions`.`date_fin`,'%d/%m/%Y'),'') as 'date_fin', `missions`.`description_mission` as 'description_mission', `missions`.`description_detaille` as 'description_detaille', IF(    CHAR_LENGTH(`client1`.`nom_du_client`), CONCAT_WS('',   `client1`.`nom_du_client`), '') as 'client', `missions`.`environnement` as 'environnement', IF(    CHAR_LENGTH(`domaine1`.`titre_domaine`) || CHAR_LENGTH(`filiere2`.`titre_filiere`) || CHAR_LENGTH(`competences_ref1`.`titre_competence`), CONCAT_WS('',   `domaine1`.`titre_domaine`, '>', `filiere2`.`titre_filiere`, `competences_ref1`.`titre_competence`), '') as 'competences_utilisees', `missions`.`tags` as 'tags'",
+			'competences_individuelles' => "`competences_individuelles`.`id_comp_indiv` as 'id_comp_indiv', `competences_individuelles`.`Competences_specifiques` as 'Competences_specifiques', IF(    CHAR_LENGTH(`competences_ref1`.`titre_competence`), CONCAT_WS('',   `competences_ref1`.`titre_competence`), '') as 'competence_mis_en_oeuvre', IF(    CHAR_LENGTH(`niveaux_ref1`.`titre`) || CHAR_LENGTH(`niveaux_ref1`.`niveau`), CONCAT_WS('',   `niveaux_ref1`.`titre`, ' : ', `niveaux_ref1`.`niveau`), '') as 'niveau', IF(    CHAR_LENGTH(`consultant1`.`Prenom`) || CHAR_LENGTH(`consultant1`.`Nom`), CONCAT_WS('',   `consultant1`.`Prenom`, ', ', `consultant1`.`Nom`), '') as 'consultant_id', `competences_individuelles`.`Documents_capitalises` as 'Documents_capitalises', `competences_individuelles`.`commentaires` as 'commentaires', `competences_individuelles`.`tags` as 'tags'",
 			'client' => "`client`.`id_client` as 'id_client', `client`.`nom_du_client` as 'nom_du_client', `client`.`nom_du_contact` as 'nom_du_contact', `client`.`titre_du_contact` as 'titre_du_contact', `client`.`adresse_postale` as 'adresse_postale', `client`.`ville` as 'ville', `client`.`code_postal` as 'code_postal', `client`.`adresse_gm` as 'adresse_gm', `client`.`pays` as 'pays', `client`.`telephone_contact` as 'telephone_contact', `client`.`email` as 'email', `client`.`commentaires` as 'commentaires'",
 			'competences_ref' => "`competences_ref`.`id_competence` as 'id_competence', `competences_ref`.`titre_competence` as 'titre_competence', `competences_ref`.`description` as 'description', IF(    CHAR_LENGTH(`domaine1`.`titre_domaine`) || CHAR_LENGTH(`filiere1`.`titre_filiere`), CONCAT_WS('',   `domaine1`.`titre_domaine`, '>', `filiere1`.`titre_filiere`), '') as 'domaine_principal', `competences_ref`.`domaine` as 'domaine'",
 			'domaine' => "`domaine`.`id_domaine` as 'id_domaine', `domaine`.`titre_domaine` as 'titre_domaine', `domaine`.`description` as 'description', IF(    CHAR_LENGTH(`filiere1`.`titre_filiere`), CONCAT_WS('',   `filiere1`.`titre_filiere`), '') as 'rattache_a_filiere'",
@@ -155,6 +156,7 @@
 			'formation_suivi' => "`formation_suivi`.`id` as 'id', `formation_suivi`.`titre` as 'titre', `formation_suivi`.`niveau` as 'niveau', if(`formation_suivi`.`date_deb`,date_format(`formation_suivi`.`date_deb`,'%d/%m/%Y'),'') as 'date_deb', if(`formation_suivi`.`date_fin`,date_format(`formation_suivi`.`date_fin`,'%d/%m/%Y'),'') as 'date_fin', IF(    CHAR_LENGTH(`competences_ref1`.`titre_competence`) || CHAR_LENGTH(`domaine2`.`titre_domaine`) || CHAR_LENGTH(`filiere2`.`titre_filiere`), CONCAT_WS('',   `competences_ref1`.`titre_competence`, ' ', `domaine2`.`titre_domaine`, '>', `filiere2`.`titre_filiere`), '') as 'competence_principale', IF(    CHAR_LENGTH(`competences_ref1`.`titre_competence`) || CHAR_LENGTH(`domaine1`.`titre_domaine`) || CHAR_LENGTH(`filiere1`.`titre_filiere`), CONCAT_WS('',   `competences_ref1`.`titre_competence`, ' ', `domaine1`.`titre_domaine`, '>', `filiere1`.`titre_filiere`), '') as 'competence_secondaire', `formation_suivi`.`evaluation` as 'evaluation', IF(    CHAR_LENGTH(`consultant1`.`Prenom`) || CHAR_LENGTH(`consultant1`.`Nom`), CONCAT_WS('',   `consultant1`.`Prenom`, ' ', `consultant1`.`Nom`), '') as 'consultant_id', `formation_suivi`.`organisme` as 'organisme', `formation_suivi`.`commentaire` as 'commentaire'",
 			'feedback' => "`feedback`.`id` as 'id', `feedback`.`titre` as 'titre', `feedback`.`fonctionnalite` as 'fonctionnalite', `feedback`.`description` as 'description', `feedback`.`plus` as 'plus', `feedback`.`moins` as 'moins'",
 			'emploi_fonctionnel' => "`emploi_fonctionnel`.`id_ef` as 'id_ef', `emploi_fonctionnel`.`titre_emploifct` as 'titre_emploifct', `emploi_fonctionnel`.`grade` as 'grade', `emploi_fonctionnel`.`echelon` as 'echelon', `emploi_fonctionnel`.`description` as 'description'",
+			'tags' => "`tags`.`id` as 'id', `tags`.`tags` as 'tags'",
 		);
 
 		if(isset($sql_fields[$table_name])) {
@@ -170,7 +172,7 @@
 		$sql_from = array(
 			'consultant' => "`consultant` LEFT JOIN `consultant` as consultant1 ON `consultant1`.`id_consultant`=`consultant`.`coache_par` LEFT JOIN `emploi_fonctionnel` as emploi_fonctionnel1 ON `emploi_fonctionnel1`.`id_ef`=`consultant`.`emploi_fonctionnel` ",
 			'missions' => "`missions` LEFT JOIN `consultant` as consultant1 ON `consultant1`.`id_consultant`=`missions`.`id_consultant` LEFT JOIN `filiere` as filiere1 ON `filiere1`.`id_filiere`=`missions`.`rattache_a_filiere` LEFT JOIN `client` as client1 ON `client1`.`id_client`=`missions`.`client` LEFT JOIN `competences_ref` as competences_ref1 ON `competences_ref1`.`id_competence`=`missions`.`competences_utilisees` LEFT JOIN `domaine` as domaine1 ON `domaine1`.`id_domaine`=`competences_ref1`.`domaine_principal` LEFT JOIN `filiere` as filiere2 ON `filiere2`.`id_filiere`=`domaine1`.`rattache_a_filiere` ",
-			'competences_individuelles' => "`competences_individuelles` LEFT JOIN `missions` as missions1 ON `missions1`.`id_mission`=`competences_individuelles`.`rattache_a_mission` LEFT JOIN `client` as client1 ON `client1`.`id_client`=`missions1`.`client` LEFT JOIN `competences_ref` as competences_ref1 ON `competences_ref1`.`id_competence`=`competences_individuelles`.`competence_mis_en_oeuvre` LEFT JOIN `niveaux_ref` as niveaux_ref1 ON `niveaux_ref1`.`id_niveau`=`competences_individuelles`.`niveau` LEFT JOIN `consultant` as consultant1 ON `consultant1`.`id_consultant`=`competences_individuelles`.`consultant_id` ",
+			'competences_individuelles' => "`competences_individuelles` LEFT JOIN `competences_ref` as competences_ref1 ON `competences_ref1`.`id_competence`=`competences_individuelles`.`competence_mis_en_oeuvre` LEFT JOIN `niveaux_ref` as niveaux_ref1 ON `niveaux_ref1`.`id_niveau`=`competences_individuelles`.`niveau` LEFT JOIN `consultant` as consultant1 ON `consultant1`.`id_consultant`=`competences_individuelles`.`consultant_id` ",
 			'client' => "`client` ",
 			'competences_ref' => "`competences_ref` LEFT JOIN `domaine` as domaine1 ON `domaine1`.`id_domaine`=`competences_ref`.`domaine_principal` LEFT JOIN `filiere` as filiere1 ON `filiere1`.`id_filiere`=`domaine1`.`rattache_a_filiere` ",
 			'domaine' => "`domaine` LEFT JOIN `filiere` as filiere1 ON `filiere1`.`id_filiere`=`domaine`.`rattache_a_filiere` ",
@@ -180,6 +182,7 @@
 			'formation_suivi' => "`formation_suivi` LEFT JOIN `competences_ref` as competences_ref1 ON `competences_ref1`.`id_competence`=`formation_suivi`.`competence_secondaire` LEFT JOIN `domaine` as domaine1 ON `domaine1`.`id_domaine`=`competences_ref1`.`domaine_principal` LEFT JOIN `filiere` as filiere1 ON `filiere1`.`id_filiere`=`domaine1`.`rattache_a_filiere` LEFT JOIN `consultant` as consultant1 ON `consultant1`.`id_consultant`=`formation_suivi`.`consultant_id` LEFT JOIN `domaine` as domaine2 ON `domaine2`.`id_domaine`=`competences_ref1`.`domaine_principal` LEFT JOIN `filiere` as filiere2 ON `filiere2`.`id_filiere`=`domaine2`.`rattache_a_filiere` ",
 			'feedback' => "`feedback` ",
 			'emploi_fonctionnel' => "`emploi_fonctionnel` ",
+			'tags' => "`tags` ",
 		);
 
 		$pkey = array(
@@ -195,6 +198,7 @@
 			'formation_suivi' => 'id',
 			'feedback' => 'id',
 			'emploi_fonctionnel' => 'id_ef',
+			'tags' => 'id',
 		);
 
 		if(!isset($sql_from[$table_name])) return false;
@@ -268,16 +272,18 @@
 				'description_detaille' => '',
 				'client' => '',
 				'environnement' => '',
-				'competences_utilisees' => ''
+				'competences_utilisees' => '',
+				'tags' => ''
 			),
 			'competences_individuelles' => array(
 				'id_comp_indiv' => '',
-				'rattache_a_mission' => '',
+				'Competences_specifiques' => '',
 				'competence_mis_en_oeuvre' => '',
 				'niveau' => '',
 				'consultant_id' => '',
 				'Documents_capitalises' => '',
-				'commentaires' => ''
+				'commentaires' => '',
+				'tags' => ''
 			),
 			'client' => array(
 				'id_client' => '',
@@ -350,6 +356,10 @@
 				'grade' => '',
 				'echelon' => '',
 				'description' => ''
+			),
+			'tags' => array(
+				'id' => '',
+				'tags' => ''
 			)
 		);
 

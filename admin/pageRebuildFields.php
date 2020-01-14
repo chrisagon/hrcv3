@@ -36,15 +36,17 @@
 			'client' => array('appgini' => 'INT unsigned null '),
 			'environnement' => array('appgini' => 'VARCHAR(254) null '),
 			'competences_utilisees' => array('appgini' => 'INT unsigned null '),
+			'tags' => array('appgini' => 'TEXT null '),
 		),
 		'competences_individuelles' => array(
 			'id_comp_indiv' => array('appgini' => 'INT unsigned not null primary key auto_increment '),
-			'rattache_a_mission' => array('appgini' => 'INT unsigned null '),
+			'Competences_specifiques' => array('appgini' => 'VARCHAR(40) null '),
 			'competence_mis_en_oeuvre' => array('appgini' => 'INT unsigned not null '),
 			'niveau' => array('appgini' => 'INT unsigned not null '),
 			'consultant_id' => array('appgini' => 'INT unsigned not null '),
 			'Documents_capitalises' => array('appgini' => 'VARCHAR(40) null '),
 			'commentaires' => array('appgini' => 'TEXT null '),
+			'tags' => array('appgini' => 'TEXT null '),
 		),
 		'client' => array(
 			'id_client' => array('appgini' => 'INT unsigned not null primary key auto_increment '),
@@ -117,6 +119,10 @@
 			'grade' => array('appgini' => 'VARCHAR(40) null '),
 			'echelon' => array('appgini' => 'VARCHAR(40) null '),
 			'description' => array('appgini' => 'TEXT null '),
+		),
+		'tags' => array(
+			'id' => array('appgini' => 'INT unsigned not null primary key auto_increment '),
+			'tags' => array('appgini' => 'VARCHAR(40) null '),
 		),
 	);
 

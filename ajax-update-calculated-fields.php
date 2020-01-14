@@ -38,6 +38,8 @@ WHERE `consultant`.`id_consultant`=\'%ID%\'',
 		),
 		'emploi_fonctionnel' => array(
 		),
+		'tags' => array(
+		),
 	);
 
 	cleanup_calc_fields($calc);

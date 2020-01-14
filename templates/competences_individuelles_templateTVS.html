@@ -5,11 +5,13 @@
 <!-- add the following to the competences_individuelles_init() hook (in hooks/competences_individuelles.php file) -->
 <!--     $options->ShowTableHeader = 0;     -->
 
+		<td id="competences_individuelles-Competences_specifiques-<%%VALUE(id_comp_indiv)%%>" class="competences_individuelles-Competences_specifiques"><%%VALUE(Competences_specifiques)%%></td>
 		<td id="competences_individuelles-competence_mis_en_oeuvre-<%%VALUE(id_comp_indiv)%%>" class="competences_individuelles-competence_mis_en_oeuvre"><%%VALUE(competence_mis_en_oeuvre)%%></td>
 		<td id="competences_individuelles-niveau-<%%VALUE(id_comp_indiv)%%>" class="competences_individuelles-niveau"><%%VALUE(niveau)%%></td>
 		<td id="competences_individuelles-consultant_id-<%%VALUE(id_comp_indiv)%%>" class="competences_individuelles-consultant_id"><%%VALUE(consultant_id)%%></td>
 		<td id="competences_individuelles-Documents_capitalises-<%%VALUE(id_comp_indiv)%%>" class="competences_individuelles-Documents_capitalises"><a href="link.php?t=competences_individuelles&f=Documents_capitalises&i=<%%VALUE(id_comp_indiv)%%>" target="_blank" title="<%%VALUE(Documents_capitalises)%%>" class="btn btn-default"><i class="glyphicon glyphicon-file text-info"></i></a></td>
 		<td id="competences_individuelles-commentaires-<%%VALUE(id_comp_indiv)%%>" class="competences_individuelles-commentaires"><%%VALUE(commentaires)%%></td>
+		<td id="competences_individuelles-tags-<%%VALUE(id_comp_indiv)%%>" class="competences_individuelles-tags"><%%VALUE(tags)%%></td>
 		<script>$j(function(){
 			var e_Documents_capitalises = '<%%VALUE(Documents_capitalises)%%>'; if(e_Documents_capitalises == '' || e_Documents_capitalises == '&nbsp;') $j(/*<*/ '#competences_individuelles-Documents_capitalises-<%%VALUE(id_comp_indiv)%%>' /*>*/).html('');
 		});</script>

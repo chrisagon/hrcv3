@@ -8,6 +8,7 @@
 $currDir2 = dirname( __FILE__ );
 include "$currDir2/extraire_cv.php";
 include "$currDir2/alim_missions_cv.php";
+include "$currDir2/alim_competences_indiv_cv.php";
 // error message to be logged
 $error_message = "Ceci est un message erreur!\r";
 
@@ -15,7 +16,7 @@ $error_message = "Ceci est un message erreur!\r";
 $log_file = "./mes-erreurs.log";
 
 // logging error message to given log file
-error_log($error_message, 3, $log_file); 
+//error_log($error_message, 3, $log_file);
 /**
  * Called before rendering the page. This is a very powerful hook that allows you to control all aspects of how the page is rendered.
  *
@@ -198,7 +199,9 @@ si OUI alors lire le CV pour alimenter les missions */
    
     /* chemin du CV */
     $currDir3=dirname(__FILE__ , 2 );
-    $chemin_cv = $currDir3."\\images\\".$data['cv_hrc'];
+    $chemin_cv = $currDir3.DIRECTORY_SEPARATOR."images".DIRECTORY_SEPARATOR.$data['cv_hrc'];
+            /*$error_message = $chemin_cv." Fichier non trouve !\r";
+        error_log($error_message, 3, "./mes-erreurs.log");*/
 
     if ( isset($chemin_cv ) && !file_exists( $chemin_cv ) ) {
         echo $chemin_cv." Fichier non trouve !";
@@ -221,28 +224,30 @@ si OUI alors lire le CV pour alimenter les missions */
     }
 
    //echo '<pre>'.print_r($tablo_danalyse, true); exit;
-    $error_message = "225:avant eclatement \r";
-    error_log($error_message, 3, "./mes-erreurs.log");
+
 // boucle sur missions pour :
 // alim_missions_cv.php
     foreach ( $tablo_danalyse as $ligne ) {
+    /*$error_message = "230: Ligne analyser : ".$ligne. "\r";
+    error_log($error_message, 3, "./mes-erreurs.log");*/
         $site_mission   = prendre_chaine_entre( $ligne, 'MISSION :', 'µ' );
-        if (!empty($site_mission)){ $site_mission_upd = substr($site_mission,0,64);}
+        $site_mission_fct = ltrim($site_mission, "\x00..\x1F");
+        if (!empty($site_mission_fct)){ $site_mission_upd = substr($site_mission_fct,0,64);}
         $periode        = prendre_chaine_entre( $ligne, 'PERIODE :', '/FINBLOK' );
-        if (!empty($periode)){ $periode_upd = $periode;}
+        if (!empty($periode)){ $periode_upd = substr($periode,0,39);}
         $objet_mission  = prendre_chaine_entre( $ligne, 'OBJET :', '/FINBLOK' );
         if (!empty($objet_mission)) { $objet_mission_upd = $objet_mission;}
         $detail_mission = prendre_chaine_entre( $ligne, 'DETAIL :', '/FINBLOK' );
         if (!empty($detail_mission)) { $detail_mission_upd = $detail_mission;}
         $environnement  = prendre_chaine_entre( $ligne, 'ENVIRONNEMENT :', '/FINBLOK' );
         if (!empty($environnement)) { $environnement_upd = substr($environnement,0,254);}
-        $error_message =  "\r 238:missions_cv_insert = 0 ".$ligne ."\r 1" . $site_mission_upd ."\r 2:". $periode_upd." \r 3:". $objet_mission_upd . "<\r 4:" .
+       /* $error_message =  "\r 238:missions_cv_insert = 0 ".$ligne ."\r 1" . $site_mission_upd ."\r 2:". $periode_upd." \r 3:". $objet_mission_upd . "<\r 4:" .
             $detail_mission_upd ."\r 5:". $environnement_upd."\r" ;
-        error_log($error_message, 3, "./mes-erreurs.log"); 
+        error_log($error_message, 3, "./mes-erreurs.log");*/
         if (!empty($site_mission_upd) && !empty($periode_upd) && !empty($objet_mission_upd) && !empty($detail_mission_upd) ) {
-            $error_message =  "\r INSERT :missions_cv_insert = 1" . $site_mission_upd ."\r 2:". $periode_upd." \r 3:". $objet_mission_upd . "<\r 4:" .
+            /*$error_message =  "\r INSERT :missions_cv_insert = 1" . $site_mission_upd ."\r 2:". $periode_upd." \r 3:". $objet_mission_upd . "<\r 4:" .
                 $detail_mission ."\r 5:". $environnement_upd."\r" ;
-                error_log($error_message, 3, "./mes-erreurs.log");
+                error_log($error_message, 3, "./mes-erreurs.log");*/
                 missions_cv_insert( $data, $site_mission_upd, $periode_upd, $objet_mission_upd,
             $detail_mission_upd, $environnement_upd );
                 /* Réinitialisation des variables de stockage */
@@ -253,11 +258,19 @@ si OUI alors lire le CV pour alimenter les missions */
                 $environnement_upd = '';
                 
         }
+         // INSERTION&nbsp;Compétences individuelles
+         $competence_indiv = prendre_chaine_entre( $ligne, 'COMPETENCES :', '/FINBLOK' );
+         if (!empty($competence_indiv)){
+            /* $error_message = "competences CV".$competence_indiv."\r";
+             error_log($error_message, 3, "./mes-erreurs.log");*/
+            $competence_indiv_upd = substr($competence_indiv,0,40);
+            competences_individuelles_cv_insert( $data, $competence_indiv_upd);
+            }
 
     }
-    $error_message = "après eclatement \r";
+/*    $error_message = "après eclatement \r";
     error_log($error_message, 3, "./mes-erreurs.log");
-    
+*/
     return true;
 }
 
@@ -310,7 +323,7 @@ function consultant_before_update( &$data, $memberInfo, &$args )
  */
 
 function consultant_after_update( $data, $memberInfo, &$args ){
-  echo "<br>apres update&nbsp; Consultant </br>";
+
     return true;
 }
 

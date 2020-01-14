@@ -227,6 +227,24 @@ emploi_fonctionnel_delete1Tip=["",spacer+"This option allows each member of the 
 emploi_fonctionnel_delete2Tip=["",spacer+"This option allows each member of the group to delete any record owned by any member of the group in the 'Emploi fonctionnel' table."];
 emploi_fonctionnel_delete3Tip=["",spacer+"This option allows each member of the group to delete any records in the 'Emploi fonctionnel' table."];
 
+// tags table
+tags_addTip=["",spacer+"This option allows all members of the group to add records to the 'Tags' table. A member who adds a record to the table becomes the 'owner' of that record."];
+
+tags_view0Tip=["",spacer+"This option prohibits all members of the group from viewing any record in the 'Tags' table."];
+tags_view1Tip=["",spacer+"This option allows each member of the group to view only his own records in the 'Tags' table."];
+tags_view2Tip=["",spacer+"This option allows each member of the group to view any record owned by any member of the group in the 'Tags' table."];
+tags_view3Tip=["",spacer+"This option allows each member of the group to view all records in the 'Tags' table."];
+
+tags_edit0Tip=["",spacer+"This option prohibits all members of the group from modifying any record in the 'Tags' table."];
+tags_edit1Tip=["",spacer+"This option allows each member of the group to edit only his own records in the 'Tags' table."];
+tags_edit2Tip=["",spacer+"This option allows each member of the group to edit any record owned by any member of the group in the 'Tags' table."];
+tags_edit3Tip=["",spacer+"This option allows each member of the group to edit any records in the 'Tags' table, regardless of their owner."];
+
+tags_delete0Tip=["",spacer+"This option prohibits all members of the group from deleting any record in the 'Tags' table."];
+tags_delete1Tip=["",spacer+"This option allows each member of the group to delete only his own records in the 'Tags' table."];
+tags_delete2Tip=["",spacer+"This option allows each member of the group to delete any record owned by any member of the group in the 'Tags' table."];
+tags_delete3Tip=["",spacer+"This option allows each member of the group to delete any records in the 'Tags' table."];
+
 /*
 	Style syntax:
 	-------------

@@ -60,22 +60,56 @@
             zip_close( $zip );
     /* Identification des balises d'extractions  */
 /*            $content = stripAccents($content); */
-            $content = str_replace( '<w:pPr><w:pStyle w:val="Titre"/><w:rPr><w:lang w:val="en-US"/></w:rPr></w:pPr>',
+// nettoyage de chaines inutiles pour les titres et balises
+            $content = str_ireplace('<w:szCs w:val="24"/>', "", $content);
+            $content = str_ireplace('<w:sz w:val="24"/>', "", $content);
+            $content = str_ireplace('<w:rFonts w:cs="Arial"/>', "", $content);
+            $content = str_ireplace('<w:lang w:val="fr-FR" w:eastAsia="fr-FR"/>', "", $content);
+            $content = str_ireplace('<w:lang w:val="en-US"/>', "", $content);
+            $content = str_ireplace('<w:keepNext/>', "", $content);
+            $content = str_ireplace('<w:lastRenderedPageBreak/>', "", $content);
+            $content = str_ireplace('<w:proofErr w:type="spellStart"/>', "", $content);
+            $content = str_ireplace('<w:proofErr w:type="spellEnd"/>', "", $content);
+            $content = str_ireplace('<w:ind w:left="0" w:firstLine="0"/>', "", $content);
+//            $content = preg_replace('#<w:rPr><w:rFonts w(.+)/></w:rPr>#isx', "#",$content);
+            $content = preg_replace('#\<w:rpr\><w:rfonts (.+?)\<\/w:rpr\>#isx', "",$content);
+            $content = preg_replace('/w:pos="..."/', "",$content);
+            $content = preg_replace('/w:left="..."/', "",$content);
+            $content = preg_replace('/w:hanging="..."/', "",$content);
+            $content = preg_replace('#w:rsidRDefault="........"#isx', "",$content);
+            $content = preg_replace('#w:rsidRPr="........"#isx', "",$content);
+            $content = preg_replace('#w:rsid.="........"#isx', "",$content);
+            $content = preg_replace('#\<w:tabs\>\<w:tab w:val="clear"(.+?)\<\/w:tabs\>#isx', "",$content);
+            $content = str_ireplace('<w:rPr></w:rPr>', "", $content);
+            $content = str_ireplace('<w:rPr><w:lang w:val="fr-FR"/></w:rPr>', "", $content);
+            $content = str_ireplace('<w:r >', '<w:r>', $content);
+
+
+        /*$error_message = "Contenu nettoye = ".var_export($content, true)."\r";
+        error_log($error_message, 3, "./mes-erreurs.log");*/
+
+            // recherche de chaines à extraire :
+            $content = str_replace( '<w:pPr><w:pStyle w:val="Titre"/></w:pPr>',
                 "µ|NOM :", $content );
-            $content = str_replace( '<w:pPr><w:pStyle w:val="Titre"/><w:rPr><w:lang w:val="en-US"/></w:rPr></w:pPr>',
-                "|TITRE :", $content );
-            $content = str_replace( '<w:pStyle w:val="Titre2"/><w:rPr><w:rFonts w:cs="Arial"/><w:szCs w:val="24"/><w:lang w:val="fr-FR" w:eastAsia="fr-FR"/></w:rPr></w:pPr><w:r><w:rPr><w:rFonts w:cs="Arial"/><w:szCs w:val="24"/><w:lang w:val="fr-FR" w:eastAsia="fr-FR"/></w:rPr>',
+            $content = str_replace( '<w:pPr><w:pStyle w:val="Titre2"/></w:pPr><w:r><w:t>',
                 "|MISSION :", $content );
-            $content = str_replace( '<w:pPr><w:pStyle w:val="Titre2"/><w:rPr><w:rFonts w:cs="Arial"/><w:szCs w:val="24"/></w:rPr></w:pPr>',
+            $content = str_replace( '<w:pPr><w:pStyle w:val="Titre2"/><w:tabs><w:tab w:val="clear" /><w:tab w:val="num" /></w:tabs><w:ind  /><w:jc w:val="left"/></w:pPr><w:r><w:t>',
                 "|MISSION :", $content );
+            $content = str_replace( '<w:pPr><w:pStyle w:val="Titre2"/><w:tabs><w:tab w:val="clear" /></w:tabs></w:pPr><w:r><w:t>',
+                "|MISSION :", $content );
+            $content = str_replace( '<w:t xml:space="preserve">Objet de la </w:t></w:r><w:r ><w:t>mission</w:t>', "|OBJET :", $content );
+            $content = str_replace( '<w:t>Objet de la mission</w:t>', "|OBJET :", $content );
+            $content = str_replace( '<w:t xml:space="preserve">Objet de la </w:t></w:r><w:r><w:t>mission</w:t></w:r>', "|OBJET :", $content );
+            $content = preg_replace( '/<w:t xml:space="preserve">Objet de la <\/w:t><\/w:r><w:r w:rsidRPr="."><w:t>mission<\/w:t><\/w:r><\/w:p><\/w:tc>/', "|OBJET :", $content );
             $content = str_replace( '<w:pPr><w:pStyle w:val="Dates"/>',
                 "µ|PERIODE :", $content );
-            $content =
-                str_replace( '<w:t xml:space="preserve">Objet de la </w:t></w:r><w:r w:rsidRPr="008369C3"><w:t>mission</w:t></w:r></w:p></w:tc>', "|OBJET :", $content );
-            $content = str_replace( '<w:r w:rsidRPr="00564F0A"><w:t>Detail de la mission</w:t></w:r></w:p>', "|DETAIL :", $content );
+//            $content = preg_replace( '/<w:r w:rsidRPr="."><w:t>D.tail de la mission</\w:t><\/w:r><\/w:p>/', "|DETAIL :", $content );
             $content = str_replace( '<w:t>DÃ©tail de la mission</w:t>', "|DETAIL :", $content );
             $content = str_replace( '<w:t>Environnement</w:t>', "|ENVIRONNEMENT :", $content );
+            $content = str_replace( '<w:numPr><w:ilvl w:val="0"/><w:numId w:val="6"/></w:numPr>', "|COMPETENCES :", $content );
             $content = str_replace( '</w:t></w:r></w:p></w:tc></w:tr>', "/FINBLOK|", $content );
+        /*$error_message = "Contenu formate = ".var_export($content, true)."\r";
+        error_log($error_message, 3, "./mes-erreurs.log");*/
 
 /*                  $replace_newlines   = preg_replace( '/<w:p w[0-9-Za-z]+:[a-zA-Z0-9]+="[a-zA-z"0-9 :="]+">/', "\n\r", $content );
                     $replace_tableRows  = preg_replace( '/<w:tr>/', "\n\r", $replace_newlines );
