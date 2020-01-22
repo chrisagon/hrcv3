@@ -11,7 +11,8 @@
 			id_consultant: <?php echo json_encode(array('id' => $rdata['id_consultant'], 'value' => $rdata['id_consultant'], 'text' => $jdata['id_consultant'])); ?>,
 			rattache_a_filiere: <?php echo json_encode(array('id' => $rdata['rattache_a_filiere'], 'value' => $rdata['rattache_a_filiere'], 'text' => $jdata['rattache_a_filiere'])); ?>,
 			client: <?php echo json_encode(array('id' => $rdata['client'], 'value' => $rdata['client'], 'text' => $jdata['client'])); ?>,
-			competences_utilisees: <?php echo json_encode(array('id' => $rdata['competences_utilisees'], 'value' => $rdata['competences_utilisees'], 'text' => $jdata['competences_utilisees'])); ?>
+			competences_utilisees: <?php echo json_encode(array('id' => $rdata['competences_utilisees'], 'value' => $rdata['competences_utilisees'], 'text' => $jdata['competences_utilisees'])); ?>,
+			tags: <?php echo json_encode(array('id' => $rdata['tags'], 'value' => $rdata['tags'], 'text' => $jdata['tags'])); ?>
 		};
 
 		/* initialize or continue using AppGini.cache for the current table */
@@ -48,6 +49,14 @@
 			if(u != 'ajax_combo.php') return false;
 			if(d.t == tn && d.f == 'competences_utilisees' && d.id == data.competences_utilisees.id)
 				return { results: [ data.competences_utilisees ], more: false, elapsed: 0.01 };
+			return false;
+		});
+
+		/* saved value for tags */
+		cache.addCheck(function(u, d) {
+			if(u != 'ajax_combo.php') return false;
+			if(d.t == tn && d.f == 'tags' && d.id == data.tags.id)
+				return { results: [ data.tags ], more: false, elapsed: 0.01 };
 			return false;
 		});
 

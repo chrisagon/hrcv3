@@ -74,4 +74,5 @@ function competences_individuelles_cv_insert($data_fct, $competence_indiv_fct) {
 
     return $recID;
 }
+
 ?>

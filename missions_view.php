@@ -34,7 +34,7 @@
 		"IF(    CHAR_LENGTH(`client1`.`nom_du_client`), CONCAT_WS('',   `client1`.`nom_du_client`), '') /* Client */" => "client",
 		"if(CHAR_LENGTH(`missions`.`environnement`)>40, concat(left(`missions`.`environnement`,40),' ...'), `missions`.`environnement`)" => "environnement",
 		"IF(    CHAR_LENGTH(`domaine1`.`titre_domaine`) || CHAR_LENGTH(`filiere2`.`titre_filiere`) || CHAR_LENGTH(`competences_ref1`.`titre_competence`), CONCAT_WS('',   `domaine1`.`titre_domaine`, '>', `filiere2`.`titre_filiere`, `competences_ref1`.`titre_competence`), '') /* Comp&#233;tences utilis&#233;es */" => "competences_utilisees",
-		"`missions`.`tags`" => "tags",
+		"IF(    CHAR_LENGTH(`tags1`.`tags`), CONCAT_WS('',   `tags1`.`tags`), '') /* Tags */" => "tags",
 	);
 	// mapping incoming sort by requests to actual query fields
 	$x->SortFields = array(
@@ -50,7 +50,7 @@
 		10 => '`client1`.`nom_du_client`',
 		11 => 11,
 		12 => 12,
-		13 => 13,
+		13 => '`tags1`.`tags`',
 	);
 
 	// Fields that can be displayed in the csv file
@@ -67,7 +67,7 @@
 		"IF(    CHAR_LENGTH(`client1`.`nom_du_client`), CONCAT_WS('',   `client1`.`nom_du_client`), '') /* Client */" => "client",
 		"`missions`.`environnement`" => "environnement",
 		"IF(    CHAR_LENGTH(`domaine1`.`titre_domaine`) || CHAR_LENGTH(`filiere2`.`titre_filiere`) || CHAR_LENGTH(`competences_ref1`.`titre_competence`), CONCAT_WS('',   `domaine1`.`titre_domaine`, '>', `filiere2`.`titre_filiere`, `competences_ref1`.`titre_competence`), '') /* Comp&#233;tences utilis&#233;es */" => "competences_utilisees",
-		"`missions`.`tags`" => "tags",
+		"IF(    CHAR_LENGTH(`tags1`.`tags`), CONCAT_WS('',   `tags1`.`tags`), '') /* Tags */" => "tags",
 	);
 	// Fields that can be filtered
 	$x->QueryFieldsFilters = array(
@@ -83,7 +83,7 @@
 		"IF(    CHAR_LENGTH(`client1`.`nom_du_client`), CONCAT_WS('',   `client1`.`nom_du_client`), '') /* Client */" => "Client",
 		"`missions`.`environnement`" => "Environnement",
 		"IF(    CHAR_LENGTH(`domaine1`.`titre_domaine`) || CHAR_LENGTH(`filiere2`.`titre_filiere`) || CHAR_LENGTH(`competences_ref1`.`titre_competence`), CONCAT_WS('',   `domaine1`.`titre_domaine`, '>', `filiere2`.`titre_filiere`, `competences_ref1`.`titre_competence`), '') /* Comp&#233;tences utilis&#233;es */" => "Comp&#233;tences utilis&#233;es",
-		"`missions`.`tags`" => "Tags",
+		"IF(    CHAR_LENGTH(`tags1`.`tags`), CONCAT_WS('',   `tags1`.`tags`), '') /* Tags */" => "Tags",
 	);
 
 	// Fields that can be quick searched
@@ -100,13 +100,13 @@
 		"IF(    CHAR_LENGTH(`client1`.`nom_du_client`), CONCAT_WS('',   `client1`.`nom_du_client`), '') /* Client */" => "client",
 		"`missions`.`environnement`" => "Environnement",
 		"IF(    CHAR_LENGTH(`domaine1`.`titre_domaine`) || CHAR_LENGTH(`filiere2`.`titre_filiere`) || CHAR_LENGTH(`competences_ref1`.`titre_competence`), CONCAT_WS('',   `domaine1`.`titre_domaine`, '>', `filiere2`.`titre_filiere`, `competences_ref1`.`titre_competence`), '') /* Comp&#233;tences utilis&#233;es */" => "competences_utilisees",
-		"`missions`.`tags`" => "tags",
+		"IF(    CHAR_LENGTH(`tags1`.`tags`), CONCAT_WS('',   `tags1`.`tags`), '') /* Tags */" => "tags",
 	);
 
 	// Lookup fields that can be used as filterers
-	$x->filterers = array('id_consultant' => 'Consultant', 'rattache_a_filiere' => 'Fili&#232;re', 'client' => 'Client', 'competences_utilisees' => 'Comp&#233;tences utilis&#233;es', );
+	$x->filterers = array('id_consultant' => 'Consultant', 'rattache_a_filiere' => 'Fili&#232;re', 'client' => 'Client', 'competences_utilisees' => 'Comp&#233;tences utilis&#233;es', 'tags' => 'Tags', );
 
-	$x->QueryFrom = "`missions` LEFT JOIN `consultant` as consultant1 ON `consultant1`.`id_consultant`=`missions`.`id_consultant` LEFT JOIN `filiere` as filiere1 ON `filiere1`.`id_filiere`=`missions`.`rattache_a_filiere` LEFT JOIN `client` as client1 ON `client1`.`id_client`=`missions`.`client` LEFT JOIN `competences_ref` as competences_ref1 ON `competences_ref1`.`id_competence`=`missions`.`competences_utilisees` LEFT JOIN `domaine` as domaine1 ON `domaine1`.`id_domaine`=`competences_ref1`.`domaine_principal` LEFT JOIN `filiere` as filiere2 ON `filiere2`.`id_filiere`=`domaine1`.`rattache_a_filiere` ";
+	$x->QueryFrom = "`missions` LEFT JOIN `consultant` as consultant1 ON `consultant1`.`id_consultant`=`missions`.`id_consultant` LEFT JOIN `filiere` as filiere1 ON `filiere1`.`id_filiere`=`missions`.`rattache_a_filiere` LEFT JOIN `client` as client1 ON `client1`.`id_client`=`missions`.`client` LEFT JOIN `competences_ref` as competences_ref1 ON `competences_ref1`.`id_competence`=`missions`.`competences_utilisees` LEFT JOIN `domaine` as domaine1 ON `domaine1`.`id_domaine`=`competences_ref1`.`domaine_principal` LEFT JOIN `filiere` as filiere2 ON `filiere2`.`id_filiere`=`domaine1`.`rattache_a_filiere` LEFT JOIN `tags` as tags1 ON `tags1`.`id`=`missions`.`tags` ";
 	$x->QueryWhere = '';
 	$x->QueryOrder = '';
 

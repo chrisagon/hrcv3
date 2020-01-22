@@ -34,11 +34,8 @@ function missions_insert() {
 		if($data['environnement'] == empty_lookup_value) { $data['environnement'] = ''; }
 	$data['competences_utilisees'] = $_REQUEST['competences_utilisees'];
 		if($data['competences_utilisees'] == empty_lookup_value) { $data['competences_utilisees'] = ''; }
-	$data['tags'] = '';
-	if(is_array($_REQUEST['tags'])) {
-		$MultipleSeparator = ', ';
-		$data['tags'] = implode($MultipleSeparator, $_REQUEST['tags']);
-	}
+	$data['tags'] = $_REQUEST['tags'];
+		if($data['tags'] == empty_lookup_value) { $data['tags'] = ''; }
 	if($data['description_mission']== '') {
 		echo StyleSheet() . "\n\n<div class=\"alert alert-danger\">" . $Translation['error:'] . " 'Objet de la mission': " . $Translation['field not null'] . '<br><br>';
 		echo '<a href="" onclick="history.go(-1); return false;">'.$Translation['< back'].'</a></div>';
@@ -169,14 +166,8 @@ function missions_update($selected_id) {
 		if($data['environnement'] == empty_lookup_value) { $data['environnement'] = ''; }
 	$data['competences_utilisees'] = makeSafe($_REQUEST['competences_utilisees']);
 		if($data['competences_utilisees'] == empty_lookup_value) { $data['competences_utilisees'] = ''; }
-	if(is_array($_REQUEST['tags'])) {
-		$MultipleSeparator = ', ';
-		foreach($_REQUEST['tags'] as $k => $v)
-			$data['tags'] .= makeSafe($v) . $MultipleSeparator;
-		$data['tags']=substr($data['tags'], 0, -1 * strlen($MultipleSeparator));
-	}else{
-		$data['tags']='';
-	}
+	$data['tags'] = makeSafe($_REQUEST['tags']);
+		if($data['tags'] == empty_lookup_value) { $data['tags'] = ''; }
 	$data['selectedID'] = makeSafe($selected_id);
 
 	// hook: missions_before_update
@@ -232,6 +223,7 @@ function missions_form($selected_id = '', $AllowUpdate = 1, $AllowInsert = 1, $A
 	$filterer_rattache_a_filiere = thisOr(undo_magic_quotes($_REQUEST['filterer_rattache_a_filiere']), '');
 	$filterer_client = thisOr(undo_magic_quotes($_REQUEST['filterer_client']), '');
 	$filterer_competences_utilisees = thisOr(undo_magic_quotes($_REQUEST['filterer_competences_utilisees']), '');
+	$filterer_tags = thisOr(undo_magic_quotes($_REQUEST['filterer_tags']), '');
 
 	// populate filterers, starting from children to grand-parents
 	if($filterer_rattache_a_filiere && !$filterer_id_consultant) $filterer_id_consultant = sqlValue("select  from filiere where id_filiere='" . makeSafe($filterer_rattache_a_filiere) . "'");
@@ -263,20 +255,7 @@ function missions_form($selected_id = '', $AllowUpdate = 1, $AllowInsert = 1, $A
 	// combobox: competences_utilisees
 	$combo_competences_utilisees = new DataCombo;
 	// combobox: tags
-	$combo_tags = new Combo;
-	$combo_tags->ListType = 3;
-	$combo_tags->MultipleSeparator = ', ';
-	$combo_tags->ListBoxHeight = 10;
-	$combo_tags->RadiosPerLine = 1;
-	if(is_file(dirname(__FILE__).'/hooks/missions.tags.csv')) {
-		$tags_data = addslashes(implode('', @file(dirname(__FILE__).'/hooks/missions.tags.csv')));
-		$combo_tags->ListItem = explode('||', entitiesToUTF8(convertLegacyOptions($tags_data)));
-		$combo_tags->ListData = $combo_tags->ListItem;
-	}else{
-		$combo_tags->ListItem = explode('||', entitiesToUTF8(convertLegacyOptions("A compl&#233;ter;;important;;A suivre")));
-		$combo_tags->ListData = $combo_tags->ListItem;
-	}
-	$combo_tags->SelectName = 'tags';
+	$combo_tags = new DataCombo;
 
 	if($selected_id) {
 		// mm: check member permissions
@@ -319,6 +298,7 @@ function missions_form($selected_id = '', $AllowUpdate = 1, $AllowInsert = 1, $A
 		$combo_rattache_a_filiere->SelectedData = $filterer_rattache_a_filiere;
 		$combo_client->SelectedData = $filterer_client;
 		$combo_competences_utilisees->SelectedData = $filterer_competences_utilisees;
+		$combo_tags->SelectedData = $filterer_tags;
 	}
 	$combo_id_consultant->HTML = '<span id="id_consultant-container' . $rnd1 . '"></span><input type="hidden" name="id_consultant" id="id_consultant' . $rnd1 . '" value="' . html_attr($combo_id_consultant->SelectedData) . '">';
 	$combo_id_consultant->MatchText = '<span id="id_consultant-container-readonly' . $rnd1 . '"></span><input type="hidden" name="id_consultant" id="id_consultant' . $rnd1 . '" value="' . html_attr($combo_id_consultant->SelectedData) . '">';
@@ -328,7 +308,8 @@ function missions_form($selected_id = '', $AllowUpdate = 1, $AllowInsert = 1, $A
 	$combo_client->MatchText = '<span id="client-container-readonly' . $rnd1 . '"></span><input type="hidden" name="client" id="client' . $rnd1 . '" value="' . html_attr($combo_client->SelectedData) . '">';
 	$combo_competences_utilisees->HTML = '<span id="competences_utilisees-container' . $rnd1 . '"></span><input type="hidden" name="competences_utilisees" id="competences_utilisees' . $rnd1 . '" value="' . html_attr($combo_competences_utilisees->SelectedData) . '">';
 	$combo_competences_utilisees->MatchText = '<span id="competences_utilisees-container-readonly' . $rnd1 . '"></span><input type="hidden" name="competences_utilisees" id="competences_utilisees' . $rnd1 . '" value="' . html_attr($combo_competences_utilisees->SelectedData) . '">';
-	$combo_tags->Render();
+	$combo_tags->HTML = '<span id="tags-container' . $rnd1 . '"></span><input type="hidden" name="tags" id="tags' . $rnd1 . '" value="' . html_attr($combo_tags->SelectedData) . '">';
+	$combo_tags->MatchText = '<span id="tags-container-readonly' . $rnd1 . '"></span><input type="hidden" name="tags" id="tags' . $rnd1 . '" value="' . html_attr($combo_tags->SelectedData) . '">';
 
 	ob_start();
 	?>
@@ -339,6 +320,7 @@ function missions_form($selected_id = '', $AllowUpdate = 1, $AllowInsert = 1, $A
 		AppGini.current_rattache_a_filiere__RAND__ = { text: "", value: "<?php echo addslashes($selected_id ? $urow['rattache_a_filiere'] : $filterer_rattache_a_filiere); ?>"};
 		AppGini.current_client__RAND__ = { text: "", value: "<?php echo addslashes($selected_id ? $urow['client'] : $filterer_client); ?>"};
 		AppGini.current_competences_utilisees__RAND__ = { text: "", value: "<?php echo addslashes($selected_id ? $urow['competences_utilisees'] : $filterer_competences_utilisees); ?>"};
+		AppGini.current_tags__RAND__ = { text: "", value: "<?php echo addslashes($selected_id ? $urow['tags'] : $filterer_tags); ?>"};
 
 		jQuery(function() {
 			setTimeout(function() {
@@ -346,6 +328,7 @@ function missions_form($selected_id = '', $AllowUpdate = 1, $AllowInsert = 1, $A
 				<?php echo (!$AllowUpdate || $dvprint ? 'if(typeof(rattache_a_filiere_reload__RAND__) == \'function\') rattache_a_filiere_reload__RAND__(AppGini.current_id_consultant__RAND__.value);' : ''); ?>
 				if(typeof(client_reload__RAND__) == 'function') client_reload__RAND__();
 				if(typeof(competences_utilisees_reload__RAND__) == 'function') competences_utilisees_reload__RAND__();
+				if(typeof(tags_reload__RAND__) == 'function') tags_reload__RAND__();
 			}, 10); /* we need to slightly delay client-side execution of the above code to allow AppGini.ajaxCache to work */
 		});
 		function id_consultant_reload__RAND__() {
@@ -658,6 +641,83 @@ function missions_form($selected_id = '', $AllowUpdate = 1, $AllowInsert = 1, $A
 		<?php } ?>
 
 		}
+		function tags_reload__RAND__() {
+		<?php if(($AllowUpdate || $AllowInsert) && !$dvprint) { ?>
+
+			$j("#tags-container__RAND__").select2({
+				/* initial default value */
+				initSelection: function(e, c) {
+					$j.ajax({
+						url: 'ajax_combo.php',
+						dataType: 'json',
+						data: { id: AppGini.current_tags__RAND__.value, t: 'missions', f: 'tags' },
+						success: function(resp) {
+							c({
+								id: resp.results[0].id,
+								text: resp.results[0].text
+							});
+							$j('[name="tags"]').val(resp.results[0].id);
+							$j('[id=tags-container-readonly__RAND__]').html('<span id="tags-match-text">' + resp.results[0].text + '</span>');
+							if(resp.results[0].id == '<?php echo empty_lookup_value; ?>') { $j('.btn[id=tags_view_parent]').hide(); }else{ $j('.btn[id=tags_view_parent]').show(); }
+
+
+							if(typeof(tags_update_autofills__RAND__) == 'function') tags_update_autofills__RAND__();
+						}
+					});
+				},
+				width: '100%',
+				formatNoMatches: function(term) { /* */ return '<?php echo addslashes($Translation['No matches found!']); ?>'; },
+				minimumResultsForSearch: 5,
+				loadMorePadding: 200,
+				ajax: {
+					url: 'ajax_combo.php',
+					dataType: 'json',
+					cache: true,
+					data: function(term, page) { /* */ return { s: term, p: page, t: 'missions', f: 'tags' }; },
+					results: function(resp, page) { /* */ return resp; }
+				},
+				escapeMarkup: function(str) { /* */ return str; }
+			}).on('change', function(e) {
+				AppGini.current_tags__RAND__.value = e.added.id;
+				AppGini.current_tags__RAND__.text = e.added.text;
+				$j('[name="tags"]').val(e.added.id);
+				if(e.added.id == '<?php echo empty_lookup_value; ?>') { $j('.btn[id=tags_view_parent]').hide(); }else{ $j('.btn[id=tags_view_parent]').show(); }
+
+
+				if(typeof(tags_update_autofills__RAND__) == 'function') tags_update_autofills__RAND__();
+			});
+
+			if(!$j("#tags-container__RAND__").length) {
+				$j.ajax({
+					url: 'ajax_combo.php',
+					dataType: 'json',
+					data: { id: AppGini.current_tags__RAND__.value, t: 'missions', f: 'tags' },
+					success: function(resp) {
+						$j('[name="tags"]').val(resp.results[0].id);
+						$j('[id=tags-container-readonly__RAND__]').html('<span id="tags-match-text">' + resp.results[0].text + '</span>');
+						if(resp.results[0].id == '<?php echo empty_lookup_value; ?>') { $j('.btn[id=tags_view_parent]').hide(); }else{ $j('.btn[id=tags_view_parent]').show(); }
+
+						if(typeof(tags_update_autofills__RAND__) == 'function') tags_update_autofills__RAND__();
+					}
+				});
+			}
+
+		<?php }else{ ?>
+
+			$j.ajax({
+				url: 'ajax_combo.php',
+				dataType: 'json',
+				data: { id: AppGini.current_tags__RAND__.value, t: 'missions', f: 'tags' },
+				success: function(resp) {
+					$j('[id=tags-container__RAND__], [id=tags-container-readonly__RAND__]').html('<span id="tags-match-text">' + resp.results[0].text + '</span>');
+					if(resp.results[0].id == '<?php echo empty_lookup_value; ?>') { $j('.btn[id=tags_view_parent]').hide(); }else{ $j('.btn[id=tags_view_parent]').show(); }
+
+					if(typeof(tags_update_autofills__RAND__) == 'function') tags_update_autofills__RAND__();
+				}
+			});
+		<?php } ?>
+
+		}
 	</script>
 	<?php
 
@@ -730,7 +790,8 @@ function missions_form($selected_id = '', $AllowUpdate = 1, $AllowInsert = 1, $A
 		$jsReadOnly .= "\tjQuery('#environnement').replaceWith('<div class=\"form-control-static\" id=\"environnement\">' + (jQuery('#environnement').val() || '') + '</div>');\n";
 		$jsReadOnly .= "\tjQuery('#competences_utilisees').prop('disabled', true).css({ color: '#555', backgroundColor: '#fff' });\n";
 		$jsReadOnly .= "\tjQuery('#competences_utilisees_caption').prop('disabled', true).css({ color: '#555', backgroundColor: 'white' });\n";
-		$jsReadOnly .= "\tjQuery('#tags').replaceWith('<div class=\"form-control-static\" id=\"tags\">' + (jQuery('#tags').val() || '') + '</div>'); jQuery('#tags-multi-selection-help').hide();\n";
+		$jsReadOnly .= "\tjQuery('#tags').prop('disabled', true).css({ color: '#555', backgroundColor: '#fff' });\n";
+		$jsReadOnly .= "\tjQuery('#tags_caption').prop('disabled', true).css({ color: '#555', backgroundColor: 'white' });\n";
 		$jsReadOnly .= "\tjQuery('#s2id_tags').remove();\n";
 		$jsReadOnly .= "\tjQuery('.select2-container').hide();\n";
 
@@ -758,10 +819,11 @@ function missions_form($selected_id = '', $AllowUpdate = 1, $AllowInsert = 1, $A
 	$templateCode = str_replace('<%%COMBOTEXT(competences_utilisees)%%>', $combo_competences_utilisees->MatchText, $templateCode);
 	$templateCode = str_replace('<%%URLCOMBOTEXT(competences_utilisees)%%>', urlencode($combo_competences_utilisees->MatchText), $templateCode);
 	$templateCode = str_replace('<%%COMBO(tags)%%>', $combo_tags->HTML, $templateCode);
-	$templateCode = str_replace('<%%COMBOTEXT(tags)%%>', $combo_tags->SelectedData, $templateCode);
+	$templateCode = str_replace('<%%COMBOTEXT(tags)%%>', $combo_tags->MatchText, $templateCode);
+	$templateCode = str_replace('<%%URLCOMBOTEXT(tags)%%>', urlencode($combo_tags->MatchText), $templateCode);
 
 	/* lookup fields array: 'lookup field name' => array('parent table name', 'lookup field caption') */
-	$lookup_fields = array('id_consultant' => array('consultant', 'Consultant'), 'rattache_a_filiere' => array('filiere', 'Fili&#232;re'), 'client' => array('client', 'Client'), 'competences_utilisees' => array('competences_ref', 'Comp&#233;tences utilis&#233;es'), );
+	$lookup_fields = array('id_consultant' => array('consultant', 'Consultant'), 'rattache_a_filiere' => array('filiere', 'Fili&#232;re'), 'client' => array('client', 'Client'), 'competences_utilisees' => array('competences_ref', 'Comp&#233;tences utilis&#233;es'), 'tags' => array('tags', 'Tags'), );
 	foreach($lookup_fields as $luf => $ptfc) {
 		$pt_perm = getTablePermissions($ptfc[0]);
 

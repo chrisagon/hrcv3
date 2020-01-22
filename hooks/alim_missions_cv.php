@@ -1,4 +1,26 @@
 <?php
+function lire_cv_consultant(){
+
+}
+/**
+ * Appelé pour insérer une nouvelle mission.
+ *
+ * @param $data_fct
+ * Contient les données du consultant
+ * @param $site_mission_fct
+ *
+ * @param $periode_fct
+ *
+ * @param $objet_mission_fct
+ *
+ * @param $detail_mission_fct
+ *
+ * @param $environnement_fct
+ *
+ * @return
+ * A boolean TRUE to perform the insert operation, or FALSE to cancel it.
+ */
+
 function missions_cv_insert($data_fct, $site_mission_fct, $periode_fct, $objet_mission_fct, $detail_mission_fct, $environnement_fct) {
     global $Translation;
 
@@ -67,6 +89,95 @@ function missions_cv_insert($data_fct, $site_mission_fct, $periode_fct, $objet_m
 
     return $recID;
 }
+
+/**
+ * Appelé pour mettre à jour une nouvelle mission.
+ *
+ * @param $data_fct
+ * Contient les données du consultant
+ * @param $site_mission_fct
+ *
+ * @param $periode_fct
+ *
+ * @param $objet_mission_fct
+ *
+ * @param $detail_mission_fct
+ *
+ * @param $environnement_fct
+ *
+ * @return
+ * A boolean TRUE to perform the insert operation, or FALSE to cancel it.
+ */
+
+function missions_cv_update($id_mission_fct, $id_consultant_fct, $site_mission_fct, $periode_fct, $objet_mission_fct, $detail_mission_fct, $environnement_fct) {
+    global $Translation;
+
+    // mm: can member edit record?
+    $arrPerm=getTablePermissions('missions');
+    $ownerGroupID=sqlValue("select groupID from membership_userrecords where tableName='missions' and pkValue='".makeSafe($id_mission_fct)."'");
+    $ownerMemberID=sqlValue("select lcase(memberID) from membership_userrecords where tableName='missions' and pkValue='".makeSafe($id_mission_fct)."'");
+    if(($arrPerm[3]==1 && $ownerMemberID==getLoggedMemberID()) || ($arrPerm[3]==2 && $ownerGroupID==getLoggedGroupID()) || $arrPerm[3]==3) { // allow update?
+        // update allowed, so continue ...
+    }else{
+        return false;
+    }
+
+    $donneesCV['id_consultant'] = makeSafe($id_consultant_fct);
+        if($donneesCV['id_consultant'] == empty_lookup_value) { $donneesCV['id_consultant'] = ''; }
+    $donneesCV['site_mission'] = makeSafe($site_mission_fct);
+        if($donneesCV['site_mission'] == empty_lookup_value) { $donneesCV['site_mission'] = ''; }
+    $donneesCV['periode'] = makeSafe($periode_fct);
+        if($donneesCV['periode'] == empty_lookup_value) { $donneesCV['periode'] = ''; }
+    $donneesCV['date_debut'] = '1901-01-01';
+    $donneesCV['date_debut'] = periode_en_date($periode_fct, "debut");
+    $donneesCV['date_debut'] = parseMySQLDate($donneesCV['date_debut'], '');
+    $donneesCV['date_fin'] = '2999-12-31';
+    $donneesCV['date_fin'] = periode_en_date($periode_fct, "fin");
+    $donneesCV['date_fin'] = parseMySQLDate($donneesCV['date_fin'], '');
+    $donneesCV['description_mission'] = br2nl(makeSafe($objet_mission_fct));
+    if($donneesCV['description_mission']=='') {
+        echo StyleSheet() . "\n\n<div class=\"alert alert-danger\">{$Translation['error:']} 'Objet de la mission': {$Translation['field not null']}<br><br>";
+        echo '<a href="" onclick="history.go(-1); return false;">'.$Translation['< back'].'</a></div>';
+        exit;
+    }
+    $donneesCV['description_detaille'] = makeSafe($detail_mission_fct);
+        if($donneesCV['description_detaille'] == empty_lookup_value) { $donneesCV['description_detaille'] = ''; }
+    $donneesCV['environnement'] = makeSafe($environnement_fct);
+        if($donneesCV['environnement'] == empty_lookup_value) { $donneesCV['environnement'] = ''; }
+    $donneesCV['selectedID'] = makeSafe($id_mission_fct);
+
+    // hook: missions_before_update
+    if(function_exists('missions_before_update')) {
+        $args = array();
+        if(!missions_before_update($data, getMemberInfo(), $args)) { return false; }
+    }
+
+    $o = array('silentErrors' => true);
+    sql('update `missions` set       `id_consultant`=' . (($donneesCV['id_consultant'] !== '' && $donneesCV['id_consultant'] !== NULL) ? "'{$donneesCV['id_consultant']}'" : 'NULL') . ', `site_mission`=' . (($donneesCV['site_mission'] !== '' && $donneesCV['site_mission'] !== NULL) ? "'{$donneesCV['site_mission']}'" : 'NULL') . ', `periode`=' . (($donneesCV['periode'] !== '' && $donneesCV['periode'] !== NULL) ? "'{$donneesCV['periode']}'" : 'NULL') . ', `date_debut`=' . (($donneesCV['date_debut'] !== '' && $donneesCV['date_debut'] !== NULL) ? "'{$donneesCV['date_debut']}'" : 'NULL') . ', `date_fin`=' . (($donneesCV['date_fin'] !== '' && $donneesCV['date_fin'] !== NULL) ? "'{$donneesCV['date_fin']}'" : 'NULL') . ', `description_mission`=' . (($donneesCV['description_mission'] !== '' && $donneesCV['description_mission'] !== NULL) ? "'{$donneesCV['description_mission']}'" : 'NULL') . ', `description_detaille`=' . (($donneesCV['description_detaille'] !== '' && $donneesCV['description_detaille'] !== NULL) ? "'{$donneesCV['description_detaille']}'" : 'NULL') . ', `client`=' . (($donneesCV['client'] !== '' && $donneesCV['client'] !== NULL) ? "'{$donneesCV['client']}'" : 'NULL') . ', `environnement`=' . (($donneesCV['environnement'] !== '' && $donneesCV['environnement'] !== NULL) ? "'{$donneesCV['environnement']}'" : 'NULL') . ', `competences_utilisees`=' . (($donneesCV['competences_utilisees'] !== '' && $donneesCV['competences_utilisees'] !== NULL) ? "'{$donneesCV['competences_utilisees']}'" : 'NULL') . ', `tags`=' . (($donneesCV['tags'] !== '' && $donneesCV['tags'] !== NULL) ? "'{$donneesCV['tags']}'" : 'NULL') . " where `id_mission`='".makeSafe($id_mission_fct)."'", $o);
+    if($o['error']!='') {
+        echo $o['error'];
+        echo '<a href="missions_view.php?SelectedID='.urlencode($id_mission_fct)."\">{$Translation['< back']}</a>";
+        exit;
+    }
+
+
+    // hook: missions_after_update
+    if(function_exists('missions_after_update')) {
+        $res = sql("SELECT * FROM `missions` WHERE `id_mission`='{$donneesCV['selectedID']}' LIMIT 1", $eo);
+        if($row = db_fetch_assoc($res)) {
+            $data = array_map('makeSafe', $row);
+        }
+        $donneesCV['selectedID'] = $donneesCV['id_mission'];
+        $args = array();
+        if(!missions_after_update($data, getMemberInfo(), $args)) { return; }
+    }
+
+    // mm: update ownership data
+    sql("update `membership_userrecords` set `dateUpdated`='" . time() . "' where `tableName`='missions' and `pkValue`='" . makeSafe($id_mission_fct) . "'", $eo);
+
+}
+
+
 function periode_en_date ($periode_ana, $debutoufin){
     $periode_ana = str_ireplace("D\'"," ",$periode_ana);
     $periode_ana = str_ireplace("dâ€™"," ",$periode_ana);

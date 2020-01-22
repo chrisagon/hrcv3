@@ -91,9 +91,9 @@
 
 				<div class="form-group">
 					<hr class="hidden-md hidden-lg">
-					<label for="tags" class="control-label col-lg-3">Tags</label>
+					<label for="tags" class="control-label col-lg-3" data-parent_link="view_parent_hidden">Tags</label>
 					<div class="col-lg-9">
-						<%%COMBO(tags)%%>
+						<div class="form-control-static" style="white-space: nowrap; overflow-x: hidden;"><%%COMBO(tags)%%><%%ADDNEW(tags)%%></div>
 					</div>
 				</div>
 

@@ -10,7 +10,8 @@
 		var data = {
 			competence_mis_en_oeuvre: <?php echo json_encode(array('id' => $rdata['competence_mis_en_oeuvre'], 'value' => $rdata['competence_mis_en_oeuvre'], 'text' => $jdata['competence_mis_en_oeuvre'])); ?>,
 			niveau: <?php echo json_encode(array('id' => $rdata['niveau'], 'value' => $rdata['niveau'], 'text' => $jdata['niveau'])); ?>,
-			consultant_id: <?php echo json_encode(array('id' => $rdata['consultant_id'], 'value' => $rdata['consultant_id'], 'text' => $jdata['consultant_id'])); ?>
+			consultant_id: <?php echo json_encode(array('id' => $rdata['consultant_id'], 'value' => $rdata['consultant_id'], 'text' => $jdata['consultant_id'])); ?>,
+			tags: <?php echo json_encode(array('id' => $rdata['tags'], 'value' => $rdata['tags'], 'text' => $jdata['tags'])); ?>
 		};
 
 		/* initialize or continue using AppGini.cache for the current table */
@@ -39,6 +40,14 @@
 			if(u != 'ajax_combo.php') return false;
 			if(d.t == tn && d.f == 'consultant_id' && d.id == data.consultant_id.id)
 				return { results: [ data.consultant_id ], more: false, elapsed: 0.01 };
+			return false;
+		});
+
+		/* saved value for tags */
+		cache.addCheck(function(u, d) {
+			if(u != 'ajax_combo.php') return false;
+			if(d.t == tn && d.f == 'tags' && d.id == data.tags.id)
+				return { results: [ data.tags ], more: false, elapsed: 0.01 };
 			return false;
 		});
 

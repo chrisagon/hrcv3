@@ -36,7 +36,7 @@
 			'client' => array('appgini' => 'INT unsigned null '),
 			'environnement' => array('appgini' => 'VARCHAR(254) null '),
 			'competences_utilisees' => array('appgini' => 'INT unsigned null '),
-			'tags' => array('appgini' => 'TEXT null '),
+			'tags' => array('appgini' => 'INT unsigned null '),
 		),
 		'competences_individuelles' => array(
 			'id_comp_indiv' => array('appgini' => 'INT unsigned not null primary key auto_increment '),
@@ -46,7 +46,7 @@
 			'consultant_id' => array('appgini' => 'INT unsigned not null '),
 			'Documents_capitalises' => array('appgini' => 'VARCHAR(40) null '),
 			'commentaires' => array('appgini' => 'TEXT null '),
-			'tags' => array('appgini' => 'TEXT null '),
+			'tags' => array('appgini' => 'INT unsigned null '),
 		),
 		'client' => array(
 			'id_client' => array('appgini' => 'INT unsigned not null primary key auto_increment '),

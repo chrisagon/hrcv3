@@ -84,6 +84,7 @@
 
 		/* table groups */
 		$tg = array(
+			'Accueil',
 			'Votre CV',
 			'Liste',
 			'R&#233;ferentiel'
@@ -95,70 +96,70 @@
 					'Caption' => 'Dossier Consultant',
 					'Description' => 'Fiche contact du consultant',
 					'tableIcon' => 'resources/table_icons/administrator.png',
-					'group' => $tg[1],
+					'group' => $tg[0],
 					'homepageShowCount' => 1
 				),
 				'missions' => array(
 					'Caption' => 'Vos Missions',
 					'Description' => 'Mission rattach&#233; au cv : d&#233;crivez les &#233;lements cl&#233;s de votre mission. Vous pouvez ajouter en plus les comp&#233;tences acquises lors de chacune de vos missions.',
 					'tableIcon' => 'resources/table_icons/document_comment_above.png',
-					'group' => $tg[0],
+					'group' => $tg[1],
 					'homepageShowCount' => 0
 				),
 				'competences_individuelles' => array(
 					'Caption' => 'Vos Competences ',
 					'Description' => 'Ajoutez vos Competences individuelles mis en oeuvre lors de la mission, ainsi que le niveau acquis.',
 					'tableIcon' => 'resources/table_icons/brick.png',
-					'group' => $tg[0],
+					'group' => $tg[1],
 					'homepageShowCount' => 1
 				),
 				'client' => array(
 					'Caption' => 'Client',
 					'Description' => 'Fiche contact du client',
 					'tableIcon' => 'resources/table_icons/account_balances.png',
-					'group' => $tg[1],
+					'group' => $tg[2],
 					'homepageShowCount' => 0
 				),
 				'competences_ref' => array(
 					'Caption' => 'R&#233;f&#233;rentiel des comp&#233;tences',
 					'Description' => 'R&#233;f&#233;rentiel g&#233;n&#233;ral des comp&#233;tences mise en oeuvre au sein de la soci&#233;t&#233;',
 					'tableIcon' => 'table.gif',
-					'group' => $tg[2],
+					'group' => $tg[3],
 					'homepageShowCount' => 1
 				),
 				'domaine' => array(
 					'Caption' => 'Domaine',
 					'Description' => 'Domaine regroupant des comp&#233;tences',
 					'tableIcon' => 'table.gif',
-					'group' => $tg[2],
+					'group' => $tg[3],
 					'homepageShowCount' => 1
 				),
 				'filiere' => array(
 					'Caption' => 'Filiere',
 					'Description' => 'Fill&#232;re (MOA, MOE, TMA, d&#233;claratif)',
 					'tableIcon' => 'table.gif',
-					'group' => $tg[2],
+					'group' => $tg[3],
 					'homepageShowCount' => 1
 				),
 				'niveaux_ref' => array(
 					'Caption' => 'Niveaux ref',
 					'Description' => '',
 					'tableIcon' => 'table.gif',
-					'group' => $tg[2],
+					'group' => $tg[3],
 					'homepageShowCount' => 0
 				),
 				'carriere_consultant' => array(
 					'Caption' => 'Votre Carriere',
 					'Description' => 'Les grandes &#233;tapes de votre vie de consultant.',
 					'tableIcon' => 'resources/table_icons/chair.png',
-					'group' => $tg[0],
+					'group' => $tg[1],
 					'homepageShowCount' => 0
 				),
 				'formation_suivi' => array(
 					'Caption' => 'Formations suivis',
 					'Description' => 'Indiquez ici la liste des formations internes ou externes que vous avez suivis',
 					'tableIcon' => 'resources/table_icons/books.png',
-					'group' => $tg[0],
+					'group' => $tg[1],
 					'homepageShowCount' => 1
 				),
 				'feedback' => array(
@@ -172,7 +173,7 @@
 					'Caption' => 'Emploi fonctionnel',
 					'Description' => '',
 					'tableIcon' => 'table.gif',
-					'group' => $tg[2],
+					'group' => $tg[3],
 					'homepageShowCount' => 1
 				),
 				'tags' => array(
@@ -1988,11 +1989,13 @@
 				'filiere' => array('rattache_a_filiere'),
 				'client' => array('client'),
 				'competences_ref' => array('competences_utilisees'),
+				'tags' => array('tags'),
 			),
 			'competences_individuelles' => array(
 				'competences_ref' => array('competence_mis_en_oeuvre'),
 				'niveaux_ref' => array('niveau'),
 				'consultant' => array('consultant_id'),
+				'tags' => array('tags'),
 			),
 			'competences_ref' => array(
 				'domaine' => array('domaine_principal'),

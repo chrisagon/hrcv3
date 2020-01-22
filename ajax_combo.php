@@ -64,8 +64,8 @@
 				'parent_caption' => 'IF(CHAR_LENGTH(`consultant`.`Prenom`) || CHAR_LENGTH(`consultant`.`Nom`), CONCAT_WS(\'\', `consultant`.`Prenom`, \', \', `consultant`.`Nom`), \'\')',
 				'parent_from' => '`consultant` LEFT JOIN `consultant` as consultant1 ON `consultant1`.`id_consultant`=`consultant`.`coache_par` LEFT JOIN `emploi_fonctionnel` as emploi_fonctionnel1 ON `emploi_fonctionnel1`.`id_ef`=`consultant`.`emploi_fonctionnel` ',
 				'filterers' => array(),
-				'custom_query' => '',
-				'inherit_permissions' => true,
+				'custom_query' => 'select `consultant`.`id_consultant` from `consultant` , `missions` where `consultant`.`id_consultant`=`missions`.`id_consultant`',
+				'inherit_permissions' => false,
 				'list_type' => 0,
 				'not_null' => false
 			),
@@ -96,6 +96,17 @@
 				'parent_pk_field' => 'id_competence',
 				'parent_caption' => 'IF(CHAR_LENGTH(`competences_ref`.`domaine_principal`) || CHAR_LENGTH(`competences_ref`.`titre_competence`), CONCAT_WS(\'\', IF(    CHAR_LENGTH(`domaine1`.`titre_domaine`) || CHAR_LENGTH(`filiere1`.`titre_filiere`), CONCAT_WS(\'\',   `domaine1`.`titre_domaine`, \'>\', `filiere1`.`titre_filiere`), \'\'), `competences_ref`.`titre_competence`), \'\')',
 				'parent_from' => '`competences_ref` LEFT JOIN `domaine` as domaine1 ON `domaine1`.`id_domaine`=`competences_ref`.`domaine_principal` LEFT JOIN `filiere` as filiere1 ON `filiere1`.`id_filiere`=`domaine1`.`rattache_a_filiere` ',
+				'filterers' => array(),
+				'custom_query' => '',
+				'inherit_permissions' => false,
+				'list_type' => 0,
+				'not_null' => false
+			),
+			'tags' => array(
+				'parent_table' => 'tags',
+				'parent_pk_field' => 'id',
+				'parent_caption' => '`tags`.`tags`',
+				'parent_from' => '`tags` ',
 				'filterers' => array(),
 				'custom_query' => '',
 				'inherit_permissions' => false,
@@ -136,6 +147,17 @@
 				'inherit_permissions' => false,
 				'list_type' => 0,
 				'not_null' => true
+			),
+			'tags' => array(
+				'parent_table' => 'tags',
+				'parent_pk_field' => 'id',
+				'parent_caption' => '`tags`.`tags`',
+				'parent_from' => '`tags` ',
+				'filterers' => array(),
+				'custom_query' => '',
+				'inherit_permissions' => false,
+				'list_type' => 0,
+				'not_null' => false
 			),
 		),
 		'client' => array(

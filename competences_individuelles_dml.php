@@ -23,11 +23,8 @@ function competences_individuelles_insert() {
 		if($data['consultant_id'] == empty_lookup_value) { $data['consultant_id'] = ''; }
 	$data['commentaires'] = $_REQUEST['commentaires'];
 		if($data['commentaires'] == empty_lookup_value) { $data['commentaires'] = ''; }
-	$data['tags'] = '';
-	if(is_array($_REQUEST['tags'])) {
-		$MultipleSeparator = ', ';
-		$data['tags'] = implode($MultipleSeparator, $_REQUEST['tags']);
-	}
+	$data['tags'] = $_REQUEST['tags'];
+		if($data['tags'] == empty_lookup_value) { $data['tags'] = ''; }
 	$data['Documents_capitalises'] = PrepareUploadedFile('Documents_capitalises', 102400,'txt|doc|docx|docm|odt|pdf|rtf', false, '');
 	if($data['competence_mis_en_oeuvre']== '') {
 		echo StyleSheet() . "\n\n<div class=\"alert alert-danger\">" . $Translation['error:'] . " 'Competence r&#233;f. mis en oeuvre': " . $Translation['field not null'] . '<br><br>';
@@ -179,14 +176,8 @@ function competences_individuelles_update($selected_id) {
 	}
 	$data['commentaires'] = makeSafe($_REQUEST['commentaires']);
 		if($data['commentaires'] == empty_lookup_value) { $data['commentaires'] = ''; }
-	if(is_array($_REQUEST['tags'])) {
-		$MultipleSeparator = ', ';
-		foreach($_REQUEST['tags'] as $k => $v)
-			$data['tags'] .= makeSafe($v) . $MultipleSeparator;
-		$data['tags']=substr($data['tags'], 0, -1 * strlen($MultipleSeparator));
-	}else{
-		$data['tags']='';
-	}
+	$data['tags'] = makeSafe($_REQUEST['tags']);
+		if($data['tags'] == empty_lookup_value) { $data['tags'] = ''; }
 	$data['selectedID'] = makeSafe($selected_id);
 	if($_REQUEST['Documents_capitalises_remove'] == 1) {
 		$data['Documents_capitalises'] = '';
@@ -262,6 +253,7 @@ function competences_individuelles_form($selected_id = '', $AllowUpdate = 1, $Al
 	$filterer_competence_mis_en_oeuvre = thisOr(undo_magic_quotes($_REQUEST['filterer_competence_mis_en_oeuvre']), '');
 	$filterer_niveau = thisOr(undo_magic_quotes($_REQUEST['filterer_niveau']), '');
 	$filterer_consultant_id = thisOr(undo_magic_quotes($_REQUEST['filterer_consultant_id']), '');
+	$filterer_tags = thisOr(undo_magic_quotes($_REQUEST['filterer_tags']), '');
 
 	// populate filterers, starting from children to grand-parents
 
@@ -274,20 +266,7 @@ function competences_individuelles_form($selected_id = '', $AllowUpdate = 1, $Al
 	// combobox: consultant_id
 	$combo_consultant_id = new DataCombo;
 	// combobox: tags
-	$combo_tags = new Combo;
-	$combo_tags->ListType = 3;
-	$combo_tags->MultipleSeparator = ', ';
-	$combo_tags->ListBoxHeight = 10;
-	$combo_tags->RadiosPerLine = 1;
-	if(is_file(dirname(__FILE__).'/hooks/competences_individuelles.tags.csv')) {
-		$tags_data = addslashes(implode('', @file(dirname(__FILE__).'/hooks/competences_individuelles.tags.csv')));
-		$combo_tags->ListItem = explode('||', entitiesToUTF8(convertLegacyOptions($tags_data)));
-		$combo_tags->ListData = $combo_tags->ListItem;
-	}else{
-		$combo_tags->ListItem = explode('||', entitiesToUTF8(convertLegacyOptions("A compl&#233;ter;;important;;A suivre")));
-		$combo_tags->ListData = $combo_tags->ListItem;
-	}
-	$combo_tags->SelectName = 'tags';
+	$combo_tags = new DataCombo;
 
 	if($selected_id) {
 		// mm: check member permissions
@@ -326,6 +305,7 @@ function competences_individuelles_form($selected_id = '', $AllowUpdate = 1, $Al
 		$combo_competence_mis_en_oeuvre->SelectedData = $filterer_competence_mis_en_oeuvre;
 		$combo_niveau->SelectedData = $filterer_niveau;
 		$combo_consultant_id->SelectedData = $filterer_consultant_id;
+		$combo_tags->SelectedData = $filterer_tags;
 	}
 	$combo_competence_mis_en_oeuvre->HTML = '<span id="competence_mis_en_oeuvre-container' . $rnd1 . '"></span><input type="hidden" name="competence_mis_en_oeuvre" id="competence_mis_en_oeuvre' . $rnd1 . '" value="' . html_attr($combo_competence_mis_en_oeuvre->SelectedData) . '">';
 	$combo_competence_mis_en_oeuvre->MatchText = '<span id="competence_mis_en_oeuvre-container-readonly' . $rnd1 . '"></span><input type="hidden" name="competence_mis_en_oeuvre" id="competence_mis_en_oeuvre' . $rnd1 . '" value="' . html_attr($combo_competence_mis_en_oeuvre->SelectedData) . '">';
@@ -333,7 +313,8 @@ function competences_individuelles_form($selected_id = '', $AllowUpdate = 1, $Al
 	$combo_niveau->MatchText = '<span id="niveau-container-readonly' . $rnd1 . '"></span><input type="hidden" name="niveau" id="niveau' . $rnd1 . '" value="' . html_attr($combo_niveau->SelectedData) . '">';
 	$combo_consultant_id->HTML = '<span id="consultant_id-container' . $rnd1 . '"></span><input type="hidden" name="consultant_id" id="consultant_id' . $rnd1 . '" value="' . html_attr($combo_consultant_id->SelectedData) . '">';
 	$combo_consultant_id->MatchText = '<span id="consultant_id-container-readonly' . $rnd1 . '"></span><input type="hidden" name="consultant_id" id="consultant_id' . $rnd1 . '" value="' . html_attr($combo_consultant_id->SelectedData) . '">';
-	$combo_tags->Render();
+	$combo_tags->HTML = '<span id="tags-container' . $rnd1 . '"></span><input type="hidden" name="tags" id="tags' . $rnd1 . '" value="' . html_attr($combo_tags->SelectedData) . '">';
+	$combo_tags->MatchText = '<span id="tags-container-readonly' . $rnd1 . '"></span><input type="hidden" name="tags" id="tags' . $rnd1 . '" value="' . html_attr($combo_tags->SelectedData) . '">';
 
 	ob_start();
 	?>
@@ -343,12 +324,14 @@ function competences_individuelles_form($selected_id = '', $AllowUpdate = 1, $Al
 		AppGini.current_competence_mis_en_oeuvre__RAND__ = { text: "", value: "<?php echo addslashes($selected_id ? $urow['competence_mis_en_oeuvre'] : $filterer_competence_mis_en_oeuvre); ?>"};
 		AppGini.current_niveau__RAND__ = { text: "", value: "<?php echo addslashes($selected_id ? $urow['niveau'] : $filterer_niveau); ?>"};
 		AppGini.current_consultant_id__RAND__ = { text: "", value: "<?php echo addslashes($selected_id ? $urow['consultant_id'] : $filterer_consultant_id); ?>"};
+		AppGini.current_tags__RAND__ = { text: "", value: "<?php echo addslashes($selected_id ? $urow['tags'] : $filterer_tags); ?>"};
 
 		jQuery(function() {
 			setTimeout(function() {
 				if(typeof(competence_mis_en_oeuvre_reload__RAND__) == 'function') competence_mis_en_oeuvre_reload__RAND__();
 				if(typeof(niveau_reload__RAND__) == 'function') niveau_reload__RAND__();
 				if(typeof(consultant_id_reload__RAND__) == 'function') consultant_id_reload__RAND__();
+				if(typeof(tags_reload__RAND__) == 'function') tags_reload__RAND__();
 			}, 10); /* we need to slightly delay client-side execution of the above code to allow AppGini.ajaxCache to work */
 		});
 		function competence_mis_en_oeuvre_reload__RAND__() {
@@ -582,6 +565,83 @@ function competences_individuelles_form($selected_id = '', $AllowUpdate = 1, $Al
 		<?php } ?>
 
 		}
+		function tags_reload__RAND__() {
+		<?php if(($AllowUpdate || $AllowInsert) && !$dvprint) { ?>
+
+			$j("#tags-container__RAND__").select2({
+				/* initial default value */
+				initSelection: function(e, c) {
+					$j.ajax({
+						url: 'ajax_combo.php',
+						dataType: 'json',
+						data: { id: AppGini.current_tags__RAND__.value, t: 'competences_individuelles', f: 'tags' },
+						success: function(resp) {
+							c({
+								id: resp.results[0].id,
+								text: resp.results[0].text
+							});
+							$j('[name="tags"]').val(resp.results[0].id);
+							$j('[id=tags-container-readonly__RAND__]').html('<span id="tags-match-text">' + resp.results[0].text + '</span>');
+							if(resp.results[0].id == '<?php echo empty_lookup_value; ?>') { $j('.btn[id=tags_view_parent]').hide(); }else{ $j('.btn[id=tags_view_parent]').show(); }
+
+
+							if(typeof(tags_update_autofills__RAND__) == 'function') tags_update_autofills__RAND__();
+						}
+					});
+				},
+				width: '100%',
+				formatNoMatches: function(term) { /* */ return '<?php echo addslashes($Translation['No matches found!']); ?>'; },
+				minimumResultsForSearch: 5,
+				loadMorePadding: 200,
+				ajax: {
+					url: 'ajax_combo.php',
+					dataType: 'json',
+					cache: true,
+					data: function(term, page) { /* */ return { s: term, p: page, t: 'competences_individuelles', f: 'tags' }; },
+					results: function(resp, page) { /* */ return resp; }
+				},
+				escapeMarkup: function(str) { /* */ return str; }
+			}).on('change', function(e) {
+				AppGini.current_tags__RAND__.value = e.added.id;
+				AppGini.current_tags__RAND__.text = e.added.text;
+				$j('[name="tags"]').val(e.added.id);
+				if(e.added.id == '<?php echo empty_lookup_value; ?>') { $j('.btn[id=tags_view_parent]').hide(); }else{ $j('.btn[id=tags_view_parent]').show(); }
+
+
+				if(typeof(tags_update_autofills__RAND__) == 'function') tags_update_autofills__RAND__();
+			});
+
+			if(!$j("#tags-container__RAND__").length) {
+				$j.ajax({
+					url: 'ajax_combo.php',
+					dataType: 'json',
+					data: { id: AppGini.current_tags__RAND__.value, t: 'competences_individuelles', f: 'tags' },
+					success: function(resp) {
+						$j('[name="tags"]').val(resp.results[0].id);
+						$j('[id=tags-container-readonly__RAND__]').html('<span id="tags-match-text">' + resp.results[0].text + '</span>');
+						if(resp.results[0].id == '<?php echo empty_lookup_value; ?>') { $j('.btn[id=tags_view_parent]').hide(); }else{ $j('.btn[id=tags_view_parent]').show(); }
+
+						if(typeof(tags_update_autofills__RAND__) == 'function') tags_update_autofills__RAND__();
+					}
+				});
+			}
+
+		<?php }else{ ?>
+
+			$j.ajax({
+				url: 'ajax_combo.php',
+				dataType: 'json',
+				data: { id: AppGini.current_tags__RAND__.value, t: 'competences_individuelles', f: 'tags' },
+				success: function(resp) {
+					$j('[id=tags-container__RAND__], [id=tags-container-readonly__RAND__]').html('<span id="tags-match-text">' + resp.results[0].text + '</span>');
+					if(resp.results[0].id == '<?php echo empty_lookup_value; ?>') { $j('.btn[id=tags_view_parent]').hide(); }else{ $j('.btn[id=tags_view_parent]').show(); }
+
+					if(typeof(tags_update_autofills__RAND__) == 'function') tags_update_autofills__RAND__();
+				}
+			});
+		<?php } ?>
+
+		}
 	</script>
 	<?php
 
@@ -649,7 +709,8 @@ function competences_individuelles_form($selected_id = '', $AllowUpdate = 1, $Al
 		$jsReadOnly .= "\tjQuery('#consultant_id_caption').prop('disabled', true).css({ color: '#555', backgroundColor: 'white' });\n";
 		$jsReadOnly .= "\tjQuery('#Documents_capitalises').replaceWith('<div class=\"form-control-static\" id=\"Documents_capitalises\">' + (jQuery('#Documents_capitalises').val() || '') + '</div>');\n";
 		$jsReadOnly .= "\tjQuery('#Documents_capitalises, #Documents_capitalises-edit-link').hide();\n";
-		$jsReadOnly .= "\tjQuery('#tags').replaceWith('<div class=\"form-control-static\" id=\"tags\">' + (jQuery('#tags').val() || '') + '</div>'); jQuery('#tags-multi-selection-help').hide();\n";
+		$jsReadOnly .= "\tjQuery('#tags').prop('disabled', true).css({ color: '#555', backgroundColor: '#fff' });\n";
+		$jsReadOnly .= "\tjQuery('#tags_caption').prop('disabled', true).css({ color: '#555', backgroundColor: 'white' });\n";
 		$jsReadOnly .= "\tjQuery('#s2id_tags').remove();\n";
 		$jsReadOnly .= "\tjQuery('.select2-container').hide();\n";
 
@@ -670,10 +731,11 @@ function competences_individuelles_form($selected_id = '', $AllowUpdate = 1, $Al
 	$templateCode = str_replace('<%%COMBOTEXT(consultant_id)%%>', $combo_consultant_id->MatchText, $templateCode);
 	$templateCode = str_replace('<%%URLCOMBOTEXT(consultant_id)%%>', urlencode($combo_consultant_id->MatchText), $templateCode);
 	$templateCode = str_replace('<%%COMBO(tags)%%>', $combo_tags->HTML, $templateCode);
-	$templateCode = str_replace('<%%COMBOTEXT(tags)%%>', $combo_tags->SelectedData, $templateCode);
+	$templateCode = str_replace('<%%COMBOTEXT(tags)%%>', $combo_tags->MatchText, $templateCode);
+	$templateCode = str_replace('<%%URLCOMBOTEXT(tags)%%>', urlencode($combo_tags->MatchText), $templateCode);
 
 	/* lookup fields array: 'lookup field name' => array('parent table name', 'lookup field caption') */
-	$lookup_fields = array('competence_mis_en_oeuvre' => array('competences_ref', 'Competence r&#233;f. mis en oeuvre'), 'niveau' => array('niveaux_ref', 'Niveau de la comp&#233;tence'), 'consultant_id' => array('consultant', 'detenu par'), );
+	$lookup_fields = array('competence_mis_en_oeuvre' => array('competences_ref', 'Competence r&#233;f. mis en oeuvre'), 'niveau' => array('niveaux_ref', 'Niveau de la comp&#233;tence'), 'consultant_id' => array('consultant', 'detenu par'), 'tags' => array('tags', 'Tags'), );
 	foreach($lookup_fields as $luf => $ptfc) {
 		$pt_perm = getTablePermissions($ptfc[0]);
 

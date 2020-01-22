@@ -67,7 +67,7 @@
 	$x->AllowSavingFilters = 0;
 	$x->AllowSorting = 1;
 	$x->AllowNavigation = 1;
-	$x->AllowPrinting = 1;
+	$x->AllowPrinting = 0;
 	$x->AllowPrintingDV = 1;
 	$x->AllowCSV = 1;
 	$x->RecordsPerPage = 10;

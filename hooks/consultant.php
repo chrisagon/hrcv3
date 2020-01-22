@@ -16,6 +16,7 @@ $error_message = "Ceci est un message erreur!\r";
 $log_file = "./mes-erreurs.log";
 
 // logging error message to given log file
+
 //error_log($error_message, 3, $log_file);
 /**
  * Called before rendering the page. This is a very powerful hook that allows you to control all aspects of how the page is rendered.
@@ -193,24 +194,28 @@ function consultant_before_insert( &$data, $memberInfo, &$args )
  * Warning: if a FALSE is returned, the new record will have no ownership info.
  */
 
-function consultant_after_insert( $data, $memberInfo, &$args ){
-/* Après insertion d'un nouveau consultant, vérifier si CV a été télécharger
-si OUI alors lire le CV pour alimenter les missions */
-   
-    /* chemin du CV */
-    $currDir3=dirname(__FILE__ , 2 );
-    $chemin_cv = $currDir3.DIRECTORY_SEPARATOR."images".DIRECTORY_SEPARATOR.$data['cv_hrc'];
-            /*$error_message = $chemin_cv." Fichier non trouve !\r";
-        error_log($error_message, 3, "./mes-erreurs.log");*/
+function consultant_after_insert( $data, $memberInfo, &$args )
+{
 
-    if ( isset($chemin_cv ) && !file_exists( $chemin_cv ) ) {
-        echo $chemin_cv." Fichier non trouve !";
-        $error_message = $chemin_cv." Fichier non trouve !\r";
-        error_log($error_message, 3, "./mes-erreurs.log");
+/* Après insertion d'un nouveau consultant, vérifier si CV a été téléchargé
+si OUI alors lire le CV pour alimenter les missions */
+
+    /* chemin du CV */
+    $currDir3  = dirname( __FILE__, 2 );
+    $chemin_cv =
+        $currDir3 . DIRECTORY_SEPARATOR . "images" . DIRECTORY_SEPARATOR . $data['cv_hrc'];
+
+/*$error_message = $chemin_cv." Fichier non trouve !\r";
+error_log($error_message, 3, "./mes-erreurs.log");*/
+
+    if ( isset( $chemin_cv ) && !file_exists( $chemin_cv ) ) {
+        echo $chemin_cv . " Fichier non trouve !";
+        $error_message = $chemin_cv . " Fichier non trouve !\r";
+        error_log( $error_message, 3, "./mes-erreurs.log" );
         exit;
     }
-    
-    $docObj    = new DocxConversion( $chemin_cv );
+
+    $docObj = new DocxConversion( $chemin_cv );
     // extraire_cv.php
     $docText = $docObj->convertToText();
 
@@ -223,54 +228,61 @@ si OUI alors lire le CV pour alimenter les missions */
         }
     }
 
-   //echo '<pre>'.print_r($tablo_danalyse, true); exit;
-
 // boucle sur missions pour :
+
 // alim_missions_cv.php
     foreach ( $tablo_danalyse as $ligne ) {
-    /*$error_message = "230: Ligne analyser : ".$ligne. "\r";
-    error_log($error_message, 3, "./mes-erreurs.log");*/
-        $site_mission   = prendre_chaine_entre( $ligne, 'MISSION :', 'µ' );
-        $site_mission_fct = ltrim($site_mission, "\x00..\x1F");
-        if (!empty($site_mission_fct)){ $site_mission_upd = substr($site_mission_fct,0,64);}
-        $periode        = prendre_chaine_entre( $ligne, 'PERIODE :', '/FINBLOK' );
-        if (!empty($periode)){ $periode_upd = substr($periode,0,39);}
-        $objet_mission  = prendre_chaine_entre( $ligne, 'OBJET :', '/FINBLOK' );
-        if (!empty($objet_mission)) { $objet_mission_upd = $objet_mission;}
-        $detail_mission = prendre_chaine_entre( $ligne, 'DETAIL :', '/FINBLOK' );
-        if (!empty($detail_mission)) { $detail_mission_upd = $detail_mission;}
-        $environnement  = prendre_chaine_entre( $ligne, 'ENVIRONNEMENT :', '/FINBLOK' );
-        if (!empty($environnement)) { $environnement_upd = substr($environnement,0,254);}
-       /* $error_message =  "\r 238:missions_cv_insert = 0 ".$ligne ."\r 1" . $site_mission_upd ."\r 2:". $periode_upd." \r 3:". $objet_mission_upd . "<\r 4:" .
-            $detail_mission_upd ."\r 5:". $environnement_upd."\r" ;
+        /*$error_message = "230: Ligne analyser : ".$ligne. "\r";
         error_log($error_message, 3, "./mes-erreurs.log");*/
-        if (!empty($site_mission_upd) && !empty($periode_upd) && !empty($objet_mission_upd) && !empty($detail_mission_upd) ) {
-            /*$error_message =  "\r INSERT :missions_cv_insert = 1" . $site_mission_upd ."\r 2:". $periode_upd." \r 3:". $objet_mission_upd . "<\r 4:" .
-                $detail_mission ."\r 5:". $environnement_upd."\r" ;
-                error_log($error_message, 3, "./mes-erreurs.log");*/
-                missions_cv_insert( $data, $site_mission_upd, $periode_upd, $objet_mission_upd,
-            $detail_mission_upd, $environnement_upd );
-                /* Réinitialisation des variables de stockage */
-                $site_mission_upd ='';
-                $periode_upd = '';
-                $objet_mission_upd = '';
-                $detail_mission_upd = '';
-                $environnement_upd = '';
-                
-        }
-         // INSERTION&nbsp;Compétences individuelles
-         $competence_indiv = prendre_chaine_entre( $ligne, 'COMPETENCES :', '/FINBLOK' );
-         if (!empty($competence_indiv)){
-            /* $error_message = "competences CV".$competence_indiv."\r";
-             error_log($error_message, 3, "./mes-erreurs.log");*/
-            $competence_indiv_upd = substr($competence_indiv,0,40);
-            competences_individuelles_cv_insert( $data, $competence_indiv_upd);
-            }
+        $site_mission     = prendre_chaine_entre( $ligne, 'MISSION :', 'µ' );
+        $site_mission_fct = ltrim( $site_mission, "\x00..\x1F" );
 
+        if ( !empty( $site_mission_fct ) ) {$site_mission_upd =
+                substr( $site_mission_fct, 0, 64 );}
+
+        $periode = prendre_chaine_entre( $ligne, 'PERIODE :',
+            '/FINBLOK' );
+
+        if ( !empty( $periode ) ) {$periode_upd = substr( $periode, 0, 39 );}
+
+        $objet_mission = prendre_chaine_entre( $ligne, 'OBJET :', '/FINBLOK'
+        );
+
+        if ( !empty( $objet_mission ) ) {$objet_mission_upd = $objet_mission;}
+
+        $detail_mission = prendre_chaine_entre( $ligne, 'DETAIL :', '/FINBLOK'
+        );
+
+        if ( !empty( $detail_mission ) ) {$detail_mission_upd = $detail_mission;}
+
+        $environnement = prendre_chaine_entre( $ligne, 'ENVIRONNEMENT :',
+            '/FINBLOK' );
+
+        if ( !empty( $environnement ) ) {$environnement_upd =
+                substr( $environnement, 0, 254 );}
+// si toutes les rubriques de la mission sont renseigné alors on ajoute la mission
+        if ( !empty( $site_mission_upd ) && !empty( $periode_upd ) &&
+            !empty( $objet_mission_upd ) && !empty( $detail_mission_upd ) ) {
+            missions_cv_insert( $data, $site_mission_upd, $periode_upd,
+                $objet_mission_upd,
+                $detail_mission_upd, $environnement_upd );
+            /* Réinitialisation des variables de stockage */
+            $site_mission_upd   = '';
+            $periode_upd        = '';
+            $objet_mission_upd  = '';
+            $detail_mission_upd = '';
+            $environnement_upd  = '';
+        }
+
+        // INSERTION des Compétences individuelles décrites dans le CV
+        $competence_indiv = prendre_chaine_entre( $ligne, 'COMPETENCES :',
+            '/FINBLOK' );
+
+        if ( !empty( $competence_indiv ) ) {
+            $competence_indiv_upd = substr( $competence_indiv, 0, 40 );
+            competences_individuelles_cv_insert( $data, $competence_indiv_upd );
+        }
     }
-/*    $error_message = "après eclatement \r";
-    error_log($error_message, 3, "./mes-erreurs.log");
-*/
     return true;
 }
 
@@ -322,11 +334,120 @@ function consultant_before_update( &$data, $memberInfo, &$args )
  * True to perform the ownership update operation or false to cancel it.
  */
 
-function consultant_after_update( $data, $memberInfo, &$args ){
+function consultant_after_update( $data, $memberInfo, &$args )
+{
+    /* Après mise à jour d'un consultant, vérifier si CV a été télécharger
+    si OUI alors lire le CV pour alimenter et mettre à jour les missions */
+    /* chemin du CV */
+    $currDir3  = dirname( __FILE__, 2 );
+    $chemin_cv =
+        $currDir3 . DIRECTORY_SEPARATOR . "images" . DIRECTORY_SEPARATOR . $data['cv_hrc'];
 
-    return true;
+    if ( isset( $chemin_cv ) && !file_exists( $chemin_cv ) ) {
+        echo $chemin_cv . " Fichier non trouve !";
+        $error_message = $chemin_cv . " Fichier non trouve !\r";
+        error_log( $error_message, 3, "./mes-erreurs.log" );
+        exit;
+    }
+
+    $docObj = new DocxConversion( $chemin_cv );
+    // extraire_cv.php
+    $docText = $docObj->convertToText();
+
+    /* On stocke le texte converti dans un tableau pour analyser plus facilement chaque ligne  */
+    $tablo_danalyse = [];
+
+    foreach ( explode( "|", $docText ) as $ligne ) {
+        if ( !empty( $ligne ) ) {
+            $tablo_danalyse[] = $ligne;
+        }
+    }
+
+// boucle sur missions pour alimenter les rubriques de la mission :
+    foreach ( $tablo_danalyse as $ligne ) {
+        $site_mission     = prendre_chaine_entre( $ligne, 'MISSION :', 'µ' );
+        $site_mission_fct = ltrim( $site_mission, "\x00..\x1F" );
+
+        if ( !empty( $site_mission_fct ) ) {$site_mission_upd =
+                substr( $site_mission_fct, 0, 64 );}
+
+        $periode = prendre_chaine_entre( $ligne, 'PERIODE :',
+            '/FINBLOK' );
+
+        if ( !empty( $periode ) ) {$periode_upd = substr( $periode, 0, 39 );}
+
+        $objet_mission = prendre_chaine_entre( $ligne, 'OBJET :', '/FINBLOK'
+        );
+
+        if ( !empty( $objet_mission ) ) {$objet_mission_upd = $objet_mission;}
+
+        $detail_mission = prendre_chaine_entre( $ligne, 'DETAIL :', '/FINBLOK'
+        );
+
+        if ( !empty( $detail_mission ) ) {$detail_mission_upd = $detail_mission;}
+
+        $environnement = prendre_chaine_entre( $ligne, 'ENVIRONNEMENT :',
+            '/FINBLOK' );
+
+        if ( !empty( $environnement ) ) {$environnement_upd =
+                substr( $environnement, 0, 254 );}
+// Si toutes les rubriques de la mission sont renseignée alors
+        if ( !empty( $site_mission_upd ) && !empty( $periode_upd ) &&
+            !empty( $objet_mission_upd ) && !empty( $detail_mission_upd ) ) {
+/* Rechercher les missions à partir de la clé id_consultant + periode + site_mission
+si id_mission trouvé alors update
+sinon insert mission */
+            $res =
+                sql( "select `id_mission` from `missions` where `id_consultant`='" .
+                makeSafe( $data['id_consultant'], false ) . "'" . " and `periode`= '" . makeSafe( $periode_upd,
+                    false ) . "'" . " and `site_mission` = '" . makeSafe( $site_mission_upd, false ) . "' limit 1",
+                $eo );
+
+            if ( $row = db_fetch_assoc( $res ) ) {
+                $data_mission = array_map( 'makeSafe', $row );
+            }
+
+            if ( !empty( $data_mission ) ) {
+                missions_cv_update( $data_mission['id_mission'],
+                    $data['id_consultant'], $site_mission_upd, $periode_upd, $objet_mission_upd,
+                    $detail_mission_upd, $environnement_upd );
+            } else {
+                missions_cv_insert( $data, $site_mission_upd, $periode_upd,
+                    $objet_mission_upd,
+                    $detail_mission_upd, $environnement_upd );}
+
+            /* Réinitialisation des variables de stockage */
+            $site_mission_upd   = '';
+            $periode_upd        = '';
+            $objet_mission_upd  = '';
+            $detail_mission_upd = '';
+            $environnement_upd  = '';
+        }
+
+        // INSERTION des nouvelles Compétences individuelles
+        $competence_indiv = prendre_chaine_entre( $ligne, 'COMPETENCES :',
+            '/FINBLOK' );
+
+        if ( !empty( $competence_indiv ) ) {
+            $competence_indiv_upd = substr( $competence_indiv, 0, 40 );
+        // Recherche si la compétence individuelle existe déjà
+            $res                  =
+                sql( "select `id_comp_indiv` from `competences_individuelles` where `consultant_id`='" . makeSafe( $data['id_consultant'], false ) .
+                "'" . " and `Competences_specifiques`= '" . makeSafe( $competence_indiv_upd,
+                    false ) . "' limit 1", $eo );
+
+            if ( $row = db_fetch_assoc( $res ) ) {
+                $data_comp_indiv = array_map( 'makeSafe', $row );
+            }
+        // Si la compétence spécifique n'a pas été trouvée alors on l'ajoute
+            if ( empty( $data_comp_indiv ) ) {
+                competences_individuelles_cv_insert( $data, $competence_indiv_upd );
+            }
+        }
+
+        return true;
+    }
 }
-
 /**
  * Called before deleting a record (and before performing child records check).
  *
@@ -348,11 +469,11 @@ function consultant_after_update( $data, $memberInfo, &$args ){
  * True to perform the delete operation or false to cancel it.
  */
 
-function consultant_before_delete( $selectedID, &$skipChecks, $memberInfo,
-    &$args ) {
+    function consultant_before_delete( $selectedID, &$skipChecks, $memberInfo,
+        &$args ) {
 
-    return true;
-}
+        return true;
+    }
 
 /**
  * Called after deleting a record.
@@ -371,9 +492,9 @@ function consultant_before_delete( $selectedID, &$skipChecks, $memberInfo,
  * None.
  */
 
-function consultant_after_delete( $selectedID, $memberInfo, &$args )
-{
-}
+    function consultant_after_delete( $selectedID, $memberInfo, &$args )
+    {
+    }
 
 /**
  * Called when a user requests to view the detail view (before displaying the detail view).
@@ -397,9 +518,9 @@ function consultant_after_delete( $selectedID, $memberInfo, &$args )
  * None.
  */
 
-function consultant_dv( $selectedID, $memberInfo, &$html, &$args )
-{
-}
+    function consultant_dv( $selectedID, $memberInfo, &$html, &$args )
+    {
+    }
 
 /**
  * Called when a user requests to download table data as a CSV file (by clicking on the SAVE CSV button)
@@ -418,11 +539,11 @@ function consultant_dv( $selectedID, $memberInfo, &$html, &$args )
  * A string containing the query to use for fetching the CSV data. If FALSE or empty is returned, the default query is used.
  */
 
-function consultant_csv( $query, $memberInfo, &$args )
-{
+    function consultant_csv( $query, $memberInfo, &$args )
+    {
 
-    return $query;
-}
+        return $query;
+    }
 
 /**
  * Called when displaying the table view to retrieve custom record actions
@@ -439,8 +560,8 @@ function consultant_csv( $query, $memberInfo, &$args )
  *   )
  */
 
-function consultant_batch_actions( &$args )
-{
+    function consultant_batch_actions( &$args )
+    {
 
-    return [];
-}
+        return [];
+    }

@@ -191,14 +191,6 @@ function consultant_delete($selected_id, $AllowDeleteOfParents=false, $skipCheck
 		return $RetMsg;
 	}
 
-	// delete file stored in the 'cv_hrc' field
-	$res = sql("select `cv_hrc` from `consultant` where `id_consultant`='$selected_id'", $eo);
-	if($row=@db_fetch_row($res)) {
-		if($row[0]!='') {
-			@unlink(getUploadDir('').$row[0]);
-		}
-	}
-
 	sql("delete from `consultant` where `id_consultant`='$selected_id'", $eo);
 
 	// hook: consultant_after_delete
@@ -250,24 +242,8 @@ function consultant_update($selected_id) {
 	$data['selectedID'] = makeSafe($selected_id);
 	if($_REQUEST['cv_hrc_remove'] == 1) {
 		$data['cv_hrc'] = '';
-		// delete file from server
-		$res = sql("select `cv_hrc` from `consultant` where `id_consultant`='".makeSafe($selected_id)."'", $eo);
-		if($row = @db_fetch_row($res)) {
-			if($row[0] != '') {
-				@unlink(getUploadDir('') . $row[0]);
-			}
-		}
 	} else {
 		$data['cv_hrc'] = PrepareUploadedFile('cv_hrc', 512000, 'txt|doc|docx|docm|odt|pdf|rtf', true, "");
-		// delete file from server
-		if($data['cv_hrc'] != '') {
-			$res = sql("select `cv_hrc` from `consultant` where `id_consultant`='" . makeSafe($selected_id) . "'", $eo);
-			if($row = @db_fetch_row($res)) {
-				if($row[0] != '') {
-					@unlink(getUploadDir('') . $row[0]);
-				}
-			}
-		}
 	}
 
 	// hook: consultant_before_update

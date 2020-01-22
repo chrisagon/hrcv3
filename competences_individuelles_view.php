@@ -29,7 +29,7 @@
 		"IF(    CHAR_LENGTH(`consultant1`.`Prenom`) || CHAR_LENGTH(`consultant1`.`Nom`), CONCAT_WS('',   `consultant1`.`Prenom`, ', ', `consultant1`.`Nom`), '') /* detenu par */" => "consultant_id",
 		"`competences_individuelles`.`Documents_capitalises`" => "Documents_capitalises",
 		"if(CHAR_LENGTH(`competences_individuelles`.`commentaires`)>300, concat(left(`competences_individuelles`.`commentaires`,300),' ...'), `competences_individuelles`.`commentaires`)" => "commentaires",
-		"`competences_individuelles`.`tags`" => "tags",
+		"IF(    CHAR_LENGTH(`tags1`.`tags`), CONCAT_WS('',   `tags1`.`tags`), '') /* Tags */" => "tags",
 	);
 	// mapping incoming sort by requests to actual query fields
 	$x->SortFields = array(
@@ -40,7 +40,7 @@
 		5 => 5,
 		6 => 6,
 		7 => 7,
-		8 => 8,
+		8 => '`tags1`.`tags`',
 	);
 
 	// Fields that can be displayed in the csv file
@@ -52,7 +52,7 @@
 		"IF(    CHAR_LENGTH(`consultant1`.`Prenom`) || CHAR_LENGTH(`consultant1`.`Nom`), CONCAT_WS('',   `consultant1`.`Prenom`, ', ', `consultant1`.`Nom`), '') /* detenu par */" => "consultant_id",
 		"`competences_individuelles`.`Documents_capitalises`" => "Documents_capitalises",
 		"`competences_individuelles`.`commentaires`" => "commentaires",
-		"`competences_individuelles`.`tags`" => "tags",
+		"IF(    CHAR_LENGTH(`tags1`.`tags`), CONCAT_WS('',   `tags1`.`tags`), '') /* Tags */" => "tags",
 	);
 	// Fields that can be filtered
 	$x->QueryFieldsFilters = array(
@@ -63,7 +63,7 @@
 		"IF(    CHAR_LENGTH(`consultant1`.`Prenom`) || CHAR_LENGTH(`consultant1`.`Nom`), CONCAT_WS('',   `consultant1`.`Prenom`, ', ', `consultant1`.`Nom`), '') /* detenu par */" => "detenu par",
 		"`competences_individuelles`.`Documents_capitalises`" => "Documents capitalises",
 		"`competences_individuelles`.`commentaires`" => "Commentaires",
-		"`competences_individuelles`.`tags`" => "Tags",
+		"IF(    CHAR_LENGTH(`tags1`.`tags`), CONCAT_WS('',   `tags1`.`tags`), '') /* Tags */" => "Tags",
 	);
 
 	// Fields that can be quick searched
@@ -75,13 +75,13 @@
 		"IF(    CHAR_LENGTH(`consultant1`.`Prenom`) || CHAR_LENGTH(`consultant1`.`Nom`), CONCAT_WS('',   `consultant1`.`Prenom`, ', ', `consultant1`.`Nom`), '') /* detenu par */" => "consultant_id",
 		"`competences_individuelles`.`Documents_capitalises`" => "Documents_capitalises",
 		"`competences_individuelles`.`commentaires`" => "Commentaires",
-		"`competences_individuelles`.`tags`" => "tags",
+		"IF(    CHAR_LENGTH(`tags1`.`tags`), CONCAT_WS('',   `tags1`.`tags`), '') /* Tags */" => "tags",
 	);
 
 	// Lookup fields that can be used as filterers
-	$x->filterers = array('competence_mis_en_oeuvre' => 'Competence r&#233;f. mis en oeuvre', 'niveau' => 'Niveau de la comp&#233;tence', 'consultant_id' => 'detenu par', );
+	$x->filterers = array('competence_mis_en_oeuvre' => 'Competence r&#233;f. mis en oeuvre', 'niveau' => 'Niveau de la comp&#233;tence', 'consultant_id' => 'detenu par', 'tags' => 'Tags', );
 
-	$x->QueryFrom = "`competences_individuelles` LEFT JOIN `competences_ref` as competences_ref1 ON `competences_ref1`.`id_competence`=`competences_individuelles`.`competence_mis_en_oeuvre` LEFT JOIN `niveaux_ref` as niveaux_ref1 ON `niveaux_ref1`.`id_niveau`=`competences_individuelles`.`niveau` LEFT JOIN `consultant` as consultant1 ON `consultant1`.`id_consultant`=`competences_individuelles`.`consultant_id` ";
+	$x->QueryFrom = "`competences_individuelles` LEFT JOIN `competences_ref` as competences_ref1 ON `competences_ref1`.`id_competence`=`competences_individuelles`.`competence_mis_en_oeuvre` LEFT JOIN `niveaux_ref` as niveaux_ref1 ON `niveaux_ref1`.`id_niveau`=`competences_individuelles`.`niveau` LEFT JOIN `consultant` as consultant1 ON `consultant1`.`id_consultant`=`competences_individuelles`.`consultant_id` LEFT JOIN `tags` as tags1 ON `tags1`.`id`=`competences_individuelles`.`tags` ";
 	$x->QueryWhere = '';
 	$x->QueryOrder = '';
 
